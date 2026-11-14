@@ -1,12 +1,435 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo.Backend\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\models\\eventoauditoria.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\models\\eventoauditoria.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\models\\resultadosorteo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\models\\resultadosorteo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\enums\\estadotransaccionpago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\enums\\estadotransaccionpago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\models\\ejecucionsorteo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\models\\ejecucionsorteo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\models\\transaccionpago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\models\\transaccionpago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\models\\ordenpago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\models\\ordenpago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\models\\aporte.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\models\\aporte.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\models\\participacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\models\\participacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\models\\premiosorteo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\models\\premiosorteo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\models\\sorteo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\models\\sorteo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\models\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\models\\producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\models\\suscripcion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\models\\suscripcion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\models\\plansuscripcion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\models\\plansuscripcion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\enums\\estadoentregapremio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\enums\\estadoentregapremio.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\enums\\estadoejecucionsorteo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\enums\\estadoejecucionsorteo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\enums\\tipoordenpago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\enums\\tipoordenpago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\enums\\estadoordenpago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\enums\\estadoordenpago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\enums\\estadoaporte.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\enums\\estadoaporte.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\enums\\estadoparticipacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\enums\\estadoparticipacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\enums\\estadosorteo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\enums\\estadosorteo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\enums\\estadosuscripcion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\enums\\estadosuscripcion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.entities\\models\\cliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0A0DD150-6142-C511-37EB-2F67947DF628}|Charatec.Sorteo.Entities\\Charatec.Sorteo.Entities.csproj|solutionrelative:charatec.sorteo.entities\\models\\cliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "Usuario.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\Usuario.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Models\\Usuario.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\Usuario.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Models\\Usuario.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T20:23:19.123Z",
+              "IsPinned": true,
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "EventoAuditoria.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\EventoAuditoria.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Models\\EventoAuditoria.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\EventoAuditoria.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Models\\EventoAuditoria.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T21:21:46.771Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ResultadoSorteo.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\ResultadoSorteo.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Models\\ResultadoSorteo.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\ResultadoSorteo.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Models\\ResultadoSorteo.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAADwvyIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T21:21:36.15Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "EjecucionSorteo.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\EjecucionSorteo.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Models\\EjecucionSorteo.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\EjecucionSorteo.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Models\\EjecucionSorteo.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAADwvyAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T21:21:22.684Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TransaccionPago.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\TransaccionPago.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Models\\TransaccionPago.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\TransaccionPago.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Models\\TransaccionPago.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T21:19:34.167Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "OrdenPago.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\OrdenPago.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Models\\OrdenPago.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\OrdenPago.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Models\\OrdenPago.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAkwCYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T21:19:21.173Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Aporte.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\Aporte.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Models\\Aporte.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\Aporte.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Models\\Aporte.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T21:19:09.498Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "PremioSorteo.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\PremioSorteo.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Models\\PremioSorteo.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\PremioSorteo.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Models\\PremioSorteo.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAgwBEAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T20:58:29.898Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "EstadoTransaccionPago.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Enums\\EstadoTransaccionPago.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Enums\\EstadoTransaccionPago.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Enums\\EstadoTransaccionPago.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Enums\\EstadoTransaccionPago.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T20:55:32.337Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Sorteo.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\Sorteo.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Models\\Sorteo.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\Sorteo.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Models\\Sorteo.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAuwBAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T20:58:06.709Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Producto.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\Producto.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Models\\Producto.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\Producto.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Models\\Producto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T20:57:54.835Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "PlanSuscripcion.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\PlanSuscripcion.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Models\\PlanSuscripcion.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\PlanSuscripcion.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Models\\PlanSuscripcion.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T20:57:17.251Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "EstadoEntregaPremio.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Enums\\EstadoEntregaPremio.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Enums\\EstadoEntregaPremio.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Enums\\EstadoEntregaPremio.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Enums\\EstadoEntregaPremio.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T20:56:55.224Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Participacion.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\Participacion.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Models\\Participacion.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\Participacion.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Models\\Participacion.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T20:45:41.874Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "TipoOrdenPago.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Enums\\TipoOrdenPago.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Enums\\TipoOrdenPago.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Enums\\TipoOrdenPago.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Enums\\TipoOrdenPago.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T20:56:20.683Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "EstadoEjecucionSorteo.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Enums\\EstadoEjecucionSorteo.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Enums\\EstadoEjecucionSorteo.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Enums\\EstadoEjecucionSorteo.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Enums\\EstadoEjecucionSorteo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T20:55:55.053Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Suscripcion.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\Suscripcion.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Models\\Suscripcion.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\Suscripcion.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Models\\Suscripcion.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T20:44:40.199Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "EstadoOrdenPago.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Enums\\EstadoOrdenPago.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Enums\\EstadoOrdenPago.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Enums\\EstadoOrdenPago.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Enums\\EstadoOrdenPago.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T20:55:15.834Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "EstadoAporte.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Enums\\EstadoAporte.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Enums\\EstadoAporte.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Enums\\EstadoAporte.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Enums\\EstadoAporte.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T20:54:52.857Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "EstadoParticipacion.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Enums\\EstadoParticipacion.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Enums\\EstadoParticipacion.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Enums\\EstadoParticipacion.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Enums\\EstadoParticipacion.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T20:54:35.811Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "EstadoSorteo.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Enums\\EstadoSorteo.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Enums\\EstadoSorteo.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Enums\\EstadoSorteo.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Enums\\EstadoSorteo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T20:54:17.335Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "EstadoSuscripcion.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Enums\\EstadoSuscripcion.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Enums\\EstadoSuscripcion.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Enums\\EstadoSuscripcion.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Enums\\EstadoSuscripcion.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T20:54:00.498Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "Cliente.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\Cliente.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Entities\\Models\\Cliente.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Entities\\Models\\Cliente.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Entities\\Models\\Cliente.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T20:42:07.986Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

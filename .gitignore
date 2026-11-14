@@ -1,0 +1,36 @@
+
+# Visual Studio
+.vs/
+**/bin/
+**/obj/
+*.user
+*.suo
+*.rsuser
+
+# Angular
+**/node_modules/
+**/dist/
+**/.angular/
+**/coverage/
+
+# Archivos secretos
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+*.pem
+*.key
+secrets.json
+
+# Configuraciones locales
+appsettings.Local.json
+appsettings.*.local.json
+
+# Logs
+*.log
+logs/
+
+# Sistema
+Thumbs.db
+.DS_Store
