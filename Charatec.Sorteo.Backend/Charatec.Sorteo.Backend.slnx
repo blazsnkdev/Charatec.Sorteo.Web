@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Charatec.Sorteo.Api/Charatec.Sorteo.Api.csproj" />
+  <Project Path="Charatec.Sorteo.Business/Charatec.Sorteo.Business.csproj" />
+  <Project Path="Charatec.Sorteo.Common/Charatec.Sorteo.Common.csproj" />
+  <Project Path="Charatec.Sorteo.Data/Charatec.Sorteo.Data.csproj" />
+  <Project Path="Charatec.Sorteo.Entities/Charatec.Sorteo.Entities.csproj" />
+</Solution>
