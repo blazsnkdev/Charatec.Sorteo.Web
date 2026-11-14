@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Charatec.Sorteo.Common\Charatec.Sorteo.Common.csproj" />
+    <ProjectReference Include="..\Charatec.Sorteo.Data\Charatec.Sorteo.Data.csproj" />
+  </ItemGroup>
+
 </Project>

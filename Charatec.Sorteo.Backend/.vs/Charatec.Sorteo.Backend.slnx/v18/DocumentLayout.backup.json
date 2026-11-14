@@ -3,8 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{4D4A115A-7F63-15B9-5A8D-FCBCB7BE20A5}|Charatec.Sorteo.Api\\Charatec.Sorteo.Api.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{4D4A115A-7F63-15B9-5A8D-FCBCB7BE20A5}|Charatec.Sorteo.Api\\Charatec.Sorteo.Api.csproj|solutionrelative:charatec.sorteo.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{8F5D6541-69E8-B83F-7EC8-8511D2A73609}|Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.business\\services\\clienteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F5D6541-69E8-B83F-7EC8-8511D2A73609}|Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj|solutionrelative:charatec.sorteo.business\\services\\clienteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F5D6541-69E8-B83F-7EC8-8511D2A73609}|Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.business\\interfaces\\iclienteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F5D6541-69E8-B83F-7EC8-8511D2A73609}|Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj|solutionrelative:charatec.sorteo.business\\interfaces\\iclienteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -19,14 +23,28 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Api\\appsettings.json",
-              "RelativeDocumentMoniker": "Charatec.Sorteo.Api\\appsettings.json",
-              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Api\\appsettings.json",
-              "RelativeToolTip": "Charatec.Sorteo.Api\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-11-14T22:10:05.559Z",
+              "Title": "ClienteService.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Business\\Services\\ClienteService.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Business\\Services\\ClienteService.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Business\\Services\\ClienteService.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Business\\Services\\ClienteService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T23:17:48.18Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "IClienteService.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Business\\Interfaces\\IClienteService.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Business\\Interfaces\\IClienteService.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Business\\Interfaces\\IClienteService.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Business\\Interfaces\\IClienteService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-14T23:16:03.199Z",
               "EditorCaption": "",
               "OwnerCaption": "%2"
             }
