@@ -30,8 +30,11 @@ namespace Charatec.Sorteo.Business.DTOs.Requests.Auth
         ErrorMessage = "El celular debe tener 9 dígitos y comenzar con 9.")]
     string Telefono,
 
-        [param: Required(
+    [param: Required(
         ErrorMessage = "La contraseña es obligatoria.")]
+    [param: MinLength(
+        6,
+        ErrorMessage = "La contraseña debe tener al menos 6 caracteres.")]
     string Password
     );
 }

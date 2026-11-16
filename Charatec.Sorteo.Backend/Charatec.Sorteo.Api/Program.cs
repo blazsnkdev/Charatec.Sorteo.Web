@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.RateLimiting;
+using Charatec.Sorteo.Business.Interfaces;
+using Charatec.Sorteo.Business.Services;
+using Charatec.Sorteo.Entities.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,9 +72,11 @@ builder.Services.AddDbContext<SorteoDbContext>(options =>
     options.UseNpgsql(connectionString);
 });
 
-
+//Repositories
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+//Services
+builder.Services.AddScoped<IAuthService,AuthService>();
 
 
 // ==========================================
@@ -85,11 +90,12 @@ builder.Services
         options.User.RequireUniqueEmail = true;
 
         // Contraseñas
-        options.Password.RequiredLength = 10;
-        options.Password.RequireDigit = true;
-        options.Password.RequireLowercase = true;
-        options.Password.RequireUppercase = true;
-        options.Password.RequireNonAlphanumeric = true;
+        options.Password.RequiredLength = 6;
+        options.Password.RequireDigit = false;
+        options.Password.RequireLowercase = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequiredUniqueChars = 1;
 
         // Bloqueo por intentos fallidos
         options.Lockout.DefaultLockoutTimeSpan =
@@ -163,6 +169,34 @@ builder.Services.AddRateLimiter(options =>
 // ==========================================
 
 var app = builder.Build();
+
+// ==========================================
+// INICIALIZAR ROLES DE IDENTITY
+// ==========================================
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider
+        .GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+
+    var nombreRol = Rol.Cliente.ToString();
+
+    if (!await roleManager.RoleExistsAsync(nombreRol))
+    {
+        var resultado = await roleManager.CreateAsync(
+            new IdentityRole<Guid>(nombreRol));
+
+        if (!resultado.Succeeded)
+        {
+            var errores = string.Join(
+                "; ",
+                resultado.Errors.Select(e => e.Description));
+
+            throw new InvalidOperationException(
+                $"No se pudo crear el rol {nombreRol}: {errores}");
+        }
+    }
+}
 
 // ==========================================
 // 9. MANEJO GLOBAL DE EXCEPCIONES

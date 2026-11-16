@@ -1,5 +1,4 @@
-﻿
-using Charatec.Sorteo.Entities.Models;
+﻿using Charatec.Sorteo.Entities.Models;
 
 namespace Charatec.Sorteo.Data.Interfaces
 {

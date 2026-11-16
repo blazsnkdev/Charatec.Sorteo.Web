@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Charatec.Sorteo.Common.Results;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Charatec.Sorteo.Api.Responses;
 
@@ -134,6 +135,46 @@ public static class ApiResults
         return new ObjectResult(response)
         {
             StatusCode = statusCode
+        };
+    }
+    public static IActionResult FromResult<T>(
+    Result<T> result,
+    string successMessage = "Operación exitosa.",
+    int successStatusCode = StatusCodes.Status200OK)
+    {
+        if (result.IsSuccess)
+        {
+            return Response(
+                successStatusCode,
+                true,
+                successMessage,
+                result.Value);
+        }
+
+        var error = result.Error!;
+
+        return error.Code switch
+        {
+            "EMAIL_ALREADY_EXISTS" =>
+                Conflict(error.Message),
+
+            "INVALID_PASSWORD" or
+            "VALIDATION_ERROR" =>
+                BadRequest(error.Message),
+
+            "NOT_FOUND" =>
+                NotFound(error.Message),
+
+            "UNAUTHORIZED" =>
+                Unauthorized(error.Message),
+
+            "FORBIDDEN" =>
+                Forbidden(error.Message),
+
+            "BUSINESS_RULE_VIOLATION" =>
+                Unprocessable(error.Message),
+
+            _ => InternalServerError()
         };
     }
 }
