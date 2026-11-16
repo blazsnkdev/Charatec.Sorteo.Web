@@ -1,9 +1,6 @@
-<<<<<<< HEAD
+
 ﻿using System.ComponentModel.DataAnnotations;
-=======
-﻿
-using System.ComponentModel.DataAnnotations;
->>>>>>> backend
+
 
 namespace Charatec.Sorteo.Business.DTOs.Requests.Auth;
 
