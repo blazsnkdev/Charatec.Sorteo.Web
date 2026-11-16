@@ -8,6 +8,8 @@ namespace Charatec.Sorteo.Business.Interfaces
     public interface IAuthService
     {
         Task<Result<ClienteRegistradoResponse>> RegistrarClienteAsync(ClienteRegistrarRequest request, CancellationToken cancellationToken = default);
-
+        Task<Result<ClienteLoginResponse>> LoginAsync(
+     ClienteLoginRequest request,
+     CancellationToken cancellationToken = default);
     }
 }

@@ -1,16 +1,17 @@
 ﻿using Charatec.Sorteo.Business.DTOs.Requests.Auth;
 using Charatec.Sorteo.Business.DTOs.Responses.Auth;
 using Charatec.Sorteo.Business.Interfaces;
+using Charatec.Sorteo.Common.Interfaces;
 using Charatec.Sorteo.Common.Results;
 using Charatec.Sorteo.Data.Identity;
 using Charatec.Sorteo.Data.Interfaces;
 using Charatec.Sorteo.Entities.Enums;
 using Charatec.Sorteo.Entities.Models;
 using Microsoft.AspNetCore.Identity;
+using Charatec.Sorteo.Data.Identity;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
-using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
+using Charatec.Sorteo.Data.Context;
 
 namespace Charatec.Sorteo.Business.Services
 {
@@ -19,16 +20,27 @@ namespace Charatec.Sorteo.Business.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IClienteRepository _clienteRepository;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
+        private readonly SorteoDbContext _dbContext;
+
+        private readonly IJwtTokenService _jwtTokenService;
         public AuthService(
             IUnitOfWork unitOfWork,
             IClienteRepository clienteRepository,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            IJwtTokenService jwtTokenService,
+            SorteoDbContext dbContext)
         {
             _unitOfWork = unitOfWork;
             _clienteRepository = clienteRepository;
             _userManager = userManager;
+            _signInManager = signInManager;
+            _jwtTokenService = jwtTokenService;
+            _dbContext = dbContext;
         }
+        #region REGISTRAR CLIENTE INICIO
         public async Task<Result<ClienteRegistradoResponse>>
         RegistrarClienteAsync(
             ClienteRegistrarRequest request,
@@ -179,7 +191,7 @@ namespace Charatec.Sorteo.Business.Services
                 throw;
             }
         }
-
+        #endregion
         private static bool EsCorreoDuplicado(Exception exception)
         {
             var postgres = exception as PostgresException;
@@ -200,5 +212,157 @@ namespace Charatec.Sorteo.Business.Services
                 "UserNameIndex" or
                 "UX_AspNetUsers_NormalizedEmail";
         }
+
+
+        public async Task<Result<ClienteLoginResponse>> LoginAsync(
+            ClienteLoginRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            // ============================================
+            // 1. VALIDAR DATOS
+            // ============================================
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var email = request.Email?.Trim().ToLowerInvariant()
+                ?? string.Empty;
+
+            var password = request.Password ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(email) ||
+                string.IsNullOrWhiteSpace(password))
+            {
+                return Result<ClienteLoginResponse>.Failure(
+                    new Error(
+                        "VALIDATION_ERROR",
+                        "El correo y la contraseña son obligatorios."));
+            }
+
+            // ============================================
+            // 2. BUSCAR USUARIO CON IDENTITY
+            // ============================================
+
+            var usuario = await _userManager.FindByEmailAsync(email);
+
+            if (usuario is null)
+            {
+                return Result<ClienteLoginResponse>.Failure(
+                    new Error(
+                        "INVALID_CREDENTIALS",
+                        "Correo electrónico o contraseña incorrectos."));
+            }
+
+            // ============================================
+            // 3. VERIFICAR CONTRASEÑA Y BLOQUEO
+            // ============================================
+
+            var resultadoLogin =
+                await _signInManager.CheckPasswordSignInAsync(
+                    usuario,
+                    password,
+                    lockoutOnFailure: true);
+
+            if (resultadoLogin.IsLockedOut)
+            {
+                return Result<ClienteLoginResponse>.Failure(
+                    new Error(
+                        "ACCOUNT_LOCKED",
+                        "No se pudo iniciar sesión. Intenta más tarde."));
+            }
+
+            if (!resultadoLogin.Succeeded)
+            {
+                return Result<ClienteLoginResponse>.Failure(
+                    new Error(
+                        "INVALID_CREDENTIALS",
+                        "Correo electrónico o contraseña incorrectos."));
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            // ============================================
+            // 4. VERIFICAR USUARIO ACTIVO
+            // ============================================
+
+            if (!usuario.Activo)
+            {
+                return Result<ClienteLoginResponse>.Failure(
+                    new Error(
+                        "INVALID_CREDENTIALS",
+                        "Correo electrónico o contraseña incorrectos."));
+            }
+
+            // ============================================
+            // 5. OBTENER ROLES
+            // ============================================
+
+            var roles = await _userManager.GetRolesAsync(usuario);
+
+            // ============================================
+            // 6. OBTENER PERFIL DEL CLIENTE
+            // ============================================
+
+            var cliente = await _dbContext.Clientes
+                .AsNoTracking()
+                .FirstOrDefaultAsync(
+                    x => x.UsuarioId == usuario.Id,
+                    cancellationToken);
+
+            if (cliente is not null && !cliente.Activo)
+            {
+                return Result<ClienteLoginResponse>.Failure(
+                    new Error(
+                        "INVALID_CREDENTIALS",
+                        "Correo electrónico o contraseña incorrectos."));
+            }
+
+            if (roles.Contains(Rol.Cliente.ToString()) &&
+                cliente is null)
+            {
+                return Result<ClienteLoginResponse>.Failure(
+                    new Error(
+                        "INVALID_CREDENTIALS",
+                        "No se pudo iniciar sesión."));
+            }
+
+            // ============================================
+            // 7. GENERAR JWT
+            // ============================================
+
+            var jwt = _jwtTokenService.Generar(
+                usuario.Id,
+                usuario.Email ?? email,
+                roles);
+
+            // ============================================
+            // 8. CONSTRUIR DATOS DEL USUARIO
+            // ============================================
+
+            var usuarioResponse = new UsuarioAutenticadoResponse(
+                Id: usuario.Id,
+                Email: usuario.Email ?? email,
+                Nombres: cliente?.Nombres,
+                Apellidos: cliente?.Apellidos,
+                Roles: roles.ToArray()
+            );
+
+            // ============================================
+            // 9. CONSTRUIR RESPUESTA DE LOGIN
+            // ============================================
+
+            var response = new ClienteLoginResponse(
+                AccessToken: jwt.AccessToken,
+                TokenType: "Bearer",
+                ExpiresIn: jwt.ExpiresIn,
+                Usuario: usuarioResponse
+            );
+
+            // ============================================
+            // 10. RETORNAR RESULTADO EXITOSO
+            // ============================================
+
+            return Result<ClienteLoginResponse>.Success(response);
+        }
+
     }
 }

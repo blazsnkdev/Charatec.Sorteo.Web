@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.15" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.15">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -19,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Charatec.Sorteo.Business\Charatec.Sorteo.Business.csproj" />
+    <ProjectReference Include="..\Charatec.Sorteo.Common\Charatec.Sorteo.Common.csproj" />
     <ProjectReference Include="..\Charatec.Sorteo.Data\Charatec.Sorteo.Data.csproj" />
   </ItemGroup>
 

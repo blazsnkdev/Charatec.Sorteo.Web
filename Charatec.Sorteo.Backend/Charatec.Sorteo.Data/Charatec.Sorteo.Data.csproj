@@ -13,9 +13,11 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.23.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Charatec.Sorteo.Common\Charatec.Sorteo.Common.csproj" />
     <ProjectReference Include="..\Charatec.Sorteo.Entities\Charatec.Sorteo.Entities.csproj" />
   </ItemGroup>
 

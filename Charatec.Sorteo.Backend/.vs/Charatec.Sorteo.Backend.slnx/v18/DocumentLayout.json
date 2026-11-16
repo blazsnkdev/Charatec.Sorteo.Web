@@ -3,16 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{4D4A115A-7F63-15B9-5A8D-FCBCB7BE20A5}|Charatec.Sorteo.Api\\Charatec.Sorteo.Api.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4D4A115A-7F63-15B9-5A8D-FCBCB7BE20A5}|Charatec.Sorteo.Api\\Charatec.Sorteo.Api.csproj|solutionrelative:charatec.sorteo.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8F5D6541-69E8-B83F-7EC8-8511D2A73609}|Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.business\\dtos\\requests\\auth\\clienteregistrarrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8F5D6541-69E8-B83F-7EC8-8511D2A73609}|Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj|solutionrelative:charatec.sorteo.business\\dtos\\requests\\auth\\clienteregistrarrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8F5D6541-69E8-B83F-7EC8-8511D2A73609}|Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.business\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8F5D6541-69E8-B83F-7EC8-8511D2A73609}|Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj|solutionrelative:charatec.sorteo.business\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F5D6541-69E8-B83F-7EC8-8511D2A73609}|Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.business\\charatec.sorteo.business.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{8F5D6541-69E8-B83F-7EC8-8511D2A73609}|Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj|solutionrelative:charatec.sorteo.business\\charatec.sorteo.business.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4D4A115A-7F63-15B9-5A8D-FCBCB7BE20A5}|Charatec.Sorteo.Api\\Charatec.Sorteo.Api.csproj|c:\\users\\chara\\documents\\camilo\\proyectos\\charatec.sorteo\\charatec.sorteo.backend\\charatec.sorteo.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -26,61 +22,47 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Api\\Program.cs",
-              "RelativeDocumentMoniker": "Charatec.Sorteo.Api\\Program.cs",
-              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Api\\Program.cs",
-              "RelativeToolTip": "Charatec.Sorteo.Api\\Program.cs",
-              "ViewState": "AgIAAFQAAAAAAAAAAAAAAGQAAAAwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-16T18:36:56.973Z",
+              "DocumentIndex": 1,
+              "Title": "Charatec.Sorteo.Business",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj",
+              "RelativeToolTip": "Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-11-16T21:47:53.778Z",
               "EditorCaption": "",
-              "OwnerCaption": "%2"
+              "OwnerCaption": "Charatec.Sorteo.Business"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ClienteRegistrarRequest.cs",
-              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Business\\DTOs\\Requests\\Auth\\ClienteRegistrarRequest.cs",
-              "RelativeDocumentMoniker": "Charatec.Sorteo.Business\\DTOs\\Requests\\Auth\\ClienteRegistrarRequest.cs",
-              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Business\\DTOs\\Requests\\Auth\\ClienteRegistrarRequest.cs",
-              "RelativeToolTip": "Charatec.Sorteo.Business\\DTOs\\Requests\\Auth\\ClienteRegistrarRequest.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAQwCUAAAATAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Business\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "Charatec.Sorteo.Business\\Services\\AuthService.cs",
+              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Business\\Services\\AuthService.cs",
+              "RelativeToolTip": "Charatec.Sorteo.Business\\Services\\AuthService.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAowBsAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-16T18:35:39.385Z",
+              "WhenOpened": "2026-11-16T21:46:56.529Z",
               "EditorCaption": "",
               "OwnerCaption": "%2"
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Business\\Services\\AuthService.cs",
-              "RelativeDocumentMoniker": "Charatec.Sorteo.Business\\Services\\AuthService.cs",
-              "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Business\\Services\\AuthService.cs",
-              "RelativeToolTip": "Charatec.Sorteo.Business\\Services\\AuthService.cs",
-              "ViewState": "AgIAAFYAAAAAAAAAAAAhwGYAAABBAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-16T18:30:36.657Z",
-              "EditorCaption": "",
-              "OwnerCaption": "%2"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Api\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "Charatec.Sorteo.Api\\Controllers\\AuthController.cs",
               "ToolTip": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Api\\Controllers\\AuthController.cs",
               "RelativeToolTip": "Charatec.Sorteo.Api\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAqwBkAAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAQwBoAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-16T18:30:20.102Z",
+              "WhenOpened": "2026-11-16T21:46:36.478Z",
               "EditorCaption": "",
               "OwnerCaption": "%2"
             }
