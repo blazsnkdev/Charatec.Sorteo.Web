@@ -1,0 +1,239 @@
+
+/* =====================================
+   LOGIN - CORPORACIÓN CHARATEC
+===================================== */
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 22px 0 44px;
+}
+
+/* TARJETA PRINCIPAL */
+
+.login-card {
+  width: 100%;
+  max-width: 480px;
+  padding: 38px 42px;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  box-shadow: 0 14px 45px rgba(8, 12, 20, 0.08);
+}
+
+/* HEADER DE LOGIN */
+
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-icon {
+  width: 66px;
+  height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.login-brand {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: var(--color-black);
+}
+
+.login-subtitle {
+  margin-top: 4px;
+  font-size: 11px;
+  letter-spacing: 3px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.login-header h1 {
+  margin: 23px 0 10px;
+  font-size: 27px;
+  font-weight: 800;
+  color: var(--color-black);
+}
+
+.login-header p {
+  max-width: 320px;
+  margin: 0 auto;
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--color-muted);
+}
+
+/* CAMPOS */
+
+.form-field {
+  margin-bottom: 23px;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 9px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.form-field input {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 15px;
+  background: #ffffff;
+  border: 1px solid #d6e0e9;
+  border-radius: 10px;
+  color: var(--color-text);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.form-field input::placeholder {
+  color: #94a3b8;
+}
+
+.form-field input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(0, 59, 255, 0.10);
+}
+
+.field-error {
+  display: block;
+  margin-top: 7px;
+  color: #d92d20;
+  font-size: 11px;
+}
+
+/* CONTRASEÑA */
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 91px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  min-height: 34px;
+  padding: 0 9px;
+  border: none;
+  background: transparent;
+  color: var(--color-primary);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* BOTÓN PRINCIPAL */
+
+.login-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 52px;
+  margin-top: 8px;
+  padding: 12px;
+  background: var(--color-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.login-submit:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+}
+
+.login-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* ERROR DE API */
+
+.login-alert {
+  margin-bottom: 22px;
+  padding: 13px 15px;
+  border: 1px solid #fecaca;
+  border-radius: 9px;
+  background: #fff1f2;
+  color: #b42318;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+/* PARTE INFERIOR */
+
+.login-bottom {
+  margin-top: 30px;
+  padding-top: 25px;
+  text-align: center;
+  border-top: 1px solid var(--color-border);
+}
+
+.login-bottom p {
+  margin: 0 0 9px;
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.login-bottom a {
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.login-bottom a:hover {
+  text-decoration: underline;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 540px) {
+  .login-page {
+    padding: 12px 0 28px;
+  }
+
+  .login-card {
+    padding: 28px 22px;
+    border-radius: 13px;
+  }
+
+  .login-header h1 {
+    font-size: 24px;
+  }
+
+  .login-brand {
+    font-size: 13px;
+  }
+}

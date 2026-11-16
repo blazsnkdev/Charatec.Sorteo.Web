@@ -8,6 +8,8 @@ import { ApiResponse } from '../../../core/models/api-response.model';
 
 import { ClienteRegistrarRequest } from '../models/cliente-registrar-request.model';
 import { ClienteRegistradoResponse } from '../models/cliente-registrado-response.model';
+import { ClienteLoginRequest } from '../models/cliente-login-request.model';
+import { ClienteLoginResponse } from '../models/cliente-login-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +26,16 @@ export class AuthService {
 
     return this.http.post<ApiResponse<ClienteRegistradoResponse>>(
       `${this.apiUrl}/register`,
+      request
+    );
+  }
+
+  login(
+    request: ClienteLoginRequest
+  ): Observable<ApiResponse<ClienteLoginResponse>> {
+
+    return this.http.post<ApiResponse<ClienteLoginResponse>>(
+      `${this.apiUrl}/login`,
       request
     );
   }
