@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Charatec.Sorteo.Common\Charatec.Sorteo.Common.csproj" />
     <ProjectReference Include="..\Charatec.Sorteo.Entities\Charatec.Sorteo.Entities.csproj" />
   </ItemGroup>
 

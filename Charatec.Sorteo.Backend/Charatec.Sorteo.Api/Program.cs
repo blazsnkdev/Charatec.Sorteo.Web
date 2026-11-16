@@ -1,17 +1,22 @@
 using Charatec.Sorteo.Api.Responses;
+using Charatec.Sorteo.Business.Interfaces;
+using Charatec.Sorteo.Business.Services;
+using Charatec.Sorteo.Common.Interfaces;
 using Charatec.Sorteo.Data.Context;
 using Charatec.Sorteo.Data.Identity;
 using Charatec.Sorteo.Data.Interfaces;
 using Charatec.Sorteo.Data.Repositories;
+using Charatec.Sorteo.Data.Services;
+using Charatec.Sorteo.Entities.Enums;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.RateLimiting;
-using Charatec.Sorteo.Business.Interfaces;
-using Charatec.Sorteo.Business.Services;
-using Charatec.Sorteo.Entities.Enums;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -77,7 +82,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 //Services
 builder.Services.AddScoped<IAuthService,AuthService>();
-
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 // ==========================================
 // 5. ASP.NET CORE IDENTITY
@@ -107,13 +112,12 @@ builder.Services
     })
     .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<SorteoDbContext>()
+    .AddSignInManager()
     .AddDefaultTokenProviders();
 
 // ==========================================
 // 6. AUTORIZACION
 // ==========================================
-
-builder.Services.AddAuthorization();
 
 // La autenticación JWT se configurará
 // cuando implementemos el inicio de sesión.
@@ -144,6 +148,23 @@ builder.Services.AddRateLimiter(options =>
             });
     });
 
+    options.AddPolicy("login", context =>
+    {
+        var ip = context.Connection.RemoteIpAddress?
+            .ToString() ?? "unknown";
+
+        return RateLimitPartition.GetFixedWindowLimiter(
+            ip,
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0,
+                AutoReplenishment = true
+            });
+    });
+
+
     // Respuesta JSON cuando se supera el límite
     options.OnRejected = async (context, cancellationToken) =>
     {
@@ -163,6 +184,75 @@ builder.Services.AddRateLimiter(options =>
             cancellationToken);
     };
 });
+//LOGIN AUTH
+
+var jwtIssuer = builder.Configuration["Jwt:Issuer"]
+    ?? throw new InvalidOperationException("Falta Jwt:Issuer.");
+
+var jwtAudience = builder.Configuration["Jwt:Audience"]
+    ?? throw new InvalidOperationException("Falta Jwt:Audience.");
+
+var jwtEncodedKey = builder.Configuration["Jwt:Key"]
+    ?? throw new InvalidOperationException("Falta Jwt:Key.");
+
+var jwtKeyBytes = Convert.FromBase64String(jwtEncodedKey);
+
+if (jwtKeyBytes.Length < 32)
+{
+    throw new InvalidOperationException(
+        "La clave JWT debe tener al menos 32 bytes.");
+}
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.MapInboundClaims = false;
+
+
+        options.TokenValidationParameters =
+            new TokenValidationParameters
+            {
+                // Validar firma
+                ValidateIssuerSigningKey = true,
+
+                IssuerSigningKey =
+                    new SymmetricSecurityKey(jwtKeyBytes),
+
+                // Algoritmo permitido
+                ValidAlgorithms = new[]
+                {
+            SecurityAlgorithms.HmacSha256
+                },
+
+                // Validar emisor
+                ValidateIssuer = true,
+                ValidIssuer = jwtIssuer,
+
+                // Validar audiencia
+                ValidateAudience = true,
+                ValidAudience = jwtAudience,
+
+                // Validar expiración
+                ValidateLifetime = true,
+                RequireExpirationTime = true,
+
+                // Requerir firma
+                RequireSignedTokens = true,
+
+                ClockSkew = TimeSpan.FromSeconds(30),
+
+                // Claims
+                NameClaimType = ClaimTypes.Name,
+                RoleClaimType = ClaimTypes.Role
+            };
+
+    });
+
+builder.Services.AddAuthorization();
+
+
+
 
 // ==========================================
 // 8. CONSTRUIR APLICACION
@@ -249,25 +339,9 @@ if (app.Environment.IsDevelopment())
 // ==========================================
 
 app.UseHttpsRedirection();
-
 app.UseRouting();
-
-// Protección contra solicitudes abusivas
 app.UseRateLimiter();
-
-// Cuando configuremos JWT agregaremos:
-// app.UseAuthentication();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
-// ==========================================
-// 12. CONTROLADORES
-// ==========================================
-
 app.MapControllers();
-
-// ==========================================
-// 13. INICIAR APLICACION
-// ==========================================
-
 app.Run();

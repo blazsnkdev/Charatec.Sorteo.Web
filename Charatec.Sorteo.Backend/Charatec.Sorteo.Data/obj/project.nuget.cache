@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "AhineNG5zvw=",
+  "dgSpecHash": "7oQbOqyA0LM=",
   "success": true,
   "projectFilePath": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Data\\Charatec.Sorteo.Data.csproj",
   "expectedPackageFiles": [
@@ -56,5 +56,15 @@
     "C:\\Users\\chara\\.nuget\\packages\\system.composition.typedparts\\9.0.0\\system.composition.typedparts.9.0.0.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\system.identitymodel.tokens.jwt\\8.23.0\\system.identitymodel.tokens.jwt.8.23.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "message": "Problema al leer el archivo de caché C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Data\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
+      "projectPath": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Data\\Charatec.Sorteo.Data.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Data\\Charatec.Sorteo.Data.csproj",
+      "targetGraphs": []
+    }
+  ]
 }

@@ -5,7 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Charatec.Sorteo.Common\Charatec.Sorteo.Common.csproj" />
     <ProjectReference Include="..\Charatec.Sorteo.Data\Charatec.Sorteo.Data.csproj" />

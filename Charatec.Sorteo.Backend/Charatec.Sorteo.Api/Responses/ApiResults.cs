@@ -137,10 +137,11 @@ public static class ApiResults
             StatusCode = statusCode
         };
     }
+
     public static IActionResult FromResult<T>(
-    Result<T> result,
-    string successMessage = "Operación exitosa.",
-    int successStatusCode = StatusCodes.Status200OK)
+        Result<T> result,
+        string successMessage = "Operación exitosa.",
+        int successStatusCode = StatusCodes.Status200OK)
     {
         if (result.IsSuccess)
         {
@@ -155,6 +156,7 @@ public static class ApiResults
 
         return error.Code switch
         {
+            // REGISTRO
             "EMAIL_ALREADY_EXISTS" =>
                 Conflict(error.Message),
 
@@ -162,14 +164,23 @@ public static class ApiResults
             "VALIDATION_ERROR" =>
                 BadRequest(error.Message),
 
-            "NOT_FOUND" =>
-                NotFound(error.Message),
-
+            // LOGIN
+            "INVALID_CREDENTIALS" or
             "UNAUTHORIZED" =>
                 Unauthorized(error.Message),
 
+            "ACCOUNT_LOCKED" =>
+                Error(
+                    StatusCodes.Status423Locked,
+                    error.Message),
+
+            "ACCOUNT_DISABLED" or
             "FORBIDDEN" =>
                 Forbidden(error.Message),
+
+            // OTROS
+            "NOT_FOUND" =>
+                NotFound(error.Message),
 
             "BUSINESS_RULE_VIOLATION" =>
                 Unprocessable(error.Message),
@@ -177,4 +188,5 @@ public static class ApiResults
             _ => InternalServerError()
         };
     }
+
 }

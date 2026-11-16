@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Charatec.Sorteo.Business\Charatec.Sorteo.Business.csproj" />
+    <ProjectReference Include="..\Charatec.Sorteo.Common\Charatec.Sorteo.Common.csproj" />
     <ProjectReference Include="..\Charatec.Sorteo.Data\Charatec.Sorteo.Data.csproj" />
   </ItemGroup>
 

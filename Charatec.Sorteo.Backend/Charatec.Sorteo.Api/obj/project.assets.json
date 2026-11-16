@@ -851,7 +851,10 @@
         },
         "runtime": {
           "bin/placeholder/Charatec.Sorteo.Business.dll": {}
-        }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       },
       "Charatec.Sorteo.Common/1.0.0": {
         "type": "project",
@@ -867,6 +870,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
+          "Charatec.Sorteo.Common": "1.0.0",
           "Charatec.Sorteo.Entities": "1.0.0",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.15",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.3",
@@ -2766,6 +2770,7 @@
   "projectFileDependencyGroups": {
     "net10.0": [
       "Charatec.Sorteo.Business >= 1.0.0",
+      "Charatec.Sorteo.Common >= 1.0.0",
       "Charatec.Sorteo.Data >= 1.0.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 10.0.15",
       "Microsoft.AspNetCore.OpenApi >= 10.0.15",
@@ -2808,6 +2813,9 @@
           "projectReferences": {
             "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj": {
               "projectPath": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj"
+            },
+            "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Common\\Charatec.Sorteo.Common.csproj": {
+              "projectPath": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Common\\Charatec.Sorteo.Common.csproj"
             },
             "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Data\\Charatec.Sorteo.Data.csproj": {
               "projectPath": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Data\\Charatec.Sorteo.Data.csproj"
@@ -3287,5 +3295,13 @@
         }
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problema al leer el archivo de caché C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Api\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0."
+    }
+  ]
 }

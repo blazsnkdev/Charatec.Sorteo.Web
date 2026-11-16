@@ -28,5 +28,23 @@ namespace Charatec.Sorteo.Api.Controllers
                 "Cliente registrado correctamente.",
                 StatusCodes.Status201Created);
         }
+
+        [HttpPost("login")]
+        [AllowAnonymous]
+        [EnableRateLimiting("login")]
+        public async Task<IActionResult> Login(
+            [FromBody] ClienteLoginRequest request,
+            CancellationToken cancellationToken)
+        {
+            var result = await authService.LoginAsync(
+                request,
+                cancellationToken);
+
+            return ApiResults.FromResult(
+                result,
+                "Inicio de sesión exitoso.",
+                StatusCodes.Status200OK);
+        }
+
     }
 }

@@ -1,17 +1,20 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "5Q11jMTXrjY=",
+=======
+  "dgSpecHash": "s+zw7H2sO3g=",
+>>>>>>> backend
   "success": true,
   "projectFilePath": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\chara\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\10.0.15\\microsoft.aspnetcore.cryptography.internal.10.0.15.nupkg.sha512",
-    "C:\\Users\\chara\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\10.0.15\\microsoft.aspnetcore.cryptography.keyderivation.10.0.15.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.aspnetcore.identity.entityframeworkcore\\10.0.15\\microsoft.aspnetcore.identity.entityframeworkcore.10.0.15.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.bcl.cryptography\\10.0.2\\microsoft.bcl.cryptography.10.0.2.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.entityframeworkcore\\10.0.15\\microsoft.entityframeworkcore.10.0.15.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\10.0.15\\microsoft.entityframeworkcore.abstractions.10.0.15.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\10.0.15\\microsoft.entityframeworkcore.analyzers.10.0.15.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\10.0.15\\microsoft.entityframeworkcore.relational.10.0.15.nupkg.sha512",
+<<<<<<< HEAD
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\10.0.15\\microsoft.extensions.caching.abstractions.10.0.15.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.extensions.caching.memory\\10.0.15\\microsoft.extensions.caching.memory.10.0.15.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.extensions.configuration\\10.0.15\\microsoft.extensions.configuration.10.0.15.nupkg.sha512",
@@ -28,6 +31,8 @@
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.extensions.options\\10.0.15\\microsoft.extensions.options.10.0.15.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.extensions.options.configurationextensions\\10.0.15\\microsoft.extensions.options.configurationextensions.10.0.15.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.extensions.primitives\\10.0.15\\microsoft.extensions.primitives.10.0.15.nupkg.sha512",
+=======
+>>>>>>> backend
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.identitymodel.abstractions\\8.23.0\\microsoft.identitymodel.abstractions.8.23.0.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\8.23.0\\microsoft.identitymodel.jsonwebtokens.8.23.0.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.identitymodel.logging\\8.23.0\\microsoft.identitymodel.logging.8.23.0.nupkg.sha512",
