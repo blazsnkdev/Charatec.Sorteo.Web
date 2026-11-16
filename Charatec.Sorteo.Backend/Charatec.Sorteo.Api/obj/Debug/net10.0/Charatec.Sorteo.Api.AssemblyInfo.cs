@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Charatec.Sorteo.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+aba27c1a67f2a2913aeda9bee07c08ce680c5047")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+481bf82654ac3ac9c70412fdb2013403ca0bde70")]
 [assembly: System.Reflection.AssemblyProductAttribute("Charatec.Sorteo.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Charatec.Sorteo.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

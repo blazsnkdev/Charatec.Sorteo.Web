@@ -9,7 +9,7 @@ namespace Charatec.Sorteo.Entities.Models
         public string Email { get; set; } = string.Empty!;
         public string NumeroCelular { get; set; }
         public string Direccion { get; set; }
-        public string PasswordHashed { get; set; } = string.Empty!;//TODO: esto hace que sea no null
+        public string PasswordHashed { get; set; } = string.Empty!;
         public Rol Rol { get; set; }
         public bool Activo { get; set; }
         public DateTimeOffset FechaRegistro { get; set; }

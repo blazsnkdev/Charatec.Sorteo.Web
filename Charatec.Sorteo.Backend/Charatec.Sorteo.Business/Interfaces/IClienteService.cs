@@ -2,11 +2,6 @@
 using Charatec.Sorteo.Business.DTOs.Responses;
 using Charatec.Sorteo.Common.Results;
 
-namespace Charatec.Sorteo.Business.Interface
+namespace Charatec.Sorteo.Business.Interfaces
 {
-    public interface IClienteService
-    {
-        Result<Task<RegistrarClienteResponse>>
-            RegistrarClienteAsync(RegistrarClienteRequest request);
-    }
 }

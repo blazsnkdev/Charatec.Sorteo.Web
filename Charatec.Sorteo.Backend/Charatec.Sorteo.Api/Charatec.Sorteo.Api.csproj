@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Charatec.Sorteo.Business\Charatec.Sorteo.Business.csproj" />
     <ProjectReference Include="..\Charatec.Sorteo.Data\Charatec.Sorteo.Data.csproj" />
   </ItemGroup>
 

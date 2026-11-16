@@ -692,6 +692,30 @@
           "buildTransitive/net8.0/_._": {}
         }
       },
+      "Charatec.Sorteo.Business/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Charatec.Sorteo.Common": "1.0.0",
+          "Charatec.Sorteo.Data": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Charatec.Sorteo.Business.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Charatec.Sorteo.Business.dll": {}
+        }
+      },
+      "Charatec.Sorteo.Common/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "compile": {
+          "bin/placeholder/Charatec.Sorteo.Common.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Charatec.Sorteo.Common.dll": {}
+        }
+      },
       "Charatec.Sorteo.Data/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -2341,6 +2365,16 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "Charatec.Sorteo.Business/1.0.0": {
+      "type": "project",
+      "path": "../Charatec.Sorteo.Business/Charatec.Sorteo.Business.csproj",
+      "msbuildProject": "../Charatec.Sorteo.Business/Charatec.Sorteo.Business.csproj"
+    },
+    "Charatec.Sorteo.Common/1.0.0": {
+      "type": "project",
+      "path": "../Charatec.Sorteo.Common/Charatec.Sorteo.Common.csproj",
+      "msbuildProject": "../Charatec.Sorteo.Common/Charatec.Sorteo.Common.csproj"
+    },
     "Charatec.Sorteo.Data/1.0.0": {
       "type": "project",
       "path": "../Charatec.Sorteo.Data/Charatec.Sorteo.Data.csproj",
@@ -2354,6 +2388,7 @@
   },
   "projectFileDependencyGroups": {
     "net10.0": [
+      "Charatec.Sorteo.Business >= 1.0.0",
       "Charatec.Sorteo.Data >= 1.0.0",
       "Microsoft.AspNetCore.OpenApi >= 10.0.15",
       "Microsoft.EntityFrameworkCore.Design >= 10.0.15",
@@ -2393,6 +2428,9 @@
           "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
+            "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj": {
+              "projectPath": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj"
+            },
             "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Data\\Charatec.Sorteo.Data.csproj": {
               "projectPath": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Data\\Charatec.Sorteo.Data.csproj"
             }

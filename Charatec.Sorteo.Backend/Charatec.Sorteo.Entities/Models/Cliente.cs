@@ -5,7 +5,7 @@ public class Cliente
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    // Relación con ASP.NET Core Identity
+
     public Guid UsuarioId { get; set; }
 
     public DateOnly? FechaNacimiento { get; set; }
@@ -23,7 +23,7 @@ public class Cliente
 
     public bool Activo { get; set; } = true;
 
-    // Relaciones con entidades del negocio
+
     public ICollection<Suscripcion> Suscripciones { get; set; }
         = new List<Suscripcion>();
 

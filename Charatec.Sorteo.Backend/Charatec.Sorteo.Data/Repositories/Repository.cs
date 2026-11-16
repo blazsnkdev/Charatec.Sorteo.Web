@@ -15,7 +15,7 @@ namespace Charatec.Sorteo.Data.Repositories
             _dbSet = dbContext.Set<T>();
         }
 
-        public async Task AddAsync(T entity)
+        public async Task AddAsync(T entity, CancellationToken cancellationToken)
         {
             await _dbSet.AddAsync(entity);
         }
