@@ -1,0 +1,177 @@
+
+<section class="registro-page">
+
+  <div class="registro-card">
+
+    <!-- ENCABEZADO -->
+    <header class="registro-header">
+      <div class="brand">CORPORACIÓN CHARATEC</div>
+
+      <h1>Crear cuenta</h1>
+
+      <p>
+        Regístrate y comienza a disfrutar de
+        nuevas oportunidades con nosotros.
+      </p>
+    </header>
+
+    <!-- RESPUESTA EXITOSA -->
+    @if (mensajeExito()) {
+      <div class="alert success" role="status">
+        {{ mensajeExito() }}
+      </div>
+    }
+
+    <!-- ERROR GENERAL -->
+    @if (mensajeError()) {
+      <div class="alert error" role="alert">
+        {{ mensajeError() }}
+      </div>
+    }
+
+    <!-- ERRORES DEL BACKEND -->
+    @if (errores().length > 0) {
+      <div class="alert error" role="alert">
+        @for (error of errores(); track $index) {
+          <p>{{ error }}</p>
+        }
+      </div>
+    }
+
+    <!-- FORMULARIO -->
+    <form
+      [formGroup]="formulario"
+      (ngSubmit)="registrar()"
+      novalidate
+    >
+
+      <div class="columns">
+
+        <div class="field">
+          <label for="nombres">Nombres</label>
+
+          <input
+            id="nombres"
+            type="text"
+            formControlName="nombres"
+            autocomplete="given-name"
+            placeholder="Ingrese sus nombres"
+          />
+
+          @if (
+            formulario.controls.nombres.touched &&
+            formulario.controls.nombres.invalid
+          ) {
+            <small>
+              Ingresa entre 2 y 100 caracteres.
+            </small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="apellidos">Apellidos</label>
+
+          <input
+            id="apellidos"
+            type="text"
+            formControlName="apellidos"
+            autocomplete="family-name"
+            placeholder="Ingrese sus apellidos"
+          />
+
+          @if (
+            formulario.controls.apellidos.touched &&
+            formulario.controls.apellidos.invalid
+          ) {
+            <small>
+              Ingresa entre 2 y 100 caracteres.
+            </small>
+          }
+        </div>
+
+      </div>
+
+      <div class="field">
+        <label for="email">Correo electrónico</label>
+
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          placeholder="correo@ejemplo.com"
+        />
+
+        @if (
+          formulario.controls.email.touched &&
+          formulario.controls.email.invalid
+        ) {
+          <small>Ingresa un correo válido.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="telefono">Número de celular</label>
+
+        <input
+          id="telefono"
+          type="tel"
+          formControlName="telefono"
+          inputmode="numeric"
+          autocomplete="tel"
+          maxlength="9"
+          placeholder="987654321"
+        />
+
+        @if (
+          formulario.controls.telefono.touched &&
+          formulario.controls.telefono.invalid
+        ) {
+          <small>
+            Ingresa un número de 9 dígitos que comience con 9.
+          </small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Contraseña</label>
+
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          autocomplete="new-password"
+          placeholder="Mínimo 6 caracteres"
+        />
+
+        @if (
+          formulario.controls.password.touched &&
+          formulario.controls.password.invalid
+        ) {
+          <small>
+            La contraseña debe tener al menos 6 caracteres.
+          </small>
+        }
+      </div>
+
+      <!-- BOTÓN -->
+      <button
+        type="submit"
+        [disabled]="cargando()"
+      >
+        {{ cargando() ? 'Registrando...' : 'Crear cuenta' }}
+      </button>
+
+    </form>
+
+    <!-- PIE DEL FORMULARIO -->
+    <div class="registro-bottom">
+      <p>
+        ¿Ya tienes una cuenta?
+        <span>Próximamente podrás iniciar sesión.</span>
+      </p>
+    </div>
+
+  </div>
+
+</section>

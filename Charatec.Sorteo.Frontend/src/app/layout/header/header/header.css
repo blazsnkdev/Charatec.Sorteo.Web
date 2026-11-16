@@ -1,0 +1,284 @@
+
+/* =========================================
+   HEADER CORPORACIÓN CHARATEC
+========================================= */
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.site-header {
+  width: 100%;
+  position: relative;
+  z-index: 20;
+}
+
+/* =========================================
+   BARRA SUPERIOR
+========================================= */
+
+.topbar {
+  width: 100%;
+  background: #003bff;
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.topbar-content {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.topbar-brand {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.topbar-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.topbar-links a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.topbar-links a:hover {
+  text-decoration: underline;
+}
+
+/* =========================================
+   HEADER PRINCIPAL
+========================================= */
+
+.main-header {
+  width: 100%;
+  background: #080c14;
+  color: #ffffff;
+}
+
+.header-content {
+  min-height: 105px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+/* =========================================
+   LOGO
+========================================= */
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+
+/* LOGO CIRCULAR */
+
+.logo-image {
+  display: block;
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #0a0a0a;
+}
+
+/* RESPONSIVE - CELULARES */
+
+@media (max-width: 700px) {
+  .logo-image {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+
+/* =========================================
+   ACCIONES DEL HEADER
+========================================= */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 25px;
+}
+
+.header-tag {
+  color: #d4ddeb;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.account-link {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 20px;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: 0.2s ease;
+}
+
+.account-link:hover {
+  color: #003bff;
+  background: #ffffff;
+}
+
+/* =========================================
+   NAVBAR
+========================================= */
+
+.navbar {
+  width: 100%;
+  background: #003bff;
+}
+
+.nav-content {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.nav-content a,
+.nav-upcoming {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 54px;
+  padding: 0 20px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+  transition: background-color 0.2s ease;
+}
+
+.nav-content a:hover,
+.nav-content a.active {
+  background: rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+}
+
+.nav-upcoming {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* =========================================
+   BOTÓN MENÚ MÓVIL
+========================================= */
+
+.menu-toggle {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #70809b;
+  border-radius: 8px;
+  background: transparent;
+  color: #ffffff;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+  .header-tag {
+    display: none;
+  }
+
+  .nav-content a,
+  .nav-upcoming {
+    padding: 0 12px;
+    font-size: 11px;
+  }
+}
+
+/* =========================================
+   MÓVIL
+========================================= */
+
+@media (max-width: 700px) {
+
+  .topbar-content {
+    min-height: 33px;
+    justify-content: center;
+  }
+
+  .topbar-brand,
+  .topbar-links span {
+    display: none;
+  }
+
+  .header-content {
+    min-height: 80px;
+    gap: 12px;
+  }
+
+  .logo-image {
+    width: 65px;
+    height: 65px;
+  }
+
+  .header-actions {
+    gap: 12px;
+  }
+
+  .account-link {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+  }
+
+  .navbar {
+    display: none;
+  }
+
+  .navbar.nav-open {
+    display: block;
+  }
+
+  .nav-content {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 8px 0;
+  }
+
+  .nav-content a,
+  .nav-upcoming {
+    width: 100%;
+    min-height: 46px;
+    justify-content: flex-start;
+    padding: 12px 14px;
+    white-space: normal;
+  }
+}

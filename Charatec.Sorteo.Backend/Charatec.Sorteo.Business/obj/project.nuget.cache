@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "ThdPBDMdnrA=",
+  "dgSpecHash": "5Q11jMTXrjY=",
   "success": true,
   "projectFilePath": "C:\\Users\\chara\\Documents\\camilo\\proyectos\\Charatec.Sorteo\\Charatec.Sorteo.Backend\\Charatec.Sorteo.Business\\Charatec.Sorteo.Business.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\10.0.15\\microsoft.aspnetcore.cryptography.internal.10.0.15.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\10.0.15\\microsoft.aspnetcore.cryptography.keyderivation.10.0.15.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.aspnetcore.identity.entityframeworkcore\\10.0.15\\microsoft.aspnetcore.identity.entityframeworkcore.10.0.15.nupkg.sha512",
+    "C:\\Users\\chara\\.nuget\\packages\\microsoft.bcl.cryptography\\10.0.2\\microsoft.bcl.cryptography.10.0.2.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.entityframeworkcore\\10.0.15\\microsoft.entityframeworkcore.10.0.15.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\10.0.15\\microsoft.entityframeworkcore.abstractions.10.0.15.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\10.0.15\\microsoft.entityframeworkcore.analyzers.10.0.15.nupkg.sha512",
@@ -27,8 +28,13 @@
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.extensions.options\\10.0.15\\microsoft.extensions.options.10.0.15.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.extensions.options.configurationextensions\\10.0.15\\microsoft.extensions.options.configurationextensions.10.0.15.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\microsoft.extensions.primitives\\10.0.15\\microsoft.extensions.primitives.10.0.15.nupkg.sha512",
+    "C:\\Users\\chara\\.nuget\\packages\\microsoft.identitymodel.abstractions\\8.23.0\\microsoft.identitymodel.abstractions.8.23.0.nupkg.sha512",
+    "C:\\Users\\chara\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\8.23.0\\microsoft.identitymodel.jsonwebtokens.8.23.0.nupkg.sha512",
+    "C:\\Users\\chara\\.nuget\\packages\\microsoft.identitymodel.logging\\8.23.0\\microsoft.identitymodel.logging.8.23.0.nupkg.sha512",
+    "C:\\Users\\chara\\.nuget\\packages\\microsoft.identitymodel.tokens\\8.23.0\\microsoft.identitymodel.tokens.8.23.0.nupkg.sha512",
     "C:\\Users\\chara\\.nuget\\packages\\npgsql\\10.0.3\\npgsql.10.0.3.nupkg.sha512",
-    "C:\\Users\\chara\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\10.0.3\\npgsql.entityframeworkcore.postgresql.10.0.3.nupkg.sha512"
+    "C:\\Users\\chara\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\10.0.3\\npgsql.entityframeworkcore.postgresql.10.0.3.nupkg.sha512",
+    "C:\\Users\\chara\\.nuget\\packages\\system.identitymodel.tokens.jwt\\8.23.0\\system.identitymodel.tokens.jwt.8.23.0.nupkg.sha512"
   ],
   "logs": []
 }

@@ -1,0 +1,30 @@
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-main {
+  display: block;
+  flex: 1;
+  width: 100%;
+  background: var(--color-background);
+}
+
+.page-container {
+  padding-top: 44px;
+  padding-bottom: 70px;
+}
+
+@media (max-width: 700px) {
+  .page-container {
+    padding-top: 24px;
+    padding-bottom: 40px;
+  }
+}

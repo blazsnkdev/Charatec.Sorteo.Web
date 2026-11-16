@@ -1,0 +1,94 @@
+
+<header class="site-header">
+
+
+
+  <!-- CABECERA PRINCIPAL -->
+  <div class="main-header">
+    <div class="container header-content">
+
+ 
+
+      <a
+        routerLink="/"
+        class="logo"
+        aria-label="Corporación Charatec - Inicio"
+        (click)="cerrarMenu()"
+      >
+        <img
+          src="/images/corporacion_charatec_logo.png"
+          alt="Corporación Charatec"
+          class="logo-image"
+        />
+      </a>
+
+
+
+      <div class="header-actions">
+
+        <span class="header-tag">
+          Tu próxima oportunidad comienza aquí
+        </span>
+
+        <a
+          routerLink="/#"
+          class="account-link"
+        >
+          Mi Carrito
+        </a>
+
+        <button
+          type="button"
+          class="menu-toggle"
+          (click)="alternarMenu()"
+          [attr.aria-expanded]="menuAbierto()"
+          aria-controls="main-navigation"
+          aria-label="Abrir o cerrar menú"
+        >
+          ☰
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- NAVEGACIÓN -->
+  <nav
+    id="main-navigation"
+    class="navbar"
+    aria-label="Navegación principal"
+    [class.nav-open]="menuAbierto()"
+  >
+    <div class="container nav-content">
+
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="cerrarMenu()"
+      >
+        Inicio
+      </a>
+
+      <a
+        routerLink="/registro"
+        routerLinkActive="active"
+        (click)="cerrarMenu()"
+      >
+        Crear cuenta
+      </a>
+
+      <!-- Activar cuando existan las rutas -->
+      <span class="nav-upcoming">
+        Sorteos próximamente
+      </span>
+
+      <span class="nav-upcoming">
+        Suscripciones próximamente
+      </span>
+
+    </div>
+  </nav>
+
+</header>
