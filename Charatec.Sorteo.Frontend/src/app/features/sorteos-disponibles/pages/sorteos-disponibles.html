@@ -1,0 +1,443 @@
+
+<section class="sorteos-cliente">
+
+  <!-- ENCABEZADO -->
+  <header class="sorteos-encabezado">
+
+    <div>
+      <span class="sorteos-etiqueta">
+        CHARATEC SORTEOS
+      </span>
+
+      <h1>Sorteos disponibles</h1>
+
+      <p>
+        Explora los sorteos publicados,
+        conoce sus premios y descubre cómo participar.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="btn-actualizar"
+      [disabled]="cargando()"
+      (click)="cargarSorteos()"
+    >
+      Actualizar
+    </button>
+
+  </header>
+
+  <!-- RESUMEN -->
+  <div class="sorteos-resumen">
+
+    <div>
+      <strong>{{ totalRegistros() }}</strong>
+      <span>Sorteos publicados</span>
+    </div>
+
+    <p>
+      Consulta las condiciones y fechas
+      antes de participar.
+    </p>
+
+  </div>
+
+  <!-- ERROR -->
+  @if (error()) {
+
+    <div class="sorteos-error">
+
+      <strong>No pudimos cargar los sorteos</strong>
+
+      <p>{{ error() }}</p>
+
+      <button
+        type="button"
+        (click)="cargarSorteos()"
+      >
+        Reintentar
+      </button>
+
+    </div>
+
+  }
+
+  <!-- CARGANDO -->
+  @if (cargando()) {
+
+    <div class="sorteos-cargando">
+
+      <div class="cargando-icono"></div>
+
+      <p>Cargando sorteos disponibles...</p>
+
+    </div>
+
+  } @else if (!error()) {
+
+    <!-- TARJETAS -->
+    <div class="sorteos-grid">
+
+      @for (sorteo of sorteos(); track sorteo.id) {
+
+        <article class="sorteo-card">
+
+          <!-- IMAGEN -->
+          <div class="sorteo-imagen">
+
+            @if (sorteo.imagenPortadaUrl) {
+
+              <img
+                [src]="sorteo.imagenPortadaUrl"
+                [alt]="sorteo.titulo"
+                loading="lazy"
+              />
+
+            } @else {
+
+              <div class="sorteo-sin-imagen">
+                <span class="sorteo-sin-imagen-icono">🎁</span>
+                <span>Imagen próximamente</span>
+              </div>
+
+            }
+
+            <span class="sorteo-estado">
+              {{ estadoFechas(sorteo) }}
+            </span>
+
+          </div>
+
+          <!-- CONTENIDO -->
+          <div class="sorteo-contenido">
+
+            <div class="sorteo-tipo">
+              Sorteo publicado
+            </div>
+
+            <h2>{{ sorteo.titulo }}</h2>
+
+            <p class="sorteo-descripcion">
+              {{ sorteo.descripcion }}
+            </p>
+
+            <!-- APORTE -->
+            <div class="sorteo-aporte">
+
+              <div>
+                <span>Aporte mínimo</span>
+
+                <strong>
+                  {{
+                    sorteo.aporteMinimo
+                    | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+                  }}
+                </strong>
+              </div>
+
+              <span class="sorteo-aporte-icono">
+                S/
+              </span>
+
+            </div>
+
+            <!-- FECHAS -->
+            <div class="sorteo-fechas">
+
+              <div>
+                <span>Inicio</span>
+
+                <strong>
+                  {{
+                    sorteo.fechaInicio
+                    | date:'dd/MM/yyyy':'-0500':'es-PE'
+                  }}
+                </strong>
+              </div>
+
+              <div>
+                <span>Cierre</span>
+
+                <strong>
+                  {{
+                    sorteo.fechaCierre
+                    | date:'dd/MM/yyyy':'-0500':'es-PE'
+                  }}
+                </strong>
+              </div>
+
+            </div>
+
+            <!-- BOTON -->
+            <button
+              type="button"
+              class="btn-detalles"
+              (click)="verDetalles(sorteo)"
+            >
+              Ver detalles
+            </button>
+
+          </div>
+
+        </article>
+
+      } @empty {
+
+        <div class="sorteos-vacio">
+
+          <div class="vacio-icono">🎁</div>
+
+          <h2>No hay sorteos publicados</h2>
+
+          <p>
+            Todavía no se han publicado sorteos.
+            Vuelve a consultar más adelante.
+          </p>
+
+        </div>
+
+      }
+
+    </div>
+
+    <!-- PAGINACION -->
+    @if (totalPaginas() > 1) {
+
+      <footer class="sorteos-paginacion">
+
+        <span>
+          Página {{ pagina() }} de {{ totalPaginas() }}
+        </span>
+
+        <nav aria-label="Paginación de sorteos">
+
+          <button
+            type="button"
+            [disabled]="!tieneAnterior() || cargando()"
+            (click)="irPagina(pagina() - 1)"
+          >
+            Anterior
+          </button>
+
+          @for (numero of paginasVisibles(); track numero) {
+
+            <button
+              type="button"
+              [class.activa]="numero === pagina()"
+              [disabled]="cargando()"
+              (click)="irPagina(numero)"
+            >
+              {{ numero }}
+            </button>
+
+          }
+
+          <button
+            type="button"
+            [disabled]="!tieneSiguiente() || cargando()"
+            (click)="irPagina(pagina() + 1)"
+          >
+            Siguiente
+          </button>
+
+        </nav>
+
+      </footer>
+
+    }
+
+  }
+
+</section>
+
+
+<!-- ==========================================
+     MODAL VER DETALLES
+========================================== -->
+
+@if (modalAbierto()) {
+
+  @if (sorteoSeleccionado(); as sorteo) {
+
+    <div
+      class="cliente-modal-overlay"
+      (click)="cerrarDetalles()"
+    >
+
+      <div
+        class="cliente-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="detalle-cliente-titulo"
+        (click)="$event.stopPropagation()"
+      >
+
+        <header class="cliente-modal-header">
+
+          <div>
+            <h2 id="detalle-cliente-titulo">
+              Detalles del sorteo
+            </h2>
+
+            <p>Información de la publicación</p>
+          </div>
+
+          <button
+            type="button"
+            class="cliente-modal-cerrar"
+            aria-label="Cerrar"
+            (click)="cerrarDetalles()"
+          >
+            &times;
+          </button>
+
+        </header>
+
+        <div class="cliente-modal-body">
+
+          <!-- IMAGEN -->
+          <div class="cliente-modal-imagen">
+
+            @if (sorteo.imagenPortadaUrl) {
+              <img
+                [src]="sorteo.imagenPortadaUrl"
+                [alt]="sorteo.titulo"
+              />
+            } @else {
+              <div class="cliente-modal-placeholder">
+                🎁
+              </div>
+            }
+
+          </div>
+
+          <span class="sorteo-tipo">
+            {{ estadoFechas(sorteo) }}
+          </span>
+
+          <h3>{{ sorteo.titulo }}</h3>
+
+          <p class="cliente-modal-descripcion">
+            {{ sorteo.descripcion }}
+          </p>
+
+          <!-- IMPORTE Y META -->
+          <div class="cliente-modal-grid">
+
+            <div class="cliente-modal-dato">
+              <span>Aporte mínimo</span>
+
+              <strong class="dato-destacado">
+                {{
+                  sorteo.aporteMinimo
+                  | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+                }}
+              </strong>
+            </div>
+
+            <div class="cliente-modal-dato">
+              <span>Meta de recaudación</span>
+
+              <strong>
+                @if (sorteo.metaRecaudacion !== null) {
+
+                  {{
+                    sorteo.metaRecaudacion
+                    | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+                  }}
+
+                } @else {
+                  Sin meta definida
+                }
+              </strong>
+            </div>
+
+          </div>
+
+          <!-- FECHAS -->
+          <div class="cliente-modal-seccion">
+
+            <h4>Fechas importantes</h4>
+
+            <div class="cliente-modal-grid">
+
+              <div class="cliente-modal-dato">
+                <span>Fecha de inicio</span>
+
+                <strong>
+                  {{
+                    sorteo.fechaInicio
+                    | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
+                  }}
+                </strong>
+              </div>
+
+              <div class="cliente-modal-dato">
+                <span>Fecha de cierre</span>
+
+                <strong>
+                  {{
+                    sorteo.fechaCierre
+                    | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
+                  }}
+                </strong>
+              </div>
+
+              <div class="cliente-modal-dato">
+                <span>Fecha del sorteo</span>
+
+                <strong>
+                  @if (sorteo.fechaSorteo) {
+
+                    {{
+                      sorteo.fechaSorteo
+                      | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
+                    }}
+
+                  } @else {
+                    Por definir
+                  }
+                </strong>
+              </div>
+
+              <div class="cliente-modal-dato">
+                <span>Estado</span>
+
+                <strong>{{ sorteo.estado }}</strong>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <footer class="cliente-modal-footer">
+
+          <button
+            type="button"
+            class="btn-modal-volver"
+            (click)="cerrarDetalles()"
+          >
+            Cerrar
+          </button>
+
+          <button
+            type="button"
+            class="btn-participar"
+            disabled
+            title="La inscripción se implementará próximamente"
+          >
+            Participar próximamente
+          </button>
+
+        </footer>
+
+      </div>
+
+    </div>
+
+  }
+
+}

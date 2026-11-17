@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
-
+import { clienteGuard } from './core/guards/cliente.guard';
 export const routes: Routes = [
 
   {
@@ -28,6 +28,16 @@ export const routes: Routes = [
       import('./features/auth/pages/login/login')
         .then(m => m.Login)
   },
+
+{
+  path: 'sorteos',
+  loadComponent: () =>
+    import(
+      './features/sorteos-disponibles/pages/sorteos-disponibles'
+    ).then(m => m.SorteosDisponibles),
+  canActivate: [clienteGuard]
+},
+
 
   {
     path: 'home',

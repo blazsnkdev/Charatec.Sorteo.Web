@@ -4,4 +4,8 @@ using Charatec.Sorteo.Common.Results;
 
 namespace Charatec.Sorteo.Business.Interfaces
 {
+    public interface IClienteService
+    {
+
+    }
 }

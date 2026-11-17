@@ -20,6 +20,17 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularFrontend", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
     {
@@ -66,6 +77,7 @@ builder.Services.AddDbContext<SorteoDbContext>(options =>
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<ISorteoRepository, SorteoRepository>();
+builder.Services.AddScoped<ISorteoClienteService, SorteoClienteService>();
 //Services
 builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
@@ -309,6 +321,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseCors("AngularFrontend");
 app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
