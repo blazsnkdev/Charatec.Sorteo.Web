@@ -162,8 +162,8 @@ button[type="submit"] {
   min-height: 49px;
   margin-top: 8px;
   padding: 13px 18px;
-  background: #36c1e8;
-  color: #07131b;
+  background: #003bff;
+  color: #ffffff;
   border: none;
   border-radius: 9px;
   font-size: 15px;
@@ -175,7 +175,7 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover:not(:disabled) {
-  background: #109ec7;
+  background: #002dcc;
   color: #ffffff;
   transform: translateY(-1px);
 }

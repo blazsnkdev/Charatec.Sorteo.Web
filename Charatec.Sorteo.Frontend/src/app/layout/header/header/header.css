@@ -266,3 +266,75 @@
     height: 38px;
   }
 }
+
+/* ==========================================
+   ICONOS DERECHOS DEL NAVBAR
+========================================== */
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  gap: 10px;
+}
+
+.nav-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+  padding: 0;
+
+  color: #ffffff;
+  background: transparent;
+
+  border: none;
+  border-radius: 7px;
+
+  text-decoration: none;
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.nav-icon-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.nav-icon-button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
+
+.nav-icon-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.logout-button:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 480px) {
+  .nav-actions {
+    gap: 4px;
+  }
+
+  .nav-icon-button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .nav-icon-button svg {
+    width: 20px;
+    height: 20px;
+  }
+}
