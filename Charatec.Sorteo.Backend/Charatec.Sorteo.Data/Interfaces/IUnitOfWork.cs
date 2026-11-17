@@ -2,9 +2,10 @@
 {
     public interface IUnitOfWork
     {
+        public ISorteoRepository _sorteoRepository { get; }
         Task BeginTransactionAsync();
 
-        Task<int> SaveChangesAsync();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
         Task CommitTransactionAsync();
 

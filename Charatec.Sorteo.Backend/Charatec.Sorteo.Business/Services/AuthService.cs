@@ -8,7 +8,6 @@ using Charatec.Sorteo.Data.Interfaces;
 using Charatec.Sorteo.Entities.Enums;
 using Charatec.Sorteo.Entities.Models;
 using Microsoft.AspNetCore.Identity;
-using Charatec.Sorteo.Data.Identity;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Charatec.Sorteo.Data.Context;
@@ -25,6 +24,7 @@ namespace Charatec.Sorteo.Business.Services
         private readonly SorteoDbContext _dbContext;
 
         private readonly IJwtTokenService _jwtTokenService;
+        #region constructor
         public AuthService(
             IUnitOfWork unitOfWork,
             IClienteRepository clienteRepository,
@@ -40,6 +40,7 @@ namespace Charatec.Sorteo.Business.Services
             _jwtTokenService = jwtTokenService;
             _dbContext = dbContext;
         }
+        #endregion
         #region REGISTRAR CLIENTE INICIO
         public async Task<Result<ClienteRegistradoResponse>>
         RegistrarClienteAsync(
@@ -212,16 +213,11 @@ namespace Charatec.Sorteo.Business.Services
                 "UserNameIndex" or
                 "UX_AspNetUsers_NormalizedEmail";
         }
-
-
+        #region LOGIN INICIO SESION
         public async Task<Result<ClienteLoginResponse>> LoginAsync(
             ClienteLoginRequest request,
             CancellationToken cancellationToken = default)
         {
-            // ============================================
-            // 1. VALIDAR DATOS
-            // ============================================
-
             cancellationToken.ThrowIfCancellationRequested();
 
             var email = request.Email?.Trim().ToLowerInvariant()
@@ -238,10 +234,6 @@ namespace Charatec.Sorteo.Business.Services
                         "El correo y la contraseña son obligatorios."));
             }
 
-            // ============================================
-            // 2. BUSCAR USUARIO CON IDENTITY
-            // ============================================
-
             var usuario = await _userManager.FindByEmailAsync(email);
 
             if (usuario is null)
@@ -251,10 +243,6 @@ namespace Charatec.Sorteo.Business.Services
                         "INVALID_CREDENTIALS",
                         "Correo electrónico o contraseña incorrectos."));
             }
-
-            // ============================================
-            // 3. VERIFICAR CONTRASEÑA Y BLOQUEO
-            // ============================================
 
             var resultadoLogin =
                 await _signInManager.CheckPasswordSignInAsync(
@@ -280,10 +268,6 @@ namespace Charatec.Sorteo.Business.Services
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            // ============================================
-            // 4. VERIFICAR USUARIO ACTIVO
-            // ============================================
-
             if (!usuario.Activo)
             {
                 return Result<ClienteLoginResponse>.Failure(
@@ -292,15 +276,7 @@ namespace Charatec.Sorteo.Business.Services
                         "Correo electrónico o contraseña incorrectos."));
             }
 
-            // ============================================
-            // 5. OBTENER ROLES
-            // ============================================
-
             var roles = await _userManager.GetRolesAsync(usuario);
-
-            // ============================================
-            // 6. OBTENER PERFIL DEL CLIENTE
-            // ============================================
 
             var cliente = await _dbContext.Clientes
                 .AsNoTracking()
@@ -325,18 +301,10 @@ namespace Charatec.Sorteo.Business.Services
                         "No se pudo iniciar sesión."));
             }
 
-            // ============================================
-            // 7. GENERAR JWT
-            // ============================================
-
             var jwt = _jwtTokenService.Generar(
                 usuario.Id,
                 usuario.Email ?? email,
                 roles);
-
-            // ============================================
-            // 8. CONSTRUIR DATOS DEL USUARIO
-            // ============================================
 
             var usuarioResponse = new UsuarioAutenticadoResponse(
                 Id: usuario.Id,
@@ -346,10 +314,6 @@ namespace Charatec.Sorteo.Business.Services
                 Roles: roles.ToArray()
             );
 
-            // ============================================
-            // 9. CONSTRUIR RESPUESTA DE LOGIN
-            // ============================================
-
             var response = new ClienteLoginResponse(
                 AccessToken: jwt.AccessToken,
                 TokenType: "Bearer",
@@ -357,12 +321,8 @@ namespace Charatec.Sorteo.Business.Services
                 Usuario: usuarioResponse
             );
 
-            // ============================================
-            // 10. RETORNAR RESULTADO EXITOSO
-            // ============================================
-
             return Result<ClienteLoginResponse>.Success(response);
         }
-
+#endregion
     }
 }

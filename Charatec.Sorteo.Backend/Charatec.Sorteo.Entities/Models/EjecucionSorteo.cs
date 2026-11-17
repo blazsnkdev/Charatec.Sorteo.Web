@@ -22,7 +22,7 @@ public class EjecucionSorteo
     public EstadoEjecucionSorteo Estado { get; set; }
         = EstadoEjecucionSorteo.Preparada;
 
-    public Sorteo Sorteo { get; set; } = null!;
+    public TblSorteo Sorteo { get; set; } = null!;
 
     public ICollection<DetallePadronSorteo> DetallesPadron
     { get; set; } = new List<DetallePadronSorteo>();

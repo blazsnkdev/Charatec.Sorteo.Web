@@ -15,7 +15,7 @@ public class PremioSorteo
 
     public decimal CostoAlPublicar { get; set; }
 
-    public Sorteo Sorteo { get; set; } = null!;
+    public TblSorteo Sorteo { get; set; } = null!;
 
     public Producto Producto { get; set; } = null!;
 

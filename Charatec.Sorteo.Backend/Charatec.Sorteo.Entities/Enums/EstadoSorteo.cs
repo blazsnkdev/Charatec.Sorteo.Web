@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Charatec.Sorteo.Entities.Enums
+﻿namespace Charatec.Sorteo.Entities.Enums
 {
     public enum EstadoSorteo
     {

@@ -19,7 +19,7 @@ public class Participacion
 
     public Cliente Cliente { get; set; } = null!;
 
-    public Sorteo Sorteo { get; set; } = null!;
+    public TblSorteo Sorteo { get; set; } = null!;
 
     public ICollection<Aporte> Aportes { get; set; }
         = new List<Aporte>();

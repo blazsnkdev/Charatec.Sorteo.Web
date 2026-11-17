@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-using SorteoEntity = Charatec.Sorteo.Entities.Models.Sorteo;
-
 namespace Charatec.Sorteo.Data.Context;
 
 public class SorteoDbContext
@@ -32,7 +30,7 @@ public class SorteoDbContext
 
     public DbSet<Producto> Productos => Set<Producto>();
 
-    public DbSet<SorteoEntity> Sorteos => Set<SorteoEntity>();
+    public DbSet<TblSorteo> Sorteos => Set<TblSorteo>();
 
     public DbSet<PremioSorteo> PremiosSorteo
         => Set<PremioSorteo>();
@@ -246,7 +244,7 @@ public class SorteoDbContext
         // 6. SORTEOS
         // ========================================
 
-        modelBuilder.Entity<SorteoEntity>(entity =>
+        modelBuilder.Entity<TblSorteo>(entity =>
         {
             entity.ToTable("Sorteos", t =>
             {

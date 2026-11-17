@@ -20,10 +20,6 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ==========================================
-// 1. CONTROLADORES Y VALIDACIONES HTTP
-// ==========================================
-
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
     {
@@ -47,21 +43,10 @@ builder.Services.AddControllers()
         };
     });
 
-// ==========================================
-// 2. DOCUMENTACION OPENAPI
-// ==========================================
 
 builder.Services.AddOpenApi();
 
-// ==========================================
-// 3. PROTECCION DE DATOS
-// ==========================================
-
 builder.Services.AddDataProtection();
-
-// ==========================================
-// 4. CONEXION A POSTGRESQL
-// ==========================================
 
 var connectionString = builder.Configuration
     .GetConnectionString("PostgreSQL");
@@ -80,9 +65,11 @@ builder.Services.AddDbContext<SorteoDbContext>(options =>
 //Repositories
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<ISorteoRepository, SorteoRepository>();
 //Services
 builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<ISorteoService, SorteoService>();   
 
 // ==========================================
 // 5. ASP.NET CORE IDENTITY
@@ -213,36 +200,29 @@ builder.Services
         options.TokenValidationParameters =
             new TokenValidationParameters
             {
-                // Validar firma
                 ValidateIssuerSigningKey = true,
 
                 IssuerSigningKey =
                     new SymmetricSecurityKey(jwtKeyBytes),
 
-                // Algoritmo permitido
                 ValidAlgorithms = new[]
                 {
             SecurityAlgorithms.HmacSha256
                 },
 
-                // Validar emisor
                 ValidateIssuer = true,
                 ValidIssuer = jwtIssuer,
 
-                // Validar audiencia
                 ValidateAudience = true,
                 ValidAudience = jwtAudience,
 
-                // Validar expiración
                 ValidateLifetime = true,
                 RequireExpirationTime = true,
 
-                // Requerir firma
                 RequireSignedTokens = true,
 
                 ClockSkew = TimeSpan.FromSeconds(30),
 
-                // Claims
                 NameClaimType = ClaimTypes.Name,
                 RoleClaimType = ClaimTypes.Role
             };
@@ -252,45 +232,42 @@ builder.Services
 builder.Services.AddAuthorization();
 
 
-
-
-// ==========================================
-// 8. CONSTRUIR APLICACION
-// ==========================================
-
 var app = builder.Build();
 
-// ==========================================
-// INICIALIZAR ROLES DE IDENTITY
-// ==========================================
 
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider
         .GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
-    var nombreRol = Rol.Cliente.ToString();
-
-    if (!await roleManager.RoleExistsAsync(nombreRol))
+    var roles = new[]
     {
-        var resultado = await roleManager.CreateAsync(
-            new IdentityRole<Guid>(nombreRol));
+        Rol.Cliente,
+        Rol.Administrador
+    };
 
-        if (!resultado.Succeeded)
+    foreach (var rol in roles)
+    {
+        var nombreRol = rol.ToString();
+
+        if (!await roleManager.RoleExistsAsync(nombreRol))
         {
-            var errores = string.Join(
-                "; ",
-                resultado.Errors.Select(e => e.Description));
+            var resultado = await roleManager.CreateAsync(
+                new IdentityRole<Guid>(nombreRol));
 
-            throw new InvalidOperationException(
-                $"No se pudo crear el rol {nombreRol}: {errores}");
+            if (!resultado.Succeeded)
+            {
+                var errores = string.Join(
+                    "; ",
+                    resultado.Errors.Select(e => e.Description));
+
+                throw new InvalidOperationException(
+                    $"No se pudo crear el rol {nombreRol}: {errores}");
+            }
         }
     }
 }
 
-// ==========================================
-// 9. MANEJO GLOBAL DE EXCEPCIONES
-// ==========================================
 
 app.UseExceptionHandler(errorApp =>
 {
@@ -325,18 +302,10 @@ app.UseExceptionHandler(errorApp =>
     });
 });
 
-// ==========================================
-// 10. DOCUMENTACION EN DESARROLLO
-// ==========================================
-
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
-// ==========================================
-// 11. MIDDLEWARES
-// ==========================================
 
 app.UseHttpsRedirection();
 app.UseRouting();

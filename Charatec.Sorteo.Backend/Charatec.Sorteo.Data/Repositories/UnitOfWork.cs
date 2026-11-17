@@ -12,9 +12,12 @@ public sealed class UnitOfWork : IUnitOfWork, IDisposable
 
     private bool _disposed;
 
-    public UnitOfWork(SorteoDbContext dbContext)
+    public ISorteoRepository _sorteoRepository { get;}
+
+    public UnitOfWork(SorteoDbContext dbContext, ISorteoRepository sorteoRepository)
     {
         _dbContext = dbContext;
+        _sorteoRepository = sorteoRepository;
     }
 
     // ============================================
@@ -40,12 +43,12 @@ public sealed class UnitOfWork : IUnitOfWork, IDisposable
     // 2. GUARDAR CAMBIOS
     // ============================================
 
-    public async Task<int> SaveChangesAsync()
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         ObjectDisposedException.ThrowIf(
             _disposed, this);
 
-        return await _dbContext.SaveChangesAsync();
+        return await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
     // ============================================
