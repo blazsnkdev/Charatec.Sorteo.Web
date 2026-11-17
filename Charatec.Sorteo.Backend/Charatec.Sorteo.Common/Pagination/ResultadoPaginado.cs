@@ -1,10 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Charatec.Sorteo.Common.Pagination;
 
-namespace Charatec.Sorteo.Common.Pagination
+public sealed record ResultadoPaginado<T>(
+    IReadOnlyList<T> Registros,
+    int Pagina,
+    int TamanoPagina,
+    int TotalRegistros
+)
 {
-    internal class ResultadoPaginacion
-    {
-    }
+    public int TotalPaginas =>
+        TotalRegistros == 0
+            ? 0
+            : (int)Math.Ceiling(
+                (double)TotalRegistros / TamanoPagina
+            );
+
+    public bool TienePaginaAnterior => Pagina > 1;
+
+    public bool TienePaginaSiguiente =>
+        Pagina < TotalPaginas;
 }

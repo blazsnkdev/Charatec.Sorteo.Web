@@ -1,4 +1,6 @@
-﻿namespace Charatec.Sorteo.Data.Interfaces
+﻿using Charatec.Sorteo.Entities.Models;
+
+namespace Charatec.Sorteo.Data.Interfaces
 {
     public interface IRepository<T> where T : class
     {
