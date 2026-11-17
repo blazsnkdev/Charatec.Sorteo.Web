@@ -1,0 +1,638 @@
+<section class="publicaciones">
+
+  <!-- ENCABEZADO -->
+  <header class="encabezado">
+    <div>
+      <h1>Publicaciones</h1>
+      <p>Administración general de sorteos.</p>
+    </div>
+
+    <button type="button" class="btn-nueva-publicacion" (click)="abrirCrear()">
+      <span aria-hidden="true">＋</span>
+      Nueva publicación
+    </button>
+  </header>
+
+  <!-- FILTROS -->
+  <div class="filtros">
+
+    <div class="campo">
+      <label for="estado">Estado del sorteo</label>
+
+      <select id="estado" [value]="estado() ?? ''" (change)="cambiarEstado($event)">
+        <option value="">Todos los estados</option>
+        <option value="1">Borrador</option>
+        <option value="2">Publicado</option>
+        <option value="3">Cerrado</option>
+        <option value="4">Finalizado</option>
+        <option value="5">Cancelado</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label for="tamano">Registros por página</label>
+
+      <select id="tamano" [value]="tamanoPagina()" (change)="cambiarTamano($event)">
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+      </select>
+    </div>
+
+    <div class="contador">
+      Total: <strong>{{ totalRegistros() }}</strong>
+    </div>
+
+  </div>
+
+  <!-- ERROR DEL LISTADO -->
+  @if (error()) {
+  <div class="mensaje-error">
+    <span>{{ error() }}</span>
+
+    <button type="button" (click)="cargarSorteos()">
+      Reintentar
+    </button>
+  </div>
+  }
+
+  <!-- TABLA -->
+  <div class="tabla-contenedor">
+    <table>
+
+      <thead>
+        <tr>
+          <th>Imagen</th>
+          <th>Título del sorteo</th>
+          <th>Estado</th>
+          <th>Aporte mínimo</th>
+          <th>Meta</th>
+          <th>Fecha de inicio</th>
+          <th>Fecha de cierre</th>
+          <th class="columna-acciones">Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        @if (cargando()) {
+        <tr>
+          <td colspan="8" class="estado-tabla">
+            Cargando sorteos...
+          </td>
+        </tr>
+        } @else {
+
+        @for (sorteo of sorteos(); track sorteo.id) {
+        <tr>
+
+          <!-- IMAGEN -->
+          <td>
+            @if (sorteo.imagenPortadaUrl) {
+            <img class="portada" [src]="sorteo.imagenPortadaUrl" [alt]="sorteo.titulo" loading="lazy" />
+            } @else {
+            <div class="sin-imagen">
+              Sin imagen
+            </div>
+            }
+          </td>
+
+          <!-- TITULO -->
+          <td class="titulo-sorteo">
+            {{ sorteo.titulo }}
+          </td>
+
+          <!-- ESTADO -->
+          <td>
+            <span class="estado" [ngClass]="sorteo.estado.toLowerCase()">
+              {{ sorteo.estado }}
+            </span>
+          </td>
+
+          <!-- APORTE -->
+          <td>
+            {{
+            sorteo.aporteMinimo
+            | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+            }}
+          </td>
+
+          <!-- META -->
+          <td>
+            @if (
+            sorteo.metaRecaudacion !== null &&
+            sorteo.metaRecaudacion !== undefined
+            ) {
+            {{
+            sorteo.metaRecaudacion
+            | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+            }}
+            } @else {
+            <span class="texto-secundario">
+              Sin meta
+            </span>
+            }
+          </td>
+
+          <!-- FECHA INICIO -->
+          <td>
+            {{
+            sorteo.fechaInicio
+            | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
+            }}
+          </td>
+
+          <!-- FECHA CIERRE -->
+          <td>
+            {{
+            sorteo.fechaCierre
+            | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
+            }}
+          </td>
+
+          <!-- ACCIONES -->
+          <td class="columna-acciones">
+            <button type="button" class="btn-ver-detalle" [attr.aria-label]="'Administrar ' + sorteo.titulo"
+              [title]="'Ver y administrar ' + sorteo.titulo" (click)="abrirDetalle(sorteo.id)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                <path d="M2.062 12.348a1 1 0 0 1 0-.696
+                         10.75 10.75 0 0 1 19.876 0
+                         1 1 0 0 1 0 .696
+                         10.75 10.75 0 0 1-19.876 0" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </td>
+
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="8" class="estado-tabla">
+            No se encontraron sorteos.
+          </td>
+        </tr>
+        }
+
+        }
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PAGINACION -->
+  <footer class="paginacion">
+    <p>
+      Página {{ pagina() }} de {{ totalPaginas() }}
+    </p>
+
+    <nav aria-label="Paginación de sorteos">
+
+      <button type="button" [disabled]="pagina() === 1 || cargando()" (click)="irPagina(pagina() - 1)">
+        Anterior
+      </button>
+
+      @for (numero of paginasVisibles(); track numero) {
+      <button type="button" [class.activa]="numero === pagina()" [disabled]="cargando()"
+        [attr.aria-current]="numero === pagina() ? 'page' : null" (click)="irPagina(numero)">
+        {{ numero }}
+      </button>
+      }
+
+      <button type="button" [disabled]="pagina() >= totalPaginas() || cargando()" (click)="irPagina(pagina() + 1)">
+        Siguiente
+      </button>
+
+    </nav>
+  </footer>
+
+</section>
+
+
+<!-- ======================================== -->
+<!-- MODAL EDITAR Y PUBLICAR                  -->
+<!-- ======================================== -->
+
+@if (modalAbierto()) {
+
+<div class="modal-overlay" (click)="cerrarDetalle()">
+
+  <div class="modal-contenido modal-editar" role="dialog" aria-modal="true" aria-labelledby="modal-titulo"
+    (click)="$event.stopPropagation()">
+
+    <!-- CABECERA -->
+    <header class="modal-header">
+
+      <div>
+        <h2 id="modal-titulo">
+          Administrar publicación
+        </h2>
+
+      </div>
+
+      <button type="button" class="modal-cerrar" aria-label="Cerrar modal" [disabled]="procesandoDetalle()"
+        (click)="cerrarDetalle()">
+        &times;
+      </button>
+
+    </header>
+
+    <!-- CARGANDO -->
+    @if (cargandoDetalle()) {
+
+    <div class="modal-mensaje">
+      Consultando información del sorteo...
+    </div>
+
+    } @else {
+
+    <!-- MENSAJE DE ERROR -->
+    @if (errorDetalle()) {
+    <div class="modal-alerta-error">
+      {{ errorDetalle() }}
+    </div>
+    }
+
+    <!-- MENSAJE DE EXITO -->
+    @if (mensajeDetalle()) {
+    <div class="modal-exito">
+      {{ mensajeDetalle() }}
+    </div>
+    }
+
+    <!-- DETALLE -->
+    @if (detalleSorteo(); as sorteo) {
+
+    <div class="modal-body">
+
+      <!-- ESTADO -->
+      <div class="modal-estado-actual">
+        <div>
+          <span class="texto-secundario">
+            Estado actual
+          </span>
+
+        </div>
+
+        <span class="estado" [ngClass]="sorteo.estado.toLowerCase()">
+          {{ sorteo.estado }}
+        </span>
+      </div>
+
+      @if (!detalleEditable) {
+      <div class="aviso-no-editable">
+        Este sorteo no se encuentra en estado
+        Borrador. Los campos son de solo lectura.
+      </div>
+      }
+
+      <!-- PORTADA -->
+      <div class="modal-imagen">
+
+        @if (sorteo.imagenPortadaUrl) {
+        <img [src]="sorteo.imagenPortadaUrl" [alt]="sorteo.titulo" />
+        } @else {
+        <div class="modal-sin-imagen">
+          Sin imagen de portada
+        </div>
+        }
+
+      </div>
+
+      <!-- FORMULARIO EDITABLE -->
+      <fieldset class="formulario-campos" [disabled]="!detalleEditable || procesandoDetalle()">
+
+        <div class="form-campo">
+          <label for="editar-titulo">
+            Título del sorteo *
+          </label>
+
+          <input id="editar-titulo" type="text" minlength="5" maxlength="180" [(ngModel)]="formularioDetalle.titulo" />
+        </div>
+
+        <div class="form-campo">
+          <label for="editar-descripcion">
+            Descripción *
+          </label>
+
+          <textarea id="editar-descripcion" rows="4" minlength="10" maxlength="3000"
+            [(ngModel)]="formularioDetalle.descripcion"></textarea>
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-campo">
+            <label for="editar-aporte">
+              Aporte mínimo (S/) *
+            </label>
+
+            <input id="editar-aporte" type="number" min="0.01" step="0.01"
+              [(ngModel)]="formularioDetalle.aporteMinimo" />
+          </div>
+
+          <div class="form-campo">
+            <label for="editar-meta">
+              Meta de recaudación (S/)
+            </label>
+
+            <input id="editar-meta" type="number" min="0.01" step="0.01"
+              [(ngModel)]="formularioDetalle.metaRecaudacion" />
+          </div>
+
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-campo">
+            <label for="editar-inicio">
+              Fecha de inicio *
+            </label>
+
+            <input id="editar-inicio" type="datetime-local" [(ngModel)]="formularioDetalle.fechaInicio" />
+          </div>
+
+          <div class="form-campo">
+            <label for="editar-cierre">
+              Fecha de cierre *
+            </label>
+
+            <input id="editar-cierre" type="datetime-local" [(ngModel)]="formularioDetalle.fechaCierre" />
+          </div>
+
+        </div>
+
+        <div class="form-campo">
+          <label for="editar-fecha-sorteo">
+            Fecha del sorteo
+          </label>
+
+          <input id="editar-fecha-sorteo" type="datetime-local" [(ngModel)]="formularioDetalle.fechaSorteo" />
+        </div>
+
+      </fieldset>
+
+      <!-- INFORMACION DEL REGISTRO -->
+      <div class="modal-seccion">
+
+        <h4>Información del registro</h4>
+
+        <div class="modal-grid">
+
+          <div class="modal-dato">
+            <span>Fecha de creación</span>
+
+            <strong>
+              {{
+              sorteo.fechaCreacion
+              | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
+              }}
+            </strong>
+          </div>
+
+          <div class="modal-dato">
+            <span>Administrador responsable</span>
+
+            <strong class="modal-id">
+              {{ sorteo.administradorUsuarioId }}
+            </strong>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    }
+
+    }
+
+    <!-- ACCIONES -->
+    <footer class="modal-footer modal-footer-editar">
+
+      <button type="button" class="btn-cancelar-crear" [disabled]="procesandoDetalle()" (click)="cerrarDetalle()">
+        Cerrar
+      </button>
+
+      @if (detalleSorteo() && detalleEditable) {
+
+      <!-- PUT -->
+      <button type="button" class="btn-guardar-cambios" [disabled]="procesandoDetalle() || cargandoDetalle()"
+        (click)="guardarCambiosDetalle()">
+        @if (procesandoDetalle()) {
+        Procesando...
+        } @else {
+        Guardar 
+        }
+      </button>
+
+      <!-- PATCH -->
+      <button type="button" class="btn-publicar-sorteo" [disabled]="procesandoDetalle() || cargandoDetalle()"
+        (click)="publicarSorteoDetalle()">
+        Publicar 
+      </button>
+
+      }
+
+    </footer>
+
+  </div>
+</div>
+}
+
+
+<!-- ======================================== -->
+<!-- MODAL CREAR PUBLICACION                  -->
+<!-- ======================================== -->
+
+@if (modalCrearAbierto()) {
+
+<div class="modal-overlay" (click)="cerrarCrear()">
+
+  <div class="modal-contenido modal-crear" role="dialog" aria-modal="true" aria-labelledby="crear-titulo"
+    (click)="$event.stopPropagation()">
+
+    <header class="modal-header">
+
+      <div>
+        <h2 id="crear-titulo">
+          Nueva publicación
+        </h2>
+
+        <p>
+          Registrar un nuevo sorteo como borrador
+        </p>
+      </div>
+
+      <button type="button" class="modal-cerrar" aria-label="Cerrar formulario" [disabled]="guardandoSorteo()"
+        (click)="cerrarCrear()">
+        &times;
+      </button>
+
+    </header>
+
+    <!-- FORMULARIO CREAR -->
+    <form id="form-crear-sorteo" class="modal-body" (ngSubmit)="guardarNuevoSorteo()">
+
+      @if (errorCrear()) {
+      <div class="modal-alerta-error">
+        {{ errorCrear() }}
+      </div>
+      }
+
+      @if (sorteoCreadoId()) {
+      <div class="aviso-guardado">
+        <strong>El borrador ya fue registrado.</strong>
+
+        <p>ID: {{ sorteoCreadoId() }}</p>
+
+        @if (archivoPortada()) {
+        <p>
+          Puedes reintentar subir la imagen
+          sin volver a crear el sorteo.
+        </p>
+        }
+      </div>
+      }
+
+      <fieldset class="formulario-campos" [disabled]="guardandoSorteo() || !!sorteoCreadoId()">
+
+        <!-- TITULO -->
+        <div class="form-campo">
+          <label for="crear-titulo-input">
+            Título del sorteo *
+          </label>
+
+          <input id="crear-titulo-input" name="titulo" type="text" minlength="5" maxlength="180" required
+            [(ngModel)]="formularioCrear.titulo" placeholder="PROMOCIÓN LAPTOPS LENOVO SLIM 3" />
+        </div>
+
+        <!-- DESCRIPCION -->
+        <div class="form-campo">
+          <label for="crear-descripcion">
+            Descripción *
+          </label>
+
+          <textarea id="crear-descripcion" name="descripcion" rows="3" minlength="10" maxlength="3000" required
+            [(ngModel)]="formularioCrear.descripcion" placeholder="Participa por una laptop para oficina"></textarea>
+        </div>
+
+        <!-- IMPORTES -->
+        <div class="form-grid">
+
+          <div class="form-campo">
+            <label for="crear-aporte">
+              Aporte mínimo (S/) *
+            </label>
+
+            <input id="crear-aporte" name="aporteMinimo" type="number" min="0.01" step="0.01" required
+              [(ngModel)]="formularioCrear.aporteMinimo" />
+          </div>
+
+          <div class="form-campo">
+            <label for="crear-meta">
+              Meta de recaudación (S/)
+            </label>
+
+            <input id="crear-meta" name="metaRecaudacion" type="number" min="0.01" step="0.01"
+              [(ngModel)]="formularioCrear.metaRecaudacion" placeholder="2500.00" />
+          </div>
+
+        </div>
+
+        <!-- FECHAS -->
+        <div class="form-grid">
+
+          <div class="form-campo">
+            <label for="crear-inicio">
+              Fecha de inicio *
+            </label>
+
+            <input id="crear-inicio" name="fechaInicio" type="datetime-local" required
+              [(ngModel)]="formularioCrear.fechaInicio" />
+          </div>
+
+          <div class="form-campo">
+            <label for="crear-cierre">
+              Fecha de cierre *
+            </label>
+
+            <input id="crear-cierre" name="fechaCierre" type="datetime-local" required
+              [(ngModel)]="formularioCrear.fechaCierre" />
+          </div>
+
+        </div>
+
+        <div class="form-campo">
+          <label for="crear-fecha-sorteo">
+            Fecha del sorteo
+          </label>
+
+          <input id="crear-fecha-sorteo" name="fechaSorteo" type="datetime-local"
+            [(ngModel)]="formularioCrear.fechaSorteo" />
+        </div>
+
+        <!-- IMAGEN -->
+        <div class="form-campo">
+
+          <label for="crear-imagen">
+            Imagen de portada
+          </label>
+
+          <div class="form-imagen">
+
+            <input id="crear-imagen" name="imagen" type="file" accept=".jpg,.jpeg,.png,.webp"
+              (change)="seleccionarPortada($event)" />
+
+            <small>
+              JPG, JPEG, PNG o WebP. Máximo 2 MB.
+            </small>
+
+            @if (archivoPortada(); as archivo) {
+            <span class="archivo-seleccionado">
+              Imagen: {{ archivo.name }}
+            </span>
+            }
+
+          </div>
+
+          <small class="nota-borrador">
+            La subida al servidor estará disponible
+            cuando implementemos el endpoint de portada.
+          </small>
+
+        </div>
+
+        <p class="nota-borrador">
+          Se guardará como Borrador.
+          Podrás editarlo y publicarlo posteriormente.
+        </p>
+
+      </fieldset>
+
+    </form>
+
+    <!-- BOTONES -->
+    <footer class="modal-footer modal-footer-editar">
+
+      <button type="button" class="btn-cancelar-crear" [disabled]="guardandoSorteo()" (click)="cerrarCrear()">
+        Cancelar
+      </button>
+
+      <button type="submit" form="form-crear-sorteo" class="btn-guardar-crear" [disabled]="guardandoSorteo()">
+        @if (guardandoSorteo()) {
+        Guardando...
+        } @else if (sorteoCreadoId()) {
+        Reintentar subida
+        } @else {
+        Guardar borrador
+        }
+      </button>
+
+    </footer>
+
+  </div>
+</div>
+}
