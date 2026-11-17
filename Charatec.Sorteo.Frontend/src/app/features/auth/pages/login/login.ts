@@ -30,14 +30,10 @@ export class Login {
   private readonly sesionService = inject(SesionService);
   private readonly router = inject(Router);
 
-  // Estados de la interfaz
+
   readonly cargando = signal(false);
   readonly mensajeError = signal('');
   readonly mostrarPassword = signal(false);
-
-  // =========================================
-  // FORMULARIO REACTIVO
-  // =========================================
 
   readonly formulario = this.fb.nonNullable.group({
     email: [
@@ -111,7 +107,7 @@ export class Login {
         this.formulario.controls.password.reset();
 
         // Redirigir a página privada
-        void this.router.navigateByUrl('/mi-cuenta');
+        void this.router.navigateByUrl('/home');
       },
 
       error: (error: HttpErrorResponse) => {

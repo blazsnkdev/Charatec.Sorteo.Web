@@ -1,7 +1,7 @@
 
-/* =========================================
+/* ==========================================
    HEADER CORPORACIÓN CHARATEC
-========================================= */
+========================================== */
 
 :host {
   display: block;
@@ -9,144 +9,38 @@
 }
 
 .site-header {
-  width: 100%;
   position: relative;
   z-index: 20;
-}
-
-/* =========================================
-   BARRA SUPERIOR
-========================================= */
-
-.topbar {
   width: 100%;
-  background: #003bff;
-  color: #ffffff;
-  font-size: 12px;
+  font-family: 'Montserrat', sans-serif;
 }
 
-.topbar-content {
-  min-height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.topbar-brand {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
-.topbar-links {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-
-.topbar-links a {
-  color: #ffffff;
-  text-decoration: none;
-  font-weight: 700;
-}
-
-.topbar-links a:hover {
-  text-decoration: underline;
-}
-
-/* =========================================
-   HEADER PRINCIPAL
-========================================= */
+/* ==========================================
+   BARRA NEGRA
+========================================== */
 
 .main-header {
   width: 100%;
   background: #080c14;
-  color: #ffffff;
 }
 
 .header-content {
-  min-height: 105px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 30px;
-}
-
-/* =========================================
-   LOGO
-========================================= */
-
-.logo {
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
-  text-decoration: none;
-}
-
-
-/* LOGO CIRCULAR */
-
-.logo-image {
-  display: block;
-  width: 90px;
-  height: 90px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 2px solid #0a0a0a;
-}
-
-/* RESPONSIVE - CELULARES */
-
-@media (max-width: 700px) {
-  .logo-image {
-    width: 60px;
-    height: 60px;
-  }
-}
-
-
-/* =========================================
-   ACCIONES DEL HEADER
-========================================= */
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 25px;
+  justify-content: center;
+  min-height: 43px;
 }
 
 .header-tag {
-  color: #d4ddeb;
-  font-size: 13px;
-  white-space: nowrap;
+  color: #c5d1e0;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
 }
 
-.account-link {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 42px;
-  padding: 0 20px;
-  border: 1px solid #ffffff;
-  border-radius: 8px;
-  color: #ffffff;
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: 0.2s ease;
-}
-
-.account-link:hover {
-  color: #003bff;
-  background: #ffffff;
-}
-
-/* =========================================
-   NAVBAR
-========================================= */
+/* ==========================================
+   NAVBAR AZUL
+========================================== */
 
 .navbar {
   width: 100%;
@@ -156,129 +50,219 @@
 .nav-content {
   display: flex;
   align-items: center;
-  gap: 0;
+  justify-content: space-between;
+  gap: 22px;
+  min-height: 83px;
 }
 
-.nav-content a,
+/* ==========================================
+   LOGO
+========================================== */
+
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.logo-image {
+  display: block;
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+}
+
+
+/* ==========================================
+   ENLACES DEL NAVBAR
+========================================== */
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  gap: 3px;
+}
+
+.nav-links a,
 .nav-upcoming {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 54px;
-  padding: 0 20px;
+  min-height: 45px;
+  padding: 0 11px;
   color: #ffffff;
-  font-size: 12px;
-  font-weight: 800;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
   text-decoration: none;
   text-transform: uppercase;
-  white-space: nowrap;
-  letter-spacing: 0.3px;
-  transition: background-color 0.2s ease;
 }
 
-.nav-content a:hover,
-.nav-content a.active {
-  background: rgba(0, 0, 0, 0.2);
+.nav-links a:hover,
+.nav-links a.active {
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 5px;
   color: #ffffff;
 }
 
 .nav-upcoming {
-  opacity: 0.6;
+  opacity: 0.65;
   cursor: default;
 }
 
-/* =========================================
-   BOTÓN MENÚ MÓVIL
-========================================= */
+/* ==========================================
+   ACCIONES DERECHAS
+========================================== */
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+.cart-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 43px;
+  height: 43px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.cart-button:hover {
+  background: rgba(0, 0, 0, 0.14);
+  border-radius: 7px;
+}
+
+.cart-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
 
 .menu-toggle {
   display: none;
-  justify-content: center;
   align-items: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid #70809b;
-  border-radius: 8px;
+  justify-content: center;
+  width: 43px;
+  height: 43px;
   background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 7px;
   color: #ffffff;
-  font-size: 25px;
+  font-size: 24px;
   cursor: pointer;
 }
 
-/* =========================================
+/* ==========================================
    TABLET
-========================================= */
+========================================== */
 
-@media (max-width: 900px) {
-  .header-tag {
-    display: none;
-  }
+@media (max-width: 1100px) {
 
-  .nav-content a,
-  .nav-upcoming {
-    padding: 0 12px;
-    font-size: 11px;
-  }
-}
-
-/* =========================================
-   MÓVIL
-========================================= */
-
-@media (max-width: 700px) {
-
-  .topbar-content {
-    min-height: 33px;
-    justify-content: center;
-  }
-
-  .topbar-brand,
-  .topbar-links span {
-    display: none;
-  }
-
-  .header-content {
-    min-height: 80px;
+  .nav-content {
     gap: 12px;
+  }
+
+  .nav-links a,
+  .nav-upcoming {
+    padding: 0 7px;
+    font-size: 9px;
   }
 
   .logo-image {
-    width: 65px;
-    height: 65px;
+    width: 60px;
+    height: 60px;
+  }
+}
+
+/* ==========================================
+   MÓVILES
+========================================== */
+
+@media (max-width: 850px) {
+
+  .nav-content {
+    position: relative;
+    min-height: 72px;
   }
 
-  .header-actions {
-    gap: 12px;
+  .logo-image {
+    width: 55px;
+    height: 55px;
   }
 
-  .account-link {
+  .nav-links {
     display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    padding: 10px;
+    background: #003bff;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 3px;
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .nav-links.nav-open {
+    display: flex;
+  }
+
+  .nav-links a,
+  .nav-upcoming {
+    width: 100%;
+    min-height: 43px;
+    justify-content: flex-start;
+    padding: 12px;
+    font-size: 11px;
   }
 
   .menu-toggle {
     display: inline-flex;
   }
+}
 
-  .navbar {
-    display: none;
+@media (max-width: 480px) {
+
+  .header-content {
+    min-height: 36px;
   }
 
-  .navbar.nav-open {
-    display: block;
+  .header-tag {
+    font-size: 9px;
   }
 
   .nav-content {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 8px 0;
+    min-height: 66px;
   }
 
-  .nav-content a,
-  .nav-upcoming {
-    width: 100%;
-    min-height: 46px;
-    justify-content: flex-start;
-    padding: 12px 14px;
-    white-space: normal;
+  .logo-image {
+    width: 48px;
+    height: 48px;
+  }
+
+  .cart-button {
+    width: 38px;
+    height: 38px;
   }
 }
