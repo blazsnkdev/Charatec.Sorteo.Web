@@ -671,5 +671,46 @@ public class SorteoDbContext
                 .HasForeignKey(x => x.UsuarioId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
+
+
+        modelBuilder.Entity<EvidenciaPagoYape>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+
+            entity.HasIndex(x => x.SolicitudId)
+                .IsUnique();
+
+            entity.HasIndex(x => x.OrdenPagoId)
+                .IsUnique();
+
+            entity.HasIndex(x => x.AporteId)
+                .IsUnique();
+
+            entity.HasIndex(x => x.CodigoOperacionYape)
+                .IsUnique();
+
+            entity.Property(x => x.CodigoOperacionYape)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(x => x.NumeroWhatsapp)
+                .HasMaxLength(9)
+                .IsRequired();
+
+            entity.Property(x => x.Email)
+                .HasMaxLength(254)
+                .IsRequired();
+
+            entity.HasOne<OrdenPago>()
+                .WithOne()
+                .HasForeignKey<EvidenciaPagoYape>(x => x.OrdenPagoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne<Aporte>()
+                .WithOne()
+                .HasForeignKey<EvidenciaPagoYape>(x => x.AporteId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
     }
 }

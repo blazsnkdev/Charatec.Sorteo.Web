@@ -1,4 +1,5 @@
 ﻿using Charatec.Sorteo.Api.Responses;
+using Charatec.Sorteo.Business.DTOs.Requests.Participaciones;
 using Charatec.Sorteo.Business.Interfaces;
 using Charatec.Sorteo.Business.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -44,5 +45,34 @@ namespace Charatec.Sorteo.Api.Controllers
                 "Información para participar obtenida correctamente."
             );
         }
+
+
+        [HttpPost("{sorteoId:guid}/participaciones")]
+        public async Task<IActionResult> Registrar(
+            [FromRoute] Guid sorteoId,
+            [FromBody] RegistrarParticipacionYapeRequest request,
+            CancellationToken cancellationToken)
+        {
+            var usuarioIdTexto =
+                User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!Guid.TryParse(usuarioIdTexto, out var usuarioId))
+            {
+                return Unauthorized();
+            }
+
+            var result = await participacionService.RegistrarAsync(
+                usuarioId,
+                sorteoId,
+                request,
+                cancellationToken
+            );
+
+            return ApiResults.FromResult(
+                result,
+                "Solicitud de participación procesada correctamente."
+            );
+        }
+
     }
 }

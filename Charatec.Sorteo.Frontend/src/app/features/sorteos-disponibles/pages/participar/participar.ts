@@ -13,13 +13,16 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import {
-  ParticiparService
-} from '../../services/participar.service';
+import { ParticiparService } from '../../services/participar.service';
 
 import {
   PrepararParticipacionResponse
 } from '../../models/preparar-participacion.model';
+
+import {
+  RegistrarParticipacionRequest,
+  RegistrarParticipacionResponse
+} from '../../models/registrar-participacion.model';
 
 @Component({
   selector: 'app-participar',
@@ -38,28 +41,26 @@ export class Participar implements OnInit, OnDestroy {
 
   private peticion?: Subscription;
   private parametros?: Subscription;
+  private registroPeticion?: Subscription;
 
   // ==========================================
-  // INFORMACIÓN DEL SORTEO
+  // CONFIGURACIÓN DEL SORTEO
   // ==========================================
 
   readonly cargando = signal(true);
-
   readonly error = signal<string | null>(null);
-
-  readonly sorteoId = signal<string>('');
+  readonly sorteoId = signal('');
 
   readonly configuracion =
     signal<PrepararParticipacionResponse | null>(null);
 
   // ==========================================
-  // MONTO SELECCIONADO
+  // DESLIZADOR DE APORTE
   // ==========================================
 
-  readonly montoSeleccionado = signal<number>(0);
+  readonly montoSeleccionado = signal(0);
 
   readonly porcentajeMeta = computed(() => {
-
     const datos = this.configuracion();
 
     if (!datos?.metaRecaudacion ||
@@ -81,22 +82,42 @@ export class Participar implements OnInit, OnDestroy {
   });
 
   // ==========================================
-  // DATOS PARA EL FUTURO POST
+  // MODAL YAPE
   // ==========================================
 
+  readonly modalYapeAbierto = signal(false);
+  readonly enviandoParticipacion = signal(false);
+  readonly errorRegistro = signal<string | null>(null);
+  readonly registroExitoso = signal(false);
+
+  readonly participacionRegistrada =
+    signal<RegistrarParticipacionResponse | null>(null);
+
+  // ==========================================
+  // FORMULARIO
+  // ==========================================
+
+  emailContacto = '';
   numeroWhatsapp = '';
   codigoOperacionYape = '';
-  emailContacto = '';
+  aceptaTerminos = false;
+
+  // Conserva el mismo ID para reintentar
+  // exactamente una misma solicitud.
+  private solicitudId: string | null = null;
+  private huellaSolicitud: string | null = null;
+
+  // Número oficial de la empresa.
+  // Configurar antes de habilitar WhatsApp.
+  private readonly numeroWhatsappEmpresa = '';
 
   // ==========================================
-  // CICLO DE VIDA
+  // INICIO
   // ==========================================
 
   ngOnInit(): void {
-
     this.parametros = this.route.paramMap.subscribe(
       params => {
-
         const id = params.get('sorteoId');
 
         if (!id) {
@@ -106,7 +127,7 @@ export class Participar implements OnInit, OnDestroy {
         }
 
         this.sorteoId.set(id);
-
+        this.reiniciarFormulario();
         this.cargarConfiguracion(id);
       }
     );
@@ -115,14 +136,14 @@ export class Participar implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.peticion?.unsubscribe();
     this.parametros?.unsubscribe();
+    this.registroPeticion?.unsubscribe();
   }
 
   // ==========================================
-  // CONSULTAR API
+  // GET: CONFIGURACIÓN
   // ==========================================
 
   cargarConfiguracion(id: string): void {
-
     this.peticion?.unsubscribe();
 
     this.cargando.set(true);
@@ -132,56 +153,40 @@ export class Participar implements OnInit, OnDestroy {
     this.peticion = this.participarService
       .obtenerConfiguracion(id)
       .subscribe({
-
         next: respuesta => {
-
           if (respuesta.success && respuesta.data) {
-
             const datos = respuesta.data;
 
             this.configuracion.set(datos);
-
-            // El backend establece el monto inicial.
             this.montoSeleccionado.set(
               datos.montoInicial
             );
 
-            // Precargar correo disponible.
             this.emailContacto = datos.email ?? '';
-
           } else {
-
             this.error.set(
               respuesta.message ||
-              'No se pudo obtener la información del sorteo.'
+              'No se pudo cargar el sorteo.'
             );
           }
 
           this.cargando.set(false);
         },
 
-        error: error => {
-
-          if (error.status === 401) {
-
+        error: err => {
+          if (err.status === 401) {
             this.error.set(
-              'Tu sesión expiró. Inicia sesión nuevamente.'
+              'No se pudo autenticar tu sesión. Inicia sesión nuevamente.'
             );
-
-          } else if (error.status === 403) {
-
+          } else if (err.status === 403) {
             this.error.set(
               'No tienes permisos para participar.'
             );
-
-          } else if (error.status === 404) {
-
+          } else if (err.status === 404) {
             this.error.set(
               'El sorteo no existe o no está publicado.'
             );
-
           } else {
-
             this.error.set(
               'Ocurrió un error al consultar el sorteo.'
             );
@@ -193,11 +198,10 @@ export class Participar implements OnInit, OnDestroy {
   }
 
   // ==========================================
-  // CAMBIAR MONTO DEL DESLIZADOR
+  // ACTUALIZAR APORTE
   // ==========================================
 
   cambiarMonto(valor: number | string): void {
-
     const datos = this.configuracion();
 
     if (!datos || !datos.puedeParticipar) {
@@ -210,12 +214,9 @@ export class Participar implements OnInit, OnDestroy {
       return;
     }
 
-    const minimo = datos.aporteMinimo;
-    const maximo = datos.aporteMaximo;
-
     const resultado = Math.min(
-      maximo,
-      Math.max(minimo, monto)
+      datos.aporteMaximo,
+      Math.max(datos.aporteMinimo, monto)
     );
 
     this.montoSeleccionado.set(
@@ -224,7 +225,259 @@ export class Participar implements OnInit, OnDestroy {
   }
 
   // ==========================================
-  // REGRESAR A SORTEOS DISPONIBLES
+  // ABRIR MODAL
+  // ==========================================
+
+  abrirModalYape(): void {
+    const datos = this.configuracion();
+
+    if (!datos || !datos.puedeParticipar) {
+      return;
+    }
+
+    this.errorRegistro.set(null);
+    this.modalYapeAbierto.set(true);
+  }
+
+  // ==========================================
+  // CERRAR MODAL
+  // ==========================================
+
+  cerrarModalYape(): void {
+    if (this.enviandoParticipacion()) {
+      return;
+    }
+
+    this.modalYapeAbierto.set(false);
+    this.errorRegistro.set(null);
+  }
+
+  // ==========================================
+  // REINICIAR FORMULARIO
+  // ==========================================
+
+  private reiniciarFormulario(): void {
+    this.modalYapeAbierto.set(false);
+    this.registroExitoso.set(false);
+    this.participacionRegistrada.set(null);
+    this.errorRegistro.set(null);
+
+    this.emailContacto = '';
+    this.numeroWhatsapp = '';
+    this.codigoOperacionYape = '';
+    this.aceptaTerminos = false;
+
+    this.solicitudId = null;
+    this.huellaSolicitud = null;
+  }
+
+  // ==========================================
+  // VALIDAR FORMULARIO
+  // ==========================================
+
+  private validarFormulario(): string | null {
+    const datos = this.configuracion();
+
+    if (!datos || !datos.puedeParticipar) {
+      return 'El sorteo no está disponible.';
+    }
+
+    const email = this.emailContacto.trim();
+    const whatsapp = this.numeroWhatsapp.trim();
+    const codigo = this.codigoOperacionYape.trim();
+    const monto = this.montoSeleccionado();
+
+    if (!email || !whatsapp || !codigo) {
+      return 'Completa todos los campos.';
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return 'Ingresa un correo electrónico válido.';
+    }
+
+    if (!/^9\d{8}$/.test(whatsapp)) {
+      return 'Ingresa un WhatsApp peruano de 9 dígitos.';
+    }
+
+    if (codigo.length > 100) {
+      return 'El código de operación es demasiado largo.';
+    }
+
+    if (!this.aceptaTerminos) {
+      return 'Debes aceptar los términos de participación.';
+    }
+
+    if (!Number.isFinite(monto) ||
+        monto < datos.aporteMinimo ||
+        monto > datos.aporteMaximo) {
+      return 'El monto está fuera del rango permitido.';
+    }
+
+    return null;
+  }
+
+  // ==========================================
+  // POST: REGISTRAR PARTICIPACIÓN
+  // ==========================================
+
+  registrarParticipacion(): void {
+    if (this.enviandoParticipacion() ||
+        this.registroExitoso()) {
+      return;
+    }
+
+    const mensajeError = this.validarFormulario();
+
+    if (mensajeError) {
+      this.errorRegistro.set(mensajeError);
+      return;
+    }
+
+    const datos = this.configuracion();
+
+    if (!datos) {
+      return;
+    }
+
+    const monto = this.montoSeleccionado();
+    const email = this.emailContacto.trim();
+    const whatsapp = this.numeroWhatsapp.trim();
+    const codigo = this.codigoOperacionYape.trim();
+
+    // La huella identifica el contenido de la
+    // solicitud. Si cambian los datos, cambia el ID.
+    const huella = JSON.stringify({
+      sorteoId: datos.sorteoId,
+      monto,
+      email,
+      whatsapp,
+      codigo
+    });
+
+    if (!this.solicitudId ||
+        this.huellaSolicitud !== huella) {
+      this.solicitudId = crypto.randomUUID();
+      this.huellaSolicitud = huella;
+    }
+
+    const request: RegistrarParticipacionRequest = {
+      monto,
+      numeroWhatsapp: whatsapp,
+      email,
+      codigoOperacionYape: codigo,
+      aceptaTerminos: true,
+      solicitudId: this.solicitudId
+    };
+
+    this.enviandoParticipacion.set(true);
+    this.errorRegistro.set(null);
+
+    this.registroPeticion = this.participarService
+      .registrarParticipacion(
+        datos.sorteoId,
+        request
+      )
+      .subscribe({
+        next: respuesta => {
+          this.enviandoParticipacion.set(false);
+
+          if (respuesta.success && respuesta.data) {
+            this.participacionRegistrada.set(
+              respuesta.data
+            );
+
+            this.registroExitoso.set(true);
+            return;
+          }
+
+          this.errorRegistro.set(
+            respuesta.message ||
+            'No se pudo registrar la participación.'
+          );
+        },
+
+        error: err => {
+          this.enviandoParticipacion.set(false);
+
+          if (err.status === 401) {
+            this.errorRegistro.set(
+              'Tu sesión no está autorizada.'
+            );
+          } else if (err.status === 403) {
+            this.errorRegistro.set(
+              'No tienes permisos para participar.'
+            );
+          } else if (err.status === 400) {
+            this.errorRegistro.set(
+              err.error?.message ||
+              'Revisa los datos del formulario.'
+            );
+          } else if (err.status === 404) {
+            this.errorRegistro.set(
+              'El endpoint o sorteo no fue encontrado.'
+            );
+          } else if (err.status === 409) {
+            this.errorRegistro.set(
+              'La operación ya existe o hay un conflicto. ' +
+              'Verifica tu participación antes de reintentar.'
+            );
+          } else {
+            this.errorRegistro.set(
+              'No pudimos confirmar si se guardó el registro. ' +
+              'Consulta su estado antes de repetir el pago.'
+            );
+          }
+        }
+      });
+  }
+
+  // ==========================================
+  // COMPARTIR POR WHATSAPP
+  // ==========================================
+
+  compartirPorWhatsapp(): void {
+    const datos = this.configuracion();
+    const registro = this.participacionRegistrada();
+
+    if (!datos || !registro) {
+      return;
+    }
+
+    const numero = this.numeroWhatsappEmpresa;
+
+    if (!/^51\d{9}$/.test(numero)) {
+      this.errorRegistro.set(
+        'Falta configurar el WhatsApp oficial de Charatec.'
+      );
+      return;
+    }
+
+    const mensaje = [
+      'Hola, Corporación Charatec.',
+      '',
+      'He registrado mi participación en el sorteo:',
+      datos.titulo,
+      '',
+      `Monto: S/ ${registro.monto.toFixed(2)}`,
+      `Código Yape: ${this.codigoOperacionYape}`,
+      `Orden: ${registro.ordenPagoId}`,
+      '',
+      'Adjunto mi comprobante para su verificación.'
+    ].join('\n');
+
+    const url =
+      `https://wa.me/${numero}?text=` +
+      encodeURIComponent(mensaje);
+
+    window.open(
+      url,
+      '_blank',
+      'noopener,noreferrer'
+    );
+  }
+
+  // ==========================================
+  // VOLVER
   // ==========================================
 
   volver(): void {

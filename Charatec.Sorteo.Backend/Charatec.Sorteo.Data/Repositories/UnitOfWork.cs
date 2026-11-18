@@ -1,4 +1,5 @@
-﻿using Charatec.Sorteo.Data.Context;
+﻿using Charatec.Sorteo.Common.Interfaces;
+using Charatec.Sorteo.Data.Context;
 using Charatec.Sorteo.Data.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -13,9 +14,15 @@ public sealed class UnitOfWork : IUnitOfWork, IDisposable
     private bool _disposed;
 
     public ISorteoRepository _sorteoRepository { get;}
+    public IParticipacionYapeRepository _participacionesYape { get; }
 
-    public UnitOfWork(SorteoDbContext dbContext, ISorteoRepository sorteoRepository)
+    public UnitOfWork(
+        SorteoDbContext dbContext,
+        ISorteoRepository sorteoRepository,
+        IParticipacionYapeRepository participacionYapeRepository 
+        )
     {
+        _participacionesYape = participacionYapeRepository;
         _dbContext = dbContext;
         _sorteoRepository = sorteoRepository;
     }

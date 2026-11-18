@@ -1,8 +1,6 @@
-﻿using Charatec.Sorteo.Business.DTOs.Responses.Participaciones;
+﻿using Charatec.Sorteo.Business.DTOs.Requests.Participaciones;
+using Charatec.Sorteo.Business.DTOs.Responses.Participaciones;
 using Charatec.Sorteo.Common.Results;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Charatec.Sorteo.Business.Interfaces
 {
@@ -15,5 +13,14 @@ namespace Charatec.Sorteo.Business.Interfaces
             Guid sorteoId,
             CancellationToken cancellationToken = default
         );
+
+        Task<Result<RegistrarParticipacionYapeResponse>>
+            RegistrarAsync(
+                Guid usuarioId,
+                Guid sorteoId,
+                RegistrarParticipacionYapeRequest request,
+                CancellationToken cancellationToken = default
+            );
+
     }
 }

@@ -284,6 +284,74 @@ namespace Charatec.Sorteo.Data.Migrations
                     b.ToTable("EventosAuditoria", (string)null);
                 });
 
+            modelBuilder.Entity("Charatec.Sorteo.Entities.Models.EvidenciaPagoYape", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AdministradorRevisorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AporteId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CodigoOperacionYape")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(254)
+                        .HasColumnType("character varying(254)");
+
+                    b.Property<DateTimeOffset>("FechaRegistro")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("FechaVerificacion")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NumeroWhatsapp")
+                        .IsRequired()
+                        .HasMaxLength(9)
+                        .HasColumnType("character varying(9)");
+
+                    b.Property<string>("Observacion")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("OrdenPagoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("SolicitudId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("SorteoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("Verificado")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AporteId")
+                        .IsUnique();
+
+                    b.HasIndex("CodigoOperacionYape")
+                        .IsUnique();
+
+                    b.HasIndex("OrdenPagoId")
+                        .IsUnique();
+
+                    b.HasIndex("SolicitudId")
+                        .IsUnique();
+
+                    b.ToTable("EvidenciaPagoYape");
+                });
+
             modelBuilder.Entity("Charatec.Sorteo.Entities.Models.OrdenPago", b =>
                 {
                     b.Property<Guid>("Id")
@@ -535,7 +603,46 @@ namespace Charatec.Sorteo.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Charatec.Sorteo.Entities.Models.Sorteo", b =>
+            modelBuilder.Entity("Charatec.Sorteo.Entities.Models.Suscripcion", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ClienteId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Estado")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("FechaCancelacion")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("FechaFin")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("FechaFinPrueba")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("FechaInicio")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("FechaProximoCobro")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("PlanSuscripcionId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanSuscripcionId");
+
+                    b.HasIndex("ClienteId", "Estado");
+
+                    b.ToTable("Suscripciones", (string)null);
+                });
+
+            modelBuilder.Entity("Charatec.Sorteo.Entities.Models.TblSorteo", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -598,45 +705,6 @@ namespace Charatec.Sorteo.Data.Migrations
 
                             t.HasCheckConstraint("CK_Sorteo_MetaRecaudacion", "\"MetaRecaudacion\" IS NULL OR \"MetaRecaudacion\" > 0");
                         });
-                });
-
-            modelBuilder.Entity("Charatec.Sorteo.Entities.Models.Suscripcion", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ClienteId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Estado")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTimeOffset?>("FechaCancelacion")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("FechaFin")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("FechaFinPrueba")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset>("FechaInicio")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("FechaProximoCobro")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("PlanSuscripcionId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PlanSuscripcionId");
-
-                    b.HasIndex("ClienteId", "Estado");
-
-                    b.ToTable("Suscripciones", (string)null);
                 });
 
             modelBuilder.Entity("Charatec.Sorteo.Entities.Models.TransaccionPago", b =>
@@ -856,7 +924,7 @@ namespace Charatec.Sorteo.Data.Migrations
 
             modelBuilder.Entity("Charatec.Sorteo.Entities.Models.EjecucionSorteo", b =>
                 {
-                    b.HasOne("Charatec.Sorteo.Entities.Models.Sorteo", "Sorteo")
+                    b.HasOne("Charatec.Sorteo.Entities.Models.TblSorteo", "Sorteo")
                         .WithMany("Ejecuciones")
                         .HasForeignKey("SorteoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -871,6 +939,21 @@ namespace Charatec.Sorteo.Data.Migrations
                         .WithMany()
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Charatec.Sorteo.Entities.Models.EvidenciaPagoYape", b =>
+                {
+                    b.HasOne("Charatec.Sorteo.Entities.Models.Aporte", null)
+                        .WithOne()
+                        .HasForeignKey("Charatec.Sorteo.Entities.Models.EvidenciaPagoYape", "AporteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Charatec.Sorteo.Entities.Models.OrdenPago", null)
+                        .WithOne()
+                        .HasForeignKey("Charatec.Sorteo.Entities.Models.EvidenciaPagoYape", "OrdenPagoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Charatec.Sorteo.Entities.Models.OrdenPago", b =>
@@ -899,7 +982,7 @@ namespace Charatec.Sorteo.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Charatec.Sorteo.Entities.Models.Sorteo", "Sorteo")
+                    b.HasOne("Charatec.Sorteo.Entities.Models.TblSorteo", "Sorteo")
                         .WithMany("Participaciones")
                         .HasForeignKey("SorteoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -918,7 +1001,7 @@ namespace Charatec.Sorteo.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Charatec.Sorteo.Entities.Models.Sorteo", "Sorteo")
+                    b.HasOne("Charatec.Sorteo.Entities.Models.TblSorteo", "Sorteo")
                         .WithMany("Premios")
                         .HasForeignKey("SorteoId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -956,15 +1039,6 @@ namespace Charatec.Sorteo.Data.Migrations
                     b.Navigation("PremioSorteo");
                 });
 
-            modelBuilder.Entity("Charatec.Sorteo.Entities.Models.Sorteo", b =>
-                {
-                    b.HasOne("Charatec.Sorteo.Data.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("AdministradorUsuarioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Charatec.Sorteo.Entities.Models.Suscripcion", b =>
                 {
                     b.HasOne("Charatec.Sorteo.Entities.Models.Cliente", "Cliente")
@@ -982,6 +1056,15 @@ namespace Charatec.Sorteo.Data.Migrations
                     b.Navigation("Cliente");
 
                     b.Navigation("PlanSuscripcion");
+                });
+
+            modelBuilder.Entity("Charatec.Sorteo.Entities.Models.TblSorteo", b =>
+                {
+                    b.HasOne("Charatec.Sorteo.Data.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("AdministradorUsuarioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Charatec.Sorteo.Entities.Models.TransaccionPago", b =>
@@ -1093,18 +1176,18 @@ namespace Charatec.Sorteo.Data.Migrations
                     b.Navigation("PremiosSorteo");
                 });
 
-            modelBuilder.Entity("Charatec.Sorteo.Entities.Models.Sorteo", b =>
+            modelBuilder.Entity("Charatec.Sorteo.Entities.Models.Suscripcion", b =>
+                {
+                    b.Navigation("OrdenesPago");
+                });
+
+            modelBuilder.Entity("Charatec.Sorteo.Entities.Models.TblSorteo", b =>
                 {
                     b.Navigation("Ejecuciones");
 
                     b.Navigation("Participaciones");
 
                     b.Navigation("Premios");
-                });
-
-            modelBuilder.Entity("Charatec.Sorteo.Entities.Models.Suscripcion", b =>
-                {
-                    b.Navigation("OrdenesPago");
                 });
 #pragma warning restore 612, 618
         }

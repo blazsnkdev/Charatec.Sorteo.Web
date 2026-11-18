@@ -83,6 +83,11 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<ISorteoRepository, SorteoRepository>();
 builder.Services.AddScoped<ISorteoClienteService, SorteoClienteService>();
+builder.Services.AddScoped<
+    IParticipacionYapeRepository,
+    ParticipacionYapeRepository
+>();
+
 //Services
 builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();

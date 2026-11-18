@@ -1,9 +1,10 @@
 
 <section class="participar-page">
 
-
-
+  <!-- ====================================== -->
   <!-- CARGANDO -->
+  <!-- ====================================== -->
+
   @if (cargando()) {
 
     <div class="estado-pagina">
@@ -13,9 +14,13 @@
 
   } @else if (error()) {
 
+    <!-- ==================================== -->
     <!-- ERROR -->
+    <!-- ==================================== -->
+
     <div class="estado-pagina">
       <h2>No se pudo cargar el sorteo</h2>
+
       <p>{{ error() }}</p>
 
       <button
@@ -29,14 +34,24 @@
 
   } @else if (configuracion(); as datos) {
 
+    <!-- ==================================== -->
+    <!-- ENCABEZADO -->
+    <!-- ==================================== -->
+
+    <button
+      type="button"
+      class="btn-volver"
+      (click)="volver()"
+    >
+      ← Volver a sorteos
+    </button>
+
     <header class="participar-encabezado">
-
-
       <h1>Participar en el sorteo</h1>
 
       <p>
-        Selecciona tu aporte y registra los datos
-        de tu operación Yape.
+        Selecciona tu aporte y continúa
+        con el pago mediante Yape.
       </p>
     </header>
 
@@ -46,9 +61,14 @@
       </div>
     }
 
+    <!-- ==================================== -->
+    <!-- CONTENIDO PRINCIPAL -->
+    <!-- ==================================== -->
+
     <div class="participar-grid">
 
-      <!-- COLUMNA 1: INFORMACIÓN DEL SORTEO -->
+      <!-- COLUMNA 1: SORTEO -->
+
       <article class="panel">
 
         <div class="imagen-sorteo">
@@ -87,6 +107,7 @@
 
             <div>
               <span>Inicio</span>
+
               <strong>
                 {{
                   datos.fechaInicio
@@ -97,6 +118,7 @@
 
             <div>
               <span>Cierre</span>
+
               <strong>
                 {{
                   datos.fechaCierre
@@ -115,7 +137,8 @@
 
       </article>
 
-      <!-- COLUMNA 2: PARTICIPACIÓN -->
+      <!-- COLUMNA 2: APORTE -->
+
       <div class="panel formulario-panel">
 
         <div class="panel-contenido">
@@ -126,7 +149,8 @@
             Elige cuánto deseas aportar al sorteo.
           </p>
 
-          <!-- MONTO -->
+          <!-- MONTO SELECCIONADO -->
+
           <div class="monto-resumen">
 
             <span>Tu aporte</span>
@@ -141,6 +165,7 @@
           </div>
 
           <!-- DESLIZADOR -->
+
           <div class="campo-deslizador">
 
             <input
@@ -150,7 +175,7 @@
               [step]="datos.pasoAporte"
               [ngModel]="montoSeleccionado()"
               (ngModelChange)="cambiarMonto($event)"
-              [disabled]="!datos.puedeParticipar"
+              [disabled]="!datos.puedeParticipar || registroExitoso()"
               aria-label="Seleccionar monto del aporte"
             />
 
@@ -176,7 +201,8 @@
 
           </div>
 
-          <!-- PORCENTAJE DE META -->
+          <!-- PORCENTAJE SOBRE META -->
+
           @if (porcentajeMeta() !== null) {
 
             <div class="aporte-indicador">
@@ -192,46 +218,32 @@
               </div>
 
               <div class="barra-fondo">
+
                 <div
                   class="barra-progreso"
                   [style.width.%]="porcentajeBarra()"
                 ></div>
+
               </div>
 
               <small>
-                Referencia económica, no probabilidad
-                garantizada de ganar.
+                Este porcentaje es una referencia de
+                recaudación, no la probabilidad real
+                de ganar el sorteo.
               </small>
 
             </div>
 
           }
 
-          <!-- YAPE -->
-          <div class="yape-seccion">
+          <!-- CONTINUAR CON YAPE -->
 
-            <h3>Pago mediante Yape</h3>
+          <div class="continuar-pago">
+
+            <h3>Confirma tu participación</h3>
 
             <p>
-              Escanea el QR desde Yape y realiza
-              un pago por el monto seleccionado.
-            </p>
-
-            <div class="contenedor-qr">
-
-              <!--
-                Coloca tu QR real de Charatec en:
-                public/images/yape-charatec.png
-              -->
-              <img
-                src="/images/yape-charatec.png"
-                alt="Código QR Yape de Charatec"
-              />
-
-            </div>
-
-            <p class="instruccion-yape">
-              Monto a transferir:
+              Tu aporte seleccionado es:
               <strong>
                 {{
                   montoSeleccionado()
@@ -240,70 +252,22 @@
               </strong>
             </p>
 
-          </div>
-
-          <!-- FORMULARIO PARA FUTURO POST -->
-          <div class="formulario-datos">
-
-            <h3>Datos de tu participación</h3>
-
-            <div class="campo-formulario">
-              <label for="emailContacto">
-                Correo electrónico
-              </label>
-
-              <input
-                id="emailContacto"
-                name="emailContacto"
-                type="email"
-                [(ngModel)]="emailContacto"
-                [disabled]="!datos.puedeParticipar"
-                placeholder="correo@ejemplo.com"
-              />
-            </div>
-
-            <div class="campo-formulario">
-              <label for="numeroWhatsapp">
-                Número de WhatsApp
-              </label>
-
-              <input
-                id="numeroWhatsapp"
-                name="numeroWhatsapp"
-                type="tel"
-                [(ngModel)]="numeroWhatsapp"
-                [disabled]="!datos.puedeParticipar"
-                placeholder="999999999"
-              />
-            </div>
-
-            <div class="campo-formulario">
-              <label for="codigoOperacion">
-                Código de operación Yape
-              </label>
-
-              <input
-                id="codigoOperacion"
-                name="codigoOperacion"
-                type="text"
-                [(ngModel)]="codigoOperacionYape"
-                [disabled]="!datos.puedeParticipar"
-                placeholder="Ingresa el código de tu Yape"
-              />
-            </div>
-
-            <div class="aviso-post">
-              El registro de participaciones aún
-              no está habilitado. Estos datos se
-              enviarán cuando implementemos el POST.
-            </div>
+            <p>
+              El pago se realizará mediante Yape
+              y será verificado por Corporación Charatec.
+            </p>
 
             <button
               type="button"
               class="btn-principal"
-              disabled
+              [disabled]="!datos.puedeParticipar"
+              (click)="abrirModalYape()"
             >
-              Registrar participación
+              @if (registroExitoso()) {
+                Ver participación registrada
+              } @else {
+                Continuar con Yape
+              }
             </button>
 
           </div>
@@ -313,6 +277,297 @@
       </div>
 
     </div>
+
+    <!-- ==================================== -->
+    <!-- MODAL YAPE -->
+    <!-- ==================================== -->
+
+    @if (modalYapeAbierto()) {
+
+      <div
+        class="yape-modal-overlay"
+        (click)="cerrarModalYape()"
+      >
+
+        <div
+          class="yape-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="yape-modal-titulo"
+          (click)="$event.stopPropagation()"
+        >
+
+          <!-- CABECERA -->
+
+          <header class="yape-modal-header">
+
+            <div>
+              <h2 id="yape-modal-titulo">
+                Confirmar participación
+              </h2>
+
+              <p>{{ datos.titulo }}</p>
+            </div>
+
+            <button
+              type="button"
+              class="yape-modal-cerrar"
+              [disabled]="enviandoParticipacion()"
+              (click)="cerrarModalYape()"
+              aria-label="Cerrar ventana"
+            >
+              &times;
+            </button>
+
+          </header>
+
+          <!-- CUERPO -->
+
+          <div class="yape-modal-body">
+
+            @if (registroExitoso()) {
+
+              <!-- REGISTRO EXITOSO -->
+
+              <div class="yape-exito">
+
+                <h3>¡Solicitud registrada!</h3>
+
+                <p>
+                  Tu participación está pendiente
+                  de verificación por Charatec.
+                </p>
+
+                @if (participacionRegistrada(); as registro) {
+
+                  <div class="registro-resumen">
+
+                    <span>Importe registrado</span>
+
+                    <strong>
+                      {{
+                        registro.monto
+                        | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+                      }}
+                    </strong>
+
+                    <span>Referencia de orden</span>
+
+                    <strong class="referencia-orden">
+                      {{ registro.ordenPagoId }}
+                    </strong>
+
+                    <span>Estado</span>
+
+                    <strong>
+                      {{ registro.estadoVerificacion }}
+                    </strong>
+
+                  </div>
+
+                }
+
+                <p>
+                  Comparte tu comprobante por WhatsApp
+                  para facilitar la revisión.
+                </p>
+
+              </div>
+
+              @if (errorRegistro()) {
+                <div class="yape-modal-error">
+                  {{ errorRegistro() }}
+                </div>
+              }
+
+            } @else {
+
+              <!-- MONTO A TRANSFERIR -->
+
+              <div class="yape-modal-monto">
+
+                <span>Monto a transferir</span>
+
+                <strong>
+                  {{
+                    montoSeleccionado()
+                    | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+                  }}
+                </strong>
+
+              </div>
+
+              <!-- QR OFICIAL -->
+
+              <div class="yape-modal-qr">
+
+                <img
+                  src="/images/yape-charatec.png"
+                  alt="Código QR de Yape de Charatec"
+                />
+
+              </div>
+
+              <p class="yape-modal-instruccion">
+                Escanea el QR desde Yape, transfiere
+                el importe exacto y registra el
+                código de operación.
+              </p>
+
+              <!-- FORMULARIO -->
+
+              <form
+                id="form-registro-yape"
+                #formYape="ngForm"
+                (ngSubmit)="registrarParticipacion()"
+              >
+
+                <div class="campo-formulario">
+
+                  <label for="yape-email">
+                    Correo electrónico
+                  </label>
+
+                  <input
+                    id="yape-email"
+                    name="emailContacto"
+                    type="email"
+                    [(ngModel)]="emailContacto"
+                    placeholder="correo@ejemplo.com"
+                    [disabled]="enviandoParticipacion()"
+                    required
+                    email
+                  />
+
+                </div>
+
+                <div class="campo-formulario">
+
+                  <label for="yape-whatsapp">
+                    Número de WhatsApp
+                  </label>
+
+                  <input
+                    id="yape-whatsapp"
+                    name="numeroWhatsapp"
+                    type="tel"
+                    [(ngModel)]="numeroWhatsapp"
+                    placeholder="999999999"
+                    inputmode="numeric"
+                    pattern="9[0-9]{8}"
+                    maxlength="9"
+                    [disabled]="enviandoParticipacion()"
+                    required
+                  />
+
+                </div>
+
+                <div class="campo-formulario">
+
+                  <label for="yape-codigo">
+                    Código de operación Yape
+                  </label>
+
+                  <input
+                    id="yape-codigo"
+                    name="codigoOperacionYape"
+                    type="text"
+                    [(ngModel)]="codigoOperacionYape"
+                    placeholder="Código de transferencia"
+                    maxlength="100"
+                    [disabled]="enviandoParticipacion()"
+                    required
+                  />
+
+                </div>
+
+                <label class="yape-terminos">
+
+                  <input
+                    name="aceptaTerminos"
+                    type="checkbox"
+                    [(ngModel)]="aceptaTerminos"
+                    [disabled]="enviandoParticipacion()"
+                    required
+                  />
+
+                  <span>
+                    Acepto los términos de participación
+                    y entiendo que mi pago está sujeto
+                    a verificación.
+                  </span>
+
+                </label>
+
+                @if (errorRegistro()) {
+
+                  <div class="yape-modal-error">
+                    {{ errorRegistro() }}
+                  </div>
+
+                }
+
+              </form>
+
+            }
+
+          </div>
+
+          <!-- PIE DEL MODAL -->
+
+          <footer class="yape-modal-footer">
+
+            @if (registroExitoso()) {
+
+              <button
+                type="button"
+                class="btn-principal"
+                (click)="compartirPorWhatsapp()"
+              >
+                Compartir por WhatsApp
+              </button>
+
+              <button
+                type="button"
+                class="btn-modal-cancelar"
+                (click)="cerrarModalYape()"
+              >
+                Cerrar
+              </button>
+
+            } @else {
+
+              <button
+                type="button"
+                class="btn-modal-cancelar"
+                [disabled]="enviandoParticipacion()"
+                (click)="cerrarModalYape()"
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="submit"
+                form="form-registro-yape"
+                class="btn-principal"
+                [disabled]="enviandoParticipacion()"
+              >
+                @if (enviandoParticipacion()) {
+                  Registrando...
+                } @else {
+                  Registrar participación
+                }
+              </button>
+
+            }
+
+          </footer>
+
+        </div>
+
+      </div>
+
+    }
 
   }
 

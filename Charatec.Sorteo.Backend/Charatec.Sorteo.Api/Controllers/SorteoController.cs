@@ -1,7 +1,6 @@
 ﻿using Charatec.Sorteo.Api.Responses;
 using Charatec.Sorteo.Business.DTOs.Requests.Sorteos;
 using Charatec.Sorteo.Business.Interfaces;
-using Charatec.Sorteo.Common.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
