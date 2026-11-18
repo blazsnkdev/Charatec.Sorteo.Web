@@ -1,4 +1,3 @@
-
 import { Injectable, inject } from '@angular/core';
 
 import {
@@ -12,7 +11,10 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 
 import { ApiResponse } from '../../../core/models/api-response.model';
-
+import {
+  VerificarAporteRequest,
+  VerificarAporteResponse
+} from '../models/aportes-publicacion.model';
 import {
   ResultadoPaginado
 } from '../../../core/models/resultado-paginado.model';
@@ -68,4 +70,31 @@ export class AportesPublicacionService {
       }
     );
   }
+
+
+// ==========================================
+// PATCH: APROBAR O RECHAZAR APORTE
+// ==========================================
+
+verificarAporte(
+  aporteId: string,
+  request: VerificarAporteRequest
+): Observable<ApiResponse<VerificarAporteResponse>> {
+
+  const token = this.sesionService.obtenerToken();
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token ?? ''}`
+  });
+
+  return this.http.patch<
+    ApiResponse<VerificarAporteResponse>
+  >(
+    `${environment.apiUrl}/admin/aportes/${encodeURIComponent(aporteId)}/verificacion`,
+    request,
+    { headers }
+  );
+}
+
+
 }

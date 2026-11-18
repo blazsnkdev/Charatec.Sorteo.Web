@@ -8,6 +8,8 @@ import {
   signal
 } from '@angular/core';
 
+import { DecisionAporte } from '../../models/aportes-publicacion.model';
+import { VerificarAporteRequest } from '../../models/aportes-publicacion.model';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -15,13 +17,13 @@ import { AportesPublicacionService } from '../../services/aportes-publicacion.se
 
 import { AportePublicacion } from '../../models/aportes-publicacion.model';
 import { EstadoAporte } from '../../models/aportes-publicacion.model';
-
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-aportes-publicacion',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule],
   templateUrl: './aportes-publicacion.html',
   styleUrl: './aportes-publicacion.css'
 })
@@ -128,6 +130,7 @@ export class AportesPublicacion implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.peticion?.unsubscribe();
     this.parametros?.unsubscribe();
+    this.peticionRevision?.unsubscribe();
   }
 
   // ==========================================
@@ -307,4 +310,191 @@ export class AportesPublicacion implements OnInit, OnDestroy {
   volver(): void {
     this.router.navigate(['/publicaciones']);
   }
+
+
+
+// ==========================================
+// ESTADOS DEL MODAL DE VERIFICACIÓN
+// ==========================================
+
+readonly modalRevisionAbierto = signal(false);
+
+readonly aporteSeleccionado =
+  signal<AportePublicacion | null>(null);
+
+readonly decisionSeleccionada =
+  signal<DecisionAporte | null>(null);
+
+readonly guardandoRevision = signal(false);
+
+readonly errorRevision = signal<string | null>(null);
+
+readonly mensajeRevision = signal<string | null>(null);
+
+observacionRevision = '';
+
+private peticionRevision?: Subscription;
+
+// ==========================================
+// ABRIR MODAL
+// ==========================================
+
+abrirRevision(aporte: AportePublicacion): void {
+
+  if (aporte.estado !== 'Pendiente') {
+    return;
+  }
+
+  this.aporteSeleccionado.set(aporte);
+  this.decisionSeleccionada.set(null);
+
+  this.observacionRevision = '';
+  this.errorRevision.set(null);
+
+  this.modalRevisionAbierto.set(true);
+}
+
+// ==========================================
+// CERRAR MODAL
+// ==========================================
+
+cerrarRevision(): void {
+
+  if (this.guardandoRevision()) {
+    return;
+  }
+
+  this.modalRevisionAbierto.set(false);
+  this.aporteSeleccionado.set(null);
+  this.decisionSeleccionada.set(null);
+  this.errorRevision.set(null);
+}
+
+// ==========================================
+// ELEGIR APROBAR O RECHAZAR
+// ==========================================
+
+seleccionarDecision(decision: DecisionAporte): void {
+
+  if (this.guardandoRevision()) {
+    return;
+  }
+
+  this.decisionSeleccionada.set(decision);
+  this.errorRevision.set(null);
+}
+
+// ==========================================
+// GUARDAR VERIFICACIÓN EN BACKEND
+// ==========================================
+
+confirmarRevision(): void {
+
+  if (this.guardandoRevision()) {
+    return;
+  }
+
+  const aporte = this.aporteSeleccionado();
+  const decision = this.decisionSeleccionada();
+  const observacion = this.observacionRevision.trim();
+
+  if (!aporte || !decision) {
+    this.errorRevision.set(
+      'Selecciona Aprobar o Rechazar.'
+    );
+    return;
+  }
+
+  if (decision === 'Rechazar' && !observacion) {
+    this.errorRevision.set(
+      'Debes indicar el motivo del rechazo.'
+    );
+    return;
+  }
+
+  if (observacion.length > 1000) {
+    this.errorRevision.set(
+      'La observación no puede superar 1000 caracteres.'
+    );
+    return;
+  }
+
+  const request: VerificarAporteRequest = {
+    decision,
+    observacion: observacion || null
+  };
+
+  this.guardandoRevision.set(true);
+  this.errorRevision.set(null);
+  this.mensajeRevision.set(null);
+
+  this.peticionRevision = this.service
+    .verificarAporte(aporte.aporteId, request)
+    .subscribe({
+
+      next: respuesta => {
+
+        this.guardandoRevision.set(false);
+
+        if (respuesta.success && respuesta.data) {
+
+          const estadoFinal = respuesta.data.estado;
+
+          this.mensajeRevision.set(
+            estadoFinal === 'Confirmado'
+              ? 'El aporte fue aprobado correctamente.'
+              : 'El aporte fue rechazado correctamente.'
+          );
+
+          this.cerrarRevision();
+
+          // Consultar los datos actualizados
+          // desde PostgreSQL.
+          this.cargarAportes();
+
+          return;
+        }
+
+        this.errorRevision.set(
+          respuesta.message ||
+          'No se pudo verificar el aporte.'
+        );
+      },
+
+      error: err => {
+
+        this.guardandoRevision.set(false);
+
+        if (err.status === 401) {
+          this.errorRevision.set(
+            'Tu sesión no está autorizada.'
+          );
+        } else if (err.status === 403) {
+          this.errorRevision.set(
+            'No tienes permisos para verificar aportes.'
+          );
+        } else if (err.status === 404) {
+          this.errorRevision.set(
+            'No se encontró el aporte.'
+          );
+        } else if (
+          err.status === 400 ||
+          err.status === 409 ||
+          err.status === 422
+        ) {
+          this.errorRevision.set(
+            err.error?.message ||
+            'No se puede procesar esta revisión.'
+          );
+        } else {
+          this.errorRevision.set(
+            'No se pudo confirmar la operación. ' +
+            'Actualiza el listado y verifica el estado ' +
+            'antes de volver a intentarlo.'
+          );
+        }
+      }
+    });
+}
+
 }

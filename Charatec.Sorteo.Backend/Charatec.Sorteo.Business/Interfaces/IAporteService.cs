@@ -22,5 +22,14 @@ namespace Charatec.Sorteo.Business.Interfaces
                 ListarAportesPublicacionRequest request,
                 CancellationToken cancellationToken = default
             );
+
+
+        Task<Result<VerificarAporteResponse>> VerificarAsync(
+            Guid aporteId,
+            Guid administradorUsuarioId,
+            VerificarAporteRequest request,
+            CancellationToken cancellationToken = default
+        );
+
     }
 }

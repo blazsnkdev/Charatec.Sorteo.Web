@@ -605,12 +605,12 @@
 
 .btn-participar {
   border: none;
-  background: #16a34a;
+  background: #003bff;
   color: #fff;
 }
 
 .btn-participar:hover:not(:disabled) {
-  background: #15803d;
+  background: #002dcc;
 }
 
 .btn-participar:disabled {

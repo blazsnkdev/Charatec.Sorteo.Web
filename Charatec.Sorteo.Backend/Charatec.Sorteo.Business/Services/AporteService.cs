@@ -7,6 +7,7 @@ using Charatec.Sorteo.Common.Pagination;
 using Charatec.Sorteo.Common.Results;
 using Charatec.Sorteo.Data.Extensions;
 using Charatec.Sorteo.Data.Interfaces;
+using Charatec.Sorteo.Entities.Enums;
 
 namespace Charatec.Sorteo.Business.Services
 {
@@ -156,6 +157,127 @@ namespace Charatec.Sorteo.Business.Services
 
             return Result<ResultadoPaginado<AportePublicacionResponse>>
                 .Success(respuesta);
+        }
+
+        public async Task<Result<VerificarAporteResponse>> VerificarAsync(
+            Guid aporteId,
+            Guid administradorUsuarioId,
+            VerificarAporteRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            // ==========================================
+            // 1. VALIDAR IDENTIFICADORES
+            // ==========================================
+
+            if (aporteId == Guid.Empty ||
+                administradorUsuarioId == Guid.Empty)
+            {
+                return Result<VerificarAporteResponse>.Failure(
+                    new Error(
+                        "VALIDATION_ERROR",
+                        "Los identificadores no son válidos."
+                    )
+                );
+            }
+
+            // ==========================================
+            // 2. VALIDAR DECISIÓN
+            // ==========================================
+
+            var decision = request.Decision?.Trim();
+
+            if (decision != "Aprobar" &&
+                decision != "Rechazar")
+            {
+                return Result<VerificarAporteResponse>.Failure(
+                    new Error(
+                        "VALIDATION_ERROR",
+                        "Debes seleccionar Aprobar o Rechazar."
+                    )
+                );
+            }
+
+            var aprobar = decision == "Aprobar";
+            var observacion = request.Observacion?.Trim();
+
+            if (!aprobar &&
+                string.IsNullOrWhiteSpace(observacion))
+            {
+                return Result<VerificarAporteResponse>.Failure(
+                    new Error(
+                        "VALIDATION_ERROR",
+                        "Debes indicar el motivo del rechazo."
+                    )
+                );
+            }
+
+            // ==========================================
+            // 3. EJECUTAR REVISIÓN
+            // ==========================================
+
+            var revision = await _uow._aporteRepository
+                .VerificarAsync(
+                    aporteId,
+                    administradorUsuarioId,
+                    aprobar,
+                    observacion,
+                    cancellationToken
+                );
+
+            // ==========================================
+            // 4. RESULTADOS DE NEGOCIO
+            // ==========================================
+
+            if (revision.Resultado ==
+                ResultadoRevisionAporte.NoEncontrado)
+            {
+                return Result<VerificarAporteResponse>.Failure(
+                    new Error(
+                        "NOT_FOUND",
+                        "No se encontró el aporte."
+                    )
+                );
+            }
+
+            if (revision.Resultado ==
+                ResultadoRevisionAporte.YaRevisado)
+            {
+                return Result<VerificarAporteResponse>.Failure(
+                    new Error(
+                        "BUSINESS_RULE_VIOLATION",
+                        "Este aporte ya fue revisado o no está pendiente."
+                    )
+                );
+            }
+
+            if (revision.Resultado ==
+                ResultadoRevisionAporte.EvidenciaNoEncontrada)
+            {
+                return Result<VerificarAporteResponse>.Failure(
+                    new Error(
+                        "BUSINESS_RULE_VIOLATION",
+                        "No se encontró la información completa del pago Yape."
+                    )
+                );
+            }
+
+            // ==========================================
+            // 5. RESPUESTA EXITOSA
+            // ==========================================
+
+            var respuesta = new VerificarAporteResponse(
+                AporteId: revision.AporteId,
+                Estado: revision.Estado.ToString(),
+                Monto: revision.Monto,
+                FechaRevision: revision.FechaRevision ?? DateTimeOffset.UtcNow,
+                Mensaje: aprobar
+                    ? "El aporte fue confirmado correctamente."
+                    : "El aporte fue rechazado correctamente."
+            );
+
+            return Result<VerificarAporteResponse>.Success(
+                respuesta
+            );
         }
 
 

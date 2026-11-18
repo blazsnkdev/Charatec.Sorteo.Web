@@ -2,9 +2,7 @@
 using Charatec.Sorteo.Business.DTOs.Requests.Aportes;
 using Charatec.Sorteo.Business.DTOs.Requests.Participaciones;
 using Charatec.Sorteo.Business.Interfaces;
-using Charatec.Sorteo.Business.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -20,7 +18,7 @@ namespace Charatec.Sorteo.Api.Controllers
             [FromQuery] ListarAportesRequest request,
             CancellationToken cancellationToken)
         {
-            // Obtener el ID del usuario autenticado desde JWT.
+            
             var usuarioIdTexto =
                 User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -61,6 +59,40 @@ namespace Charatec.Sorteo.Api.Controllers
                 "Listado de aportes de la publicación obtenido correctamente."
             );
         }
+
+
+        [HttpPatch("/api/v1/admin/aportes/{aporteId:guid}/verificacion")]
+        [Authorize(Roles = "Administrador")]
+        public async Task<IActionResult> VerificarAporte(
+            [FromRoute] Guid aporteId,
+            [FromBody] VerificarAporteRequest request,
+            CancellationToken cancellationToken)
+        {
+            var usuarioIdTexto =
+                User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!Guid.TryParse(
+                usuarioIdTexto,
+                out var administradorUsuarioId))
+            {
+                return ApiResults.Unauthorized(
+                    "No se pudo identificar al administrador."
+                );
+            }
+
+            var result = await aporteService.VerificarAsync(
+                aporteId,
+                administradorUsuarioId,
+                request,
+                cancellationToken
+            );
+
+            return ApiResults.FromResult(
+                result,
+                "Verificación del aporte procesada correctamente."
+            );
+        }
+
 
     }
 }

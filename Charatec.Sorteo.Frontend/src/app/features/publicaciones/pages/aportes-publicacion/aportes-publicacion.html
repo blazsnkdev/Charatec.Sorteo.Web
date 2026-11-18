@@ -8,15 +8,11 @@
   <header class="encabezado">
 
     <div class="encabezado-info">
-
-
       <h1>Aportes de la publicación</h1>
-
       <p>
         Consulta los clientes que registraron pagos
         mediante Yape para este sorteo.
       </p>
-
     </div>
 
     <button
@@ -29,6 +25,28 @@
     </button>
 
   </header>
+
+  <!-- ===================================== -->
+  <!-- MENSAJE DE VERIFICACIÓN -->
+  <!-- ===================================== -->
+
+  @if (mensajeRevision()) {
+
+    <div class="mensaje-revision-exitosa">
+
+      <span>{{ mensajeRevision() }}</span>
+
+      <button
+        type="button"
+        (click)="mensajeRevision.set(null)"
+        aria-label="Cerrar mensaje"
+      >
+        &times;
+      </button>
+
+    </div>
+
+  }
 
   <!-- ===================================== -->
   <!-- FILTROS -->
@@ -106,7 +124,7 @@
   }
 
   <!-- ===================================== -->
-  <!-- TABLA -->
+  <!-- TABLA DE APORTES -->
   <!-- ===================================== -->
 
   <div class="tabla-contenedor">
@@ -158,6 +176,7 @@
               <!-- WHATSAPP -->
 
               <td>
+
                 @if (aporte.numeroWhatsapp) {
                   {{ aporte.numeroWhatsapp }}
                 } @else {
@@ -165,6 +184,7 @@
                     No registrado
                   </span>
                 }
+
               </td>
 
               <!-- MONTO -->
@@ -179,6 +199,7 @@
               <!-- CÓDIGO YAPE -->
 
               <td class="codigo-yape">
+
                 @if (aporte.codigoOperacionYape) {
                   {{ aporte.codigoOperacionYape }}
                 } @else {
@@ -186,6 +207,7 @@
                     Sin código
                   </span>
                 }
+
               </td>
 
               <!-- FECHA -->
@@ -200,26 +222,29 @@
               <!-- ESTADO -->
 
               <td>
+
                 <span
                   class="estado"
                   [ngClass]="aporte.estado.toLowerCase()"
                 >
                   {{ textoEstado(aporte.estado) }}
                 </span>
+
               </td>
 
-              <!-- ACCIÓN -->
+              <!-- ACCIONES -->
 
               <td class="columna-acciones">
 
                 @if (aporte.estado === 'Pendiente') {
 
-                  <span
-                    class="accion-pendiente"
-                    title="La aprobación estará disponible al implementar el PATCH"
+                  <button
+                    type="button"
+                    class="btn-revisar-aporte"
+                    (click)="abrirRevision(aporte)"
                   >
-                    Pendiente de revisión
-                  </span>
+                    Revisar
+                  </button>
 
                 } @else {
 
@@ -241,7 +266,8 @@
                 @if (estado()) {
                   No hay aportes con el estado seleccionado.
                 } @else {
-                  Esta publicación todavía no tiene aportes registrados.
+                  Esta publicación todavía no tiene
+                  aportes registrados.
                 }
 
               </td>
@@ -308,3 +334,253 @@
   }
 
 </section>
+
+
+<!-- ======================================= -->
+<!-- MODAL: REVISIÓN DE APORTE YAPE -->
+<!-- ======================================= -->
+
+@if (modalRevisionAbierto()) {
+
+  <div
+    class="revision-overlay"
+    (click)="cerrarRevision()"
+  >
+
+    <div
+      class="revision-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-revision"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- CABECERA -->
+
+      <header class="revision-header">
+
+        <div>
+
+          <h2 id="titulo-revision">
+            Revisar aporte Yape
+          </h2>
+
+          <p>
+            Verificación administrativa del pago.
+          </p>
+
+        </div>
+
+        <button
+          type="button"
+          class="revision-cerrar"
+          [disabled]="guardandoRevision()"
+          (click)="cerrarRevision()"
+          aria-label="Cerrar"
+        >
+          &times;
+        </button>
+
+      </header>
+
+      <!-- CUERPO -->
+
+      @if (aporteSeleccionado(); as aporte) {
+
+        <div class="revision-body">
+
+          <!-- ESTADO ACTUAL -->
+
+          <div class="revision-estado">
+
+            <span>Estado actual</span>
+
+            <span class="estado pendiente">
+              Pendiente de revisión
+            </span>
+
+          </div>
+
+          <!-- DATOS DEL APORTE -->
+
+          <div class="revision-datos">
+
+            <div>
+              <span>Cliente</span>
+              <strong>
+                {{ aporte.nombreCliente }}
+              </strong>
+            </div>
+
+            <div>
+              <span>WhatsApp</span>
+              <strong>
+                {{ aporte.numeroWhatsapp || 'No registrado' }}
+              </strong>
+            </div>
+
+            <div>
+              <span>Monto declarado</span>
+
+              <strong class="revision-monto">
+                {{
+                  aporte.monto
+                  | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+                }}
+              </strong>
+            </div>
+
+            <div>
+              <span>Código de operación Yape</span>
+
+              <strong>
+                {{ aporte.codigoOperacionYape || 'Sin código' }}
+              </strong>
+            </div>
+
+            <div>
+              <span>Fecha del aporte</span>
+
+              <strong>
+                {{
+                  aporte.fechaCreacion
+                  | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
+                }}
+              </strong>
+            </div>
+
+          </div>
+
+
+          <!-- SELECCIONAR DECISIÓN -->
+
+          <h3>Selecciona una decisión</h3>
+
+          <div class="revision-decisiones">
+
+            <button
+              type="button"
+              class="decision-aprobar"
+              [class.seleccionada]="decisionSeleccionada() === 'Aprobar'"
+              [disabled]="guardandoRevision()"
+              (click)="seleccionarDecision('Aprobar')"
+            >
+              ✓ Aprobar
+            </button>
+
+            <button
+              type="button"
+              class="decision-rechazar"
+              [class.seleccionada]="decisionSeleccionada() === 'Rechazar'"
+              [disabled]="guardandoRevision()"
+              (click)="seleccionarDecision('Rechazar')"
+            >
+              ✕ Rechazar
+            </button>
+
+          </div>
+
+          <!-- OBSERVACIÓN -->
+
+          <div class="revision-campo">
+
+            <label for="observacion-revision">
+
+              Observación
+
+              @if (decisionSeleccionada() === 'Rechazar') {
+
+                <span class="campo-obligatorio">*</span>
+
+              } @else {
+
+                <span class="campo-opcional">
+                  (opcional)
+                </span>
+
+              }
+
+            </label>
+
+            <textarea
+              id="observacion-revision"
+              name="observacionRevision"
+              rows="3"
+              maxlength="1000"
+              [(ngModel)]="observacionRevision"
+              [disabled]="guardandoRevision()"
+              placeholder="Indica el resultado de la verificación..."
+            ></textarea>
+
+            @if (decisionSeleccionada() === 'Rechazar') {
+
+              <small>
+                Indica por qué no se aprobó el pago.
+              </small>
+
+            }
+
+          </div>
+
+          <!-- ERROR DE VERIFICACIÓN -->
+
+          @if (errorRevision()) {
+
+            <div class="revision-error">
+              {{ errorRevision() }}
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+      <!-- PIE DEL MODAL -->
+
+      <footer class="revision-footer">
+
+        <button
+          type="button"
+          class="btn-revision-cancelar"
+          [disabled]="guardandoRevision()"
+          (click)="cerrarRevision()"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="btn-revision-confirmar"
+          [class.confirmar-rechazo]="decisionSeleccionada() === 'Rechazar'"
+          [disabled]="guardandoRevision() || !decisionSeleccionada()"
+          (click)="confirmarRevision()"
+        >
+
+          @if (guardandoRevision()) {
+
+            Guardando...
+
+          } @else if (decisionSeleccionada() === 'Aprobar') {
+
+            Confirmar aprobación
+
+          } @else if (decisionSeleccionada() === 'Rechazar') {
+
+            Confirmar rechazo
+
+          } @else {
+
+            Selecciona una decisión
+
+          }
+
+        </button>
+
+      </footer>
+
+    </div>
+
+  </div>
+
+}

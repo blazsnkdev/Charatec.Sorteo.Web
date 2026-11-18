@@ -12,6 +12,13 @@ namespace Charatec.Sorteo.Data.Interfaces
         IQueryable<AporteRevisionConsulta> ConsultarPorSorteo(
             Guid sorteoId
         );
+        Task<RevisionAporteResultado> VerificarAsync(
+            Guid aporteId,
+            Guid administradorUsuarioId,
+            bool aprobar,
+            string? observacion,
+            CancellationToken cancellationToken = default
+        );
 
     }
 }

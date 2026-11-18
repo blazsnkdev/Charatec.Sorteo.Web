@@ -1,5 +1,6 @@
 ﻿using Charatec.Sorteo.Data.Context;
 using Charatec.Sorteo.Data.Interfaces;
+using Charatec.Sorteo.Entities.Enums;
 using Charatec.Sorteo.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -70,6 +71,237 @@ namespace Charatec.Sorteo.Data.Repositories
 
             return consulta;
         }
+
+
+        public async Task<RevisionAporteResultado> VerificarAsync(
+            Guid aporteId,
+            Guid administradorUsuarioId,
+            bool aprobar,
+            string? observacion,
+            CancellationToken cancellationToken = default)
+        {
+            var ahora = DateTimeOffset.UtcNow;
+
+            RevisionAporteResultado Resultado(
+                ResultadoRevisionAporte codigo,
+                decimal monto = 0m,
+                EstadoAporte estado = EstadoAporte.Pendiente,
+                DateTimeOffset? fecha = null)
+            {
+                return new RevisionAporteResultado(
+                    codigo,
+                    aporteId,
+                    monto,
+                    estado,
+                    fecha
+                );
+            }
+
+            // ==========================================
+            // 1. INICIAR TRANSACCIÓN
+            // ==========================================
+
+            await using var transaccion =
+                await _dbContext.Database.BeginTransactionAsync(
+                    cancellationToken
+                );
+
+            // ==========================================
+            // 2. OBTENER APORTE
+            // ==========================================
+
+            var aporte = await _dbContext.Set<Aporte>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(
+                    x => x.Id == aporteId,
+                    cancellationToken
+                );
+
+            if (aporte is null)
+            {
+                return Resultado(
+                    ResultadoRevisionAporte.NoEncontrado
+                );
+            }
+
+            // ==========================================
+            // 3. VERIFICAR ESTADO ACTUAL
+            // ==========================================
+
+            if (aporte.Estado != EstadoAporte.Pendiente)
+            {
+                return Resultado(
+                    ResultadoRevisionAporte.YaRevisado,
+                    aporte.Monto,
+                    aporte.Estado,
+                    aporte.FechaConfirmacion
+                );
+            }
+
+            // ==========================================
+            // 4. OBTENER ORDEN Y EVIDENCIA
+            // ==========================================
+
+            var orden = await _dbContext.Set<OrdenPago>()
+                .FirstOrDefaultAsync(
+                    x => x.Id == aporte.OrdenPagoId,
+                    cancellationToken
+                );
+
+            var evidencia = await _dbContext.Set<EvidenciaPagoYape>()
+                .FirstOrDefaultAsync(
+                    x => x.AporteId == aporteId,
+                    cancellationToken
+                );
+
+            if (orden is null || evidencia is null)
+            {
+                return Resultado(
+                    ResultadoRevisionAporte.EvidenciaNoEncontrada,
+                    aporte.Monto
+                );
+            }
+
+            if (orden.Estado != EstadoOrdenPago.Pendiente ||
+                orden.ClienteId == Guid.Empty)
+            {
+                return Resultado(
+                    ResultadoRevisionAporte.YaRevisado,
+                    aporte.Monto,
+                    aporte.Estado
+                );
+            }
+
+            // ==========================================
+            // 5. ACTUALIZACIÓN CONDICIONAL
+            // ==========================================
+            // Solo una petición puede cambiar este aporte
+            // desde Pendiente al estado definitivo.
+
+            var nuevoEstado = aprobar
+                ? EstadoAporte.Confirmado
+                : EstadoAporte.Rechazado;
+
+            int filasActualizadas;
+
+            if (aprobar)
+            {
+                filasActualizadas = await _dbContext.Set<Aporte>()
+                    .Where(x =>
+                        x.Id == aporteId &&
+                        x.Estado == EstadoAporte.Pendiente
+                    )
+                    .ExecuteUpdateAsync(
+                        setters => setters
+                            .SetProperty(
+                                x => x.Estado,
+                                EstadoAporte.Confirmado
+                            )
+                            .SetProperty(
+                                x => x.FechaConfirmacion,
+                                (DateTimeOffset?)ahora
+                            ),
+                        cancellationToken
+                    );
+            }
+            else
+            {
+                filasActualizadas = await _dbContext.Set<Aporte>()
+                    .Where(x =>
+                        x.Id == aporteId &&
+                        x.Estado == EstadoAporte.Pendiente
+                    )
+                    .ExecuteUpdateAsync(
+                        setters => setters
+                            .SetProperty(
+                                x => x.Estado,
+                                EstadoAporte.Rechazado
+                            )
+                            .SetProperty(
+                                x => x.FechaConfirmacion,
+                                (DateTimeOffset?)null
+                            ),
+                        cancellationToken
+                    );
+            }
+
+            if (filasActualizadas == 0)
+            {
+                return Resultado(
+                    ResultadoRevisionAporte.YaRevisado,
+                    aporte.Monto,
+                    aporte.Estado
+                );
+            }
+
+            // ==========================================
+            // 6. ACTUALIZAR ORDEN DE PAGO
+            // ==========================================
+
+            orden.Estado = aprobar
+                ? EstadoOrdenPago.Pagada
+                : EstadoOrdenPago.Fallida;
+
+            orden.FechaActualizacion = ahora;
+
+            // ==========================================
+            // 7. REGISTRAR REVISIÓN YAPE
+            // ==========================================
+
+            evidencia.Verificado = aprobar;
+            evidencia.FechaVerificacion = ahora;
+            evidencia.AdministradorRevisorId =
+                administradorUsuarioId;
+            evidencia.Observacion = observacion;
+
+            // ==========================================
+            // 8. ACTUALIZAR PARTICIPACIÓN
+            // ==========================================
+
+            if (aprobar)
+            {
+                var participacion =
+                    await _dbContext.Set<Participacion>()
+                        .FirstOrDefaultAsync(
+                            x => x.Id == aporte.ParticipacionId,
+                            cancellationToken
+                        );
+
+                if (participacion is not null)
+                {
+                    participacion.Estado =
+                        EstadoParticipacion.Habilitada;
+                }
+            }
+
+            // Al rechazar, no deshabilitamos la
+            // participación: podría tener otros
+            // aportes confirmados.
+
+            // ==========================================
+            // 9. GUARDAR CAMBIOS
+            // ==========================================
+
+            await _dbContext.SaveChangesAsync(
+                cancellationToken
+            );
+
+            await transaccion.CommitAsync(
+                cancellationToken
+            );
+
+            // ==========================================
+            // 10. RESULTADO
+            // ==========================================
+
+            return Resultado(
+                ResultadoRevisionAporte.Actualizado,
+                aporte.Monto,
+                nuevoEstado,
+                ahora
+            );
+        }
+
 
     }
 }
