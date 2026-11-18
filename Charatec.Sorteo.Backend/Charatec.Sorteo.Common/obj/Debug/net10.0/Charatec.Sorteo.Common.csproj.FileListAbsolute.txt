@@ -1,0 +1,13 @@
+C:\Users\CHARATEC\Documents\camilo\proyectos\Charatec.Sorteo.Web\Charatec.Sorteo.Backend\Charatec.Sorteo.Common\bin\Debug\net10.0\Charatec.Sorteo.Common.deps.json
+C:\Users\CHARATEC\Documents\camilo\proyectos\Charatec.Sorteo.Web\Charatec.Sorteo.Backend\Charatec.Sorteo.Common\bin\Debug\net10.0\Charatec.Sorteo.Common.dll
+C:\Users\CHARATEC\Documents\camilo\proyectos\Charatec.Sorteo.Web\Charatec.Sorteo.Backend\Charatec.Sorteo.Common\bin\Debug\net10.0\Charatec.Sorteo.Common.pdb
+C:\Users\CHARATEC\Documents\camilo\proyectos\Charatec.Sorteo.Web\Charatec.Sorteo.Backend\Charatec.Sorteo.Common\obj\Debug\net10.0\Charatec.Sorteo.Common.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\CHARATEC\Documents\camilo\proyectos\Charatec.Sorteo.Web\Charatec.Sorteo.Backend\Charatec.Sorteo.Common\obj\Debug\net10.0\Charatec.Sorteo.Common.AssemblyInfoInputs.cache
+C:\Users\CHARATEC\Documents\camilo\proyectos\Charatec.Sorteo.Web\Charatec.Sorteo.Backend\Charatec.Sorteo.Common\obj\Debug\net10.0\Charatec.Sorteo.Common.AssemblyInfo.cs
+C:\Users\CHARATEC\Documents\camilo\proyectos\Charatec.Sorteo.Web\Charatec.Sorteo.Backend\Charatec.Sorteo.Common\obj\Debug\net10.0\Charatec.Sorteo.Common.csproj.CoreCompileInputs.cache
+C:\Users\CHARATEC\Documents\camilo\proyectos\Charatec.Sorteo.Web\Charatec.Sorteo.Backend\Charatec.Sorteo.Common\obj\Debug\net10.0\Charatec.Sorteo.Common.sourcelink.json
+C:\Users\CHARATEC\Documents\camilo\proyectos\Charatec.Sorteo.Web\Charatec.Sorteo.Backend\Charatec.Sorteo.Common\obj\Debug\net10.0\Charatec.Sorteo.Common.dll
+C:\Users\CHARATEC\Documents\camilo\proyectos\Charatec.Sorteo.Web\Charatec.Sorteo.Backend\Charatec.Sorteo.Common\obj\Debug\net10.0\refint\Charatec.Sorteo.Common.dll
+C:\Users\CHARATEC\Documents\camilo\proyectos\Charatec.Sorteo.Web\Charatec.Sorteo.Backend\Charatec.Sorteo.Common\obj\Debug\net10.0\Charatec.Sorteo.Common.pdb
+C:\Users\CHARATEC\Documents\camilo\proyectos\Charatec.Sorteo.Web\Charatec.Sorteo.Backend\Charatec.Sorteo.Common\obj\Debug\net10.0\ref\Charatec.Sorteo.Common.dll
+C:\Users\CHARATEC\Documents\camilo\proyectos\Charatec.Sorteo.Web\Charatec.Sorteo.Backend\Charatec.Sorteo.Common\obj\Debug\net10.0\Charatec.5634FC8D.Up2Date

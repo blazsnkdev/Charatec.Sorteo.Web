@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Charatec.Sorteo.Common")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cf9bde5e693d8d99e62591a49aa4875f974c2147")]
 [assembly: System.Reflection.AssemblyProductAttribute("Charatec.Sorteo.Common")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Charatec.Sorteo.Common")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
