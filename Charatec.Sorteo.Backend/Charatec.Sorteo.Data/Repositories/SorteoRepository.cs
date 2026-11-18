@@ -1,5 +1,6 @@
 ﻿using Charatec.Sorteo.Data.Context;
 using Charatec.Sorteo.Data.Interfaces;
+using Charatec.Sorteo.Entities.Enums;
 using Charatec.Sorteo.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -42,5 +43,15 @@ namespace Charatec.Sorteo.Data.Repositories
                 );
         }
 
+        public async Task<TblSorteo?> ObtenerPublicadoPorIdAsync(Guid sorteoId, CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Set<TblSorteo>()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(
+                s => s.Id == sorteoId &&
+                     s.Estado == EstadoSorteo.Publicado,
+                cancellationToken
+            );
+        }
     }
 }

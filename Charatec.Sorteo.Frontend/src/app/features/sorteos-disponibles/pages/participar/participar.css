@@ -1,0 +1,443 @@
+
+/* ========================================
+   CHARATEC SORTEOS - PARTICIPAR
+======================================== */
+
+:host {
+  display: block;
+}
+
+.participar-page {
+  width: 100%;
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 30px 24px 60px;
+  box-sizing: border-box;
+  color: #1f2937;
+}
+
+.btn-volver {
+  padding: 9px 0;
+  margin-bottom: 24px;
+  border: none;
+  background: transparent;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-volver:hover {
+  color: #1d4ed8;
+}
+
+.participar-encabezado {
+  margin-bottom: 28px;
+}
+
+.etiqueta-superior {
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.participar-encabezado h1 {
+  margin: 9px 0;
+  font-size: 29px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.participar-encabezado p,
+.texto-secundario {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.participar-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 0.9fr)
+    minmax(0, 1.1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.panel {
+  min-width: 0;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.panel-contenido {
+  padding: 25px;
+}
+
+.panel-contenido h2 {
+  margin: 10px 0 15px;
+  color: #111827;
+  font-size: 21px;
+  line-height: 1.4;
+}
+
+.imagen-sorteo {
+  height: 280px;
+  background: #f8fafc;
+}
+
+.imagen-sorteo img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.imagen-placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.imagen-placeholder span {
+  font-size: 60px;
+}
+
+.estado-publicado {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.descripcion {
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+
+.datos-fechas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  padding: 20px 0;
+  margin-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.datos-fechas div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.datos-fechas span {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.datos-fechas strong {
+  font-size: 13px;
+  color: #374151;
+}
+
+.mensaje-disponibilidad {
+  padding: 13px;
+  border-radius: 9px;
+  background: #eff6ff;
+  color: #1e40af;
+  font-size: 13px;
+}
+
+.formulario-panel h2 {
+  margin-top: 0;
+}
+
+.monto-resumen {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  margin-top: 25px;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  background: #eff6ff;
+}
+
+.monto-resumen span {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.monto-resumen strong {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1d4ed8;
+}
+
+.campo-deslizador {
+  margin: 24px 0;
+}
+
+.campo-deslizador input[type="range"] {
+  display: block;
+  width: 100%;
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+
+.campo-deslizador input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.limites-monto {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.aporte-indicador {
+  padding: 16px;
+  margin-bottom: 22px;
+  background: #f8fafc;
+  border-radius: 11px;
+}
+
+.indicador-cabecera {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.indicador-cabecera strong {
+  color: #1d4ed8;
+}
+
+.barra-fondo {
+  width: 100%;
+  height: 9px;
+  overflow: hidden;
+  background: #e2e8f0;
+  border-radius: 20px;
+}
+
+.barra-progreso {
+  height: 100%;
+  background: #2563eb;
+  border-radius: 20px;
+  transition: width 0.15s ease;
+}
+
+.aporte-indicador small {
+  display: block;
+  margin-top: 12px;
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+/* YAPE */
+
+.yape-seccion {
+  padding: 24px 0;
+  border-top: 1px solid #e5e7eb;
+}
+
+.yape-seccion h3,
+.formulario-datos h3 {
+  margin: 0 0 9px;
+  color: #111827;
+  font-size: 17px;
+}
+
+.yape-seccion > p {
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.contenedor-qr {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: min(100%, 300px);
+  aspect-ratio: 1;
+  margin: 22px auto;
+  padding: 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: white;
+  box-sizing: border-box;
+}
+
+.contenedor-qr img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.instruccion-yape {
+  text-align: center;
+}
+
+.instruccion-yape strong {
+  color: #1d4ed8;
+  font-size: 17px;
+}
+
+/* FORMULARIO */
+
+.formulario-datos {
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.campo-formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 18px 0;
+}
+
+.campo-formulario label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.campo-formulario input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 13px;
+  border: 1px solid #d1d5db;
+  border-radius: 9px;
+  background: #fff;
+  color: #111827;
+  font: inherit;
+  font-size: 14px;
+}
+
+.campo-formulario input:focus {
+  outline: 2px solid #bfdbfe;
+  border-color: #2563eb;
+}
+
+.campo-formulario input:disabled {
+  background: #f9fafb;
+}
+
+.btn-principal {
+  display: block;
+  width: 100%;
+  padding: 13px 18px;
+  border: none;
+  border-radius: 9px;
+  background: #2563eb;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-principal:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.btn-principal:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.aviso,
+.aviso-post {
+  padding: 14px;
+  margin-bottom: 18px;
+  border: 1px solid #fde68a;
+  border-radius: 9px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.aviso-post {
+  margin-top: 20px;
+}
+
+.estado-pagina {
+  padding: 70px 20px;
+  text-align: center;
+  color: #64748b;
+}
+
+.estado-pagina h2 {
+  color: #111827;
+}
+
+.spinner {
+  width: 34px;
+  height: 34px;
+  margin: 0 auto 15px;
+  border: 3px solid #dbeafe;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: giro 0.8s linear infinite;
+}
+
+@keyframes giro {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 850px) {
+  .participar-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .participar-page {
+    padding: 20px 12px 40px;
+  }
+
+  .participar-encabezado h1 {
+    font-size: 24px;
+  }
+
+  .panel-contenido {
+    padding: 18px;
+  }
+
+  .imagen-sorteo {
+    height: 220px;
+  }
+
+  .datos-fechas {
+    grid-template-columns: 1fr;
+  }
+
+  .monto-resumen strong {
+    font-size: 23px;
+  }
+}

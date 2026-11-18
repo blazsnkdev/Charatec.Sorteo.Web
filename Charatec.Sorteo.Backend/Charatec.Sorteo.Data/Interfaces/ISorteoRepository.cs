@@ -15,7 +15,10 @@ namespace Charatec.Sorteo.Data.Interfaces
             Guid id,
             CancellationToken cancellationToken = default
         );
-
+        Task<TblSorteo?> ObtenerPublicadoPorIdAsync(
+        Guid sorteoId,
+        CancellationToken cancellationToken = default
+    );
 
     }
 }

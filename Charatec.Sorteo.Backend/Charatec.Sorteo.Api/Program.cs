@@ -1,5 +1,6 @@
 using Charatec.Sorteo.Api.Responses;
 using Charatec.Sorteo.Business.Interfaces;
+using Charatec.Sorteo.Business.Options;
 using Charatec.Sorteo.Business.Services;
 using Charatec.Sorteo.Common.Interfaces;
 using Charatec.Sorteo.Data.Context;
@@ -8,15 +9,15 @@ using Charatec.Sorteo.Data.Interfaces;
 using Charatec.Sorteo.Data.Repositories;
 using Charatec.Sorteo.Data.Services;
 using Charatec.Sorteo.Entities.Enums;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.RateLimiting;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,6 +73,10 @@ builder.Services.AddDbContext<SorteoDbContext>(options =>
 {
     options.UseNpgsql(connectionString);
 });
+//Limite de participacion
+builder.Services.Configure<ParticipacionOptions>(
+    builder.Configuration.GetSection("Participacion")
+);
 
 //Repositories
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -81,7 +86,8 @@ builder.Services.AddScoped<ISorteoClienteService, SorteoClienteService>();
 //Services
 builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-builder.Services.AddScoped<ISorteoService, SorteoService>();   
+builder.Services.AddScoped<ISorteoService, SorteoService>();
+builder.Services.AddScoped<IParticipacionService, ParticipacionService>();
 
 // ==========================================
 // 5. ASP.NET CORE IDENTITY

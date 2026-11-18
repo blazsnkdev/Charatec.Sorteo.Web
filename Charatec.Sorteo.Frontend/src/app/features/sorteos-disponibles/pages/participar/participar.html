@@ -1,0 +1,319 @@
+
+<section class="participar-page">
+
+
+
+  <!-- CARGANDO -->
+  @if (cargando()) {
+
+    <div class="estado-pagina">
+      <div class="spinner"></div>
+      <p>Cargando información del sorteo...</p>
+    </div>
+
+  } @else if (error()) {
+
+    <!-- ERROR -->
+    <div class="estado-pagina">
+      <h2>No se pudo cargar el sorteo</h2>
+      <p>{{ error() }}</p>
+
+      <button
+        type="button"
+        class="btn-principal"
+        (click)="cargarConfiguracion(sorteoId())"
+      >
+        Reintentar
+      </button>
+    </div>
+
+  } @else if (configuracion(); as datos) {
+
+    <header class="participar-encabezado">
+
+
+      <h1>Participar en el sorteo</h1>
+
+      <p>
+        Selecciona tu aporte y registra los datos
+        de tu operación Yape.
+      </p>
+    </header>
+
+    @if (!datos.puedeParticipar) {
+      <div class="aviso">
+        {{ datos.mensajeDisponibilidad }}
+      </div>
+    }
+
+    <div class="participar-grid">
+
+      <!-- COLUMNA 1: INFORMACIÓN DEL SORTEO -->
+      <article class="panel">
+
+        <div class="imagen-sorteo">
+
+          @if (datos.imagenPortadaUrl) {
+
+            <img
+              [src]="datos.imagenPortadaUrl"
+              [alt]="datos.titulo"
+            />
+
+          } @else {
+
+            <div class="imagen-placeholder">
+              <span>🎁</span>
+              <p>Imagen del sorteo</p>
+            </div>
+
+          }
+
+        </div>
+
+        <div class="panel-contenido">
+
+          <span class="estado-publicado">
+            Sorteo publicado
+          </span>
+
+          <h2>{{ datos.titulo }}</h2>
+
+          <p class="descripcion">
+            {{ datos.descripcion }}
+          </p>
+
+          <div class="datos-fechas">
+
+            <div>
+              <span>Inicio</span>
+              <strong>
+                {{
+                  datos.fechaInicio
+                  | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
+                }}
+              </strong>
+            </div>
+
+            <div>
+              <span>Cierre</span>
+              <strong>
+                {{
+                  datos.fechaCierre
+                  | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
+                }}
+              </strong>
+            </div>
+
+          </div>
+
+          <p class="mensaje-disponibilidad">
+            {{ datos.mensajeDisponibilidad }}
+          </p>
+
+        </div>
+
+      </article>
+
+      <!-- COLUMNA 2: PARTICIPACIÓN -->
+      <div class="panel formulario-panel">
+
+        <div class="panel-contenido">
+
+          <h2>Configura tu aporte</h2>
+
+          <p class="texto-secundario">
+            Elige cuánto deseas aportar al sorteo.
+          </p>
+
+          <!-- MONTO -->
+          <div class="monto-resumen">
+
+            <span>Tu aporte</span>
+
+            <strong>
+              {{
+                montoSeleccionado()
+                | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+              }}
+            </strong>
+
+          </div>
+
+          <!-- DESLIZADOR -->
+          <div class="campo-deslizador">
+
+            <input
+              type="range"
+              [min]="datos.aporteMinimo"
+              [max]="datos.aporteMaximo"
+              [step]="datos.pasoAporte"
+              [ngModel]="montoSeleccionado()"
+              (ngModelChange)="cambiarMonto($event)"
+              [disabled]="!datos.puedeParticipar"
+              aria-label="Seleccionar monto del aporte"
+            />
+
+            <div class="limites-monto">
+
+              <span>
+                Mínimo:
+                {{
+                  datos.aporteMinimo
+                  | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+                }}
+              </span>
+
+              <span>
+                Máximo:
+                {{
+                  datos.aporteMaximo
+                  | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+                }}
+              </span>
+
+            </div>
+
+          </div>
+
+          <!-- PORCENTAJE DE META -->
+          @if (porcentajeMeta() !== null) {
+
+            <div class="aporte-indicador">
+
+              <div class="indicador-cabecera">
+
+                <span>Porcentaje sobre la meta</span>
+
+                <strong>
+                  {{ porcentajeMeta() | number:'1.2-2' }}%
+                </strong>
+
+              </div>
+
+              <div class="barra-fondo">
+                <div
+                  class="barra-progreso"
+                  [style.width.%]="porcentajeBarra()"
+                ></div>
+              </div>
+
+              <small>
+                Referencia económica, no probabilidad
+                garantizada de ganar.
+              </small>
+
+            </div>
+
+          }
+
+          <!-- YAPE -->
+          <div class="yape-seccion">
+
+            <h3>Pago mediante Yape</h3>
+
+            <p>
+              Escanea el QR desde Yape y realiza
+              un pago por el monto seleccionado.
+            </p>
+
+            <div class="contenedor-qr">
+
+              <!--
+                Coloca tu QR real de Charatec en:
+                public/images/yape-charatec.png
+              -->
+              <img
+                src="/images/yape-charatec.png"
+                alt="Código QR Yape de Charatec"
+              />
+
+            </div>
+
+            <p class="instruccion-yape">
+              Monto a transferir:
+              <strong>
+                {{
+                  montoSeleccionado()
+                  | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+                }}
+              </strong>
+            </p>
+
+          </div>
+
+          <!-- FORMULARIO PARA FUTURO POST -->
+          <div class="formulario-datos">
+
+            <h3>Datos de tu participación</h3>
+
+            <div class="campo-formulario">
+              <label for="emailContacto">
+                Correo electrónico
+              </label>
+
+              <input
+                id="emailContacto"
+                name="emailContacto"
+                type="email"
+                [(ngModel)]="emailContacto"
+                [disabled]="!datos.puedeParticipar"
+                placeholder="correo@ejemplo.com"
+              />
+            </div>
+
+            <div class="campo-formulario">
+              <label for="numeroWhatsapp">
+                Número de WhatsApp
+              </label>
+
+              <input
+                id="numeroWhatsapp"
+                name="numeroWhatsapp"
+                type="tel"
+                [(ngModel)]="numeroWhatsapp"
+                [disabled]="!datos.puedeParticipar"
+                placeholder="999999999"
+              />
+            </div>
+
+            <div class="campo-formulario">
+              <label for="codigoOperacion">
+                Código de operación Yape
+              </label>
+
+              <input
+                id="codigoOperacion"
+                name="codigoOperacion"
+                type="text"
+                [(ngModel)]="codigoOperacionYape"
+                [disabled]="!datos.puedeParticipar"
+                placeholder="Ingresa el código de tu Yape"
+              />
+            </div>
+
+            <div class="aviso-post">
+              El registro de participaciones aún
+              no está habilitado. Estos datos se
+              enviarán cuando implementemos el POST.
+            </div>
+
+            <button
+              type="button"
+              class="btn-principal"
+              disabled
+            >
+              Registrar participación
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</section>

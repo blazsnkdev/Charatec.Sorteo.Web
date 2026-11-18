@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs';
 import { SorteosDisponiblesService } from '../services/sorteos-disponibles.service';
 import { SorteoDisponible } from '../models/sorteos-disponibles';
 import { ResultadoPaginado } from '../models/sorteos-disponibles';
-
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -34,7 +34,7 @@ export class SorteosDisponibles implements OnInit, OnDestroy {
   // =====================================
   // ESTADO DE LA VISTA
   // =====================================
-
+  private readonly router = inject(Router);
   readonly cargando = signal(false);
   readonly error = signal<string | null>(null);
 
@@ -84,6 +84,15 @@ export class SorteosDisponibles implements OnInit, OnDestroy {
       (_, i) => inicio + i
     );
   });
+
+
+    irAParticipar(sorteoId: string): void {
+    this.router.navigate([
+      '/sorteos',
+      sorteoId,
+      'participar'
+    ]);
+  }
 
   // =====================================
   // MODAL DE DETALLES

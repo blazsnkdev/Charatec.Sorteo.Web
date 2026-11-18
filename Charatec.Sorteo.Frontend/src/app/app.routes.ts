@@ -29,14 +29,14 @@ export const routes: Routes = [
         .then(m => m.Login)
   },
 
-{
-  path: 'sorteos',
-  loadComponent: () =>
-    import(
-      './features/sorteos-disponibles/pages/sorteos-disponibles'
-    ).then(m => m.SorteosDisponibles),
-  canActivate: [clienteGuard]
-},
+  {
+    path: 'sorteos',
+    loadComponent: () =>
+      import(
+        './features/sorteos-disponibles/pages/sorteos-disponibles'
+      ).then(m => m.SorteosDisponibles),
+    canActivate: [clienteGuard]
+  },
 
 
   {
@@ -47,6 +47,16 @@ export const routes: Routes = [
       import('./features/home/pages/home/home')
         .then(m => m.Home)
   },
+
+  {
+    path: 'sorteos/:sorteoId/participar',
+    loadComponent: () =>
+      import(
+        './features/sorteos-disponibles/pages/participar/participar'
+      ).then(m => m.Participar),
+    canActivate: [clienteGuard]
+  },
+
 
   // =====================================
   // RUTA PRINCIPAL
