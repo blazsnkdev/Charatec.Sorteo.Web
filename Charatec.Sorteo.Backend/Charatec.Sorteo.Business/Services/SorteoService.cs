@@ -1,5 +1,4 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Charatec.Sorteo.Business.DTOs.Requests.Sorteos;
 using Charatec.Sorteo.Business.DTOs.Responses.Sorteos;
 using Charatec.Sorteo.Business.Interfaces;
@@ -15,22 +14,18 @@ namespace Charatec.Sorteo.Business.Services
     public class SorteoService : ISorteoService
     {
         private readonly IUnitOfWork _uow;
-
         public SorteoService(IUnitOfWork uow)
         {
             _uow = uow;
         }
-
         #region LISTADO PAGINADO POR ESTADO
         public async Task<Result<ResultadoPaginado<SorteoListadoResponse>>>
             ListarSorteosAsync(
                 ListarSorteosRequest request,
                 CancellationToken cancellationToken = default)
         {
-            // 1. Obtener consulta base.
             var consulta = _uow._sorteoRepository.Consultar();
 
-            // 2. Filtrar por estado, solo si fue enviado.
             if (request.Estado.HasValue)
             {
                 consulta = consulta.Where(
@@ -38,18 +33,15 @@ namespace Charatec.Sorteo.Business.Services
                 );
             }
 
-            // 3. Aplicar orden estable.
             consulta = consulta
                 .OrderByDescending(x => x.FechaCreacion)
                 .ThenByDescending(x => x.Id);
 
-            // 4. Aplicar paginación después del filtro.
             var datosPaginados = await consulta.PaginarAsync(
                 request.ObtenerPaginacion(),
                 cancellationToken
             );
 
-            // 5. Convertir entidades a DTOs.
             var registros = datosPaginados.Registros
                 .Select(s => new SorteoListadoResponse(
                     Id: s.Id,
@@ -67,7 +59,6 @@ namespace Charatec.Sorteo.Business.Services
                 ))
                 .ToList();
 
-            // 6. Construir resultado paginado.
             var respuesta = new ResultadoPaginado<SorteoListadoResponse>(
                 Registros: registros,
                 Pagina: datosPaginados.Pagina,
@@ -79,7 +70,6 @@ namespace Charatec.Sorteo.Business.Services
                 .Success(respuesta);
         }
         #endregion
-
         #region BUSCAR POR ID
         public async Task<Result<SorteoListadoResponse>> ObtenerPorIdAsync(
             Guid id,
@@ -133,8 +123,7 @@ namespace Charatec.Sorteo.Business.Services
             return Result<SorteoListadoResponse>.Success(response);
         }
         #endregion
-
-
+        #region ACTUALIZAR EL BORRADOR 
         public async Task<Result<SorteoListadoResponse>>
             ActualizarBorradorAsync(
                 Guid sorteoId,
@@ -235,7 +224,8 @@ namespace Charatec.Sorteo.Business.Services
 
             return Result<SorteoListadoResponse>.Success(response);
         }
-
+        #endregion
+        #region PUBLICAR CAMBIAR ESTADO DEL SORTEO 
 
         public async Task<Result<SorteoPublicadoResponse>> PublicarSorteoAsync(
             Guid sorteoId,
@@ -365,8 +355,7 @@ namespace Charatec.Sorteo.Business.Services
 
             return Result<SorteoPublicadoResponse>.Success(response);
         }
-
-
+        #endregion
         #region REGISTRAR SORTEO BORRADOR
         public async Task<Result<BorradorSorteoRegistradoResponse>> RegistrarSorteoAsync(
             CrearSorteoBorradorRequest request,
@@ -375,13 +364,11 @@ namespace Charatec.Sorteo.Business.Services
         {
             if (administradorId == Guid.Empty)
             {
-                throw new ValidationException(//TODO: corregir a futuro
-                    "El identificador del administrador no es válido.");
+                return Result<BorradorSorteoRegistradoResponse>.Failure(Error.Validation(""));
             }
             ArgumentNullException.ThrowIfNull(request);
 
             var resultadosValidacion = new List<ValidationResult>();
-
             var contextoValidacion = new ValidationContext(request);
 
             bool esValido = Validator.TryValidateObject(
@@ -410,14 +397,12 @@ namespace Charatec.Sorteo.Business.Services
 
             if (titulo.Length < 5 || titulo.Length > 180)
             {
-                throw new ValidationException(
-                    "El título debe tener entre 5 y 180 caracteres.");
+                return Result<BorradorSorteoRegistradoResponse>.Failure(Error.Validation("Debe tener entre 5 a 180 caracateres"));
             }
 
             if (descripcion.Length < 10 || descripcion.Length > 3000)
             {
-                throw new ValidationException(
-                    "La descripción debe tener entre 10 y 3000 caracteres.");
+                return Result<BorradorSorteoRegistradoResponse>.Failure(Error.Validation("Debe tener entre 10 a 3000 caracateres"));
             }
 
             // 4. Crear entidad Sorteo

@@ -6,6 +6,7 @@ namespace Charatec.Sorteo.Data.Interfaces
     {
         public ISorteoRepository _sorteoRepository { get; }
         public IParticipacionYapeRepository _participacionesYape { get; }
+        public IAporteRepository _aporteRepository { get; }
         Task BeginTransactionAsync();
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

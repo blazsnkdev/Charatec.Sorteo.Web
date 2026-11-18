@@ -3,7 +3,6 @@ using Charatec.Sorteo.Business.DTOs.Requests.Participaciones;
 using Charatec.Sorteo.Business.DTOs.Responses.Participaciones;
 using Charatec.Sorteo.Business.Interfaces;
 using Charatec.Sorteo.Business.Options;
-using Charatec.Sorteo.Common.Interfaces;
 using Charatec.Sorteo.Common.Models;
 using Charatec.Sorteo.Common.Results;
 using Charatec.Sorteo.Data.Interfaces;
@@ -145,6 +144,7 @@ namespace Charatec.Sorteo.Business.Services
         }
         #endregion
 
+        #region REGISTRAR PAGO DE YAPE PENDIENTE A VALIDACINO DEL ADMIN
         public async Task<Result<RegistrarParticipacionYapeResponse>>
             RegistrarAsync(
                 Guid usuarioId,
@@ -152,10 +152,7 @@ namespace Charatec.Sorteo.Business.Services
                 RegistrarParticipacionYapeRequest request,
                 CancellationToken cancellationToken = default)
         {
-            // ==========================================
-            // 1. VALIDAR DATOS DEL FORMULARIO
-            // ==========================================
-
+            
             if (usuarioId == Guid.Empty ||
                 sorteoId == Guid.Empty ||
                 request.SolicitudId == Guid.Empty)
@@ -175,10 +172,6 @@ namespace Charatec.Sorteo.Business.Services
                 return Result<RegistrarParticipacionYapeResponse>
                     .Failure(Error.Validation("Ingresa el código de operación Yape."));
             }
-
-            // ==========================================
-            // 2. VALIDAR SORTEO PUBLICADO
-            // ==========================================
 
             var sorteo = await _unitOfWork._sorteoRepository
                 .ObtenerPublicadoPorIdAsync(
@@ -253,6 +246,6 @@ namespace Charatec.Sorteo.Business.Services
             return Result<RegistrarParticipacionYapeResponse>
                 .Success(response);
         }
-
+        #endregion
     }
 }

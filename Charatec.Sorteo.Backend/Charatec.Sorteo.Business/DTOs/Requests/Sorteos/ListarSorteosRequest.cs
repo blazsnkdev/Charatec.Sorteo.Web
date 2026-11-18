@@ -14,10 +14,7 @@ public sealed record ListarSorteosRequest
     [Range(1, 100,
         ErrorMessage = "El tamaño de página debe estar entre 1 y 100.")]
     public int TamanoPagina { get; init; } = 10;
-
-    // null significa TODOS los estados.
     public EstadoSorteo? Estado { get; init; }
-
     public PaginacionRequest ObtenerPaginacion() => new()
     {
         Pagina = Pagina,

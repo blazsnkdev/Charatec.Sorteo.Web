@@ -15,13 +15,15 @@ public sealed class UnitOfWork : IUnitOfWork, IDisposable
 
     public ISorteoRepository _sorteoRepository { get;}
     public IParticipacionYapeRepository _participacionesYape { get; }
-
+    public IAporteRepository _aporteRepository { get; }
     public UnitOfWork(
         SorteoDbContext dbContext,
+        IAporteRepository aporteRepository,
         ISorteoRepository sorteoRepository,
         IParticipacionYapeRepository participacionYapeRepository 
         )
     {
+        _aporteRepository = aporteRepository;
         _participacionesYape = participacionYapeRepository;
         _dbContext = dbContext;
         _sorteoRepository = sorteoRepository;

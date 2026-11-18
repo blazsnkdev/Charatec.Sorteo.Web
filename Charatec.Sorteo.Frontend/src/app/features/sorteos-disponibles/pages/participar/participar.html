@@ -1,4 +1,3 @@
-
 <section class="participar-page">
 
   <!-- ====================================== -->
@@ -7,270 +6,234 @@
 
   @if (cargando()) {
 
-    <div class="estado-pagina">
-      <div class="spinner"></div>
-      <p>Cargando información del sorteo...</p>
-    </div>
+  <div class="estado-pagina">
+    <div class="spinner"></div>
+    <p>Cargando información del sorteo...</p>
+  </div>
 
   } @else if (error()) {
 
-    <!-- ==================================== -->
-    <!-- ERROR -->
-    <!-- ==================================== -->
+  <!-- ==================================== -->
+  <!-- ERROR -->
+  <!-- ==================================== -->
 
-    <div class="estado-pagina">
-      <h2>No se pudo cargar el sorteo</h2>
+  <div class="estado-pagina">
+    <h2>No se pudo cargar el sorteo</h2>
 
-      <p>{{ error() }}</p>
+    <p>{{ error() }}</p>
 
-      <button
-        type="button"
-        class="btn-principal"
-        (click)="cargarConfiguracion(sorteoId())"
-      >
-        Reintentar
-      </button>
-    </div>
+    <button type="button" class="btn-principal" (click)="cargarConfiguracion(sorteoId())">
+      Reintentar
+    </button>
+  </div>
 
   } @else if (configuracion(); as datos) {
 
-    <!-- ==================================== -->
-    <!-- ENCABEZADO -->
-    <!-- ==================================== -->
+  <!-- ==================================== -->
+  <!-- ENCABEZADO -->
+  <!-- ==================================== -->
 
-    <button
-      type="button"
-      class="btn-volver"
-      (click)="volver()"
-    >
-      ← Volver a sorteos
-    </button>
 
-    <header class="participar-encabezado">
-      <h1>Participar en el sorteo</h1>
+  <header class="participar-encabezado">
+    <h1>Participar en el sorteo</h1>
 
-      <p>
-        Selecciona tu aporte y continúa
-        con el pago mediante Yape.
-      </p>
-    </header>
+    <p>
+      Selecciona tu aporte y continúa
+      con el pago mediante Yape.
+    </p>
+  </header>
 
-    @if (!datos.puedeParticipar) {
-      <div class="aviso">
-        {{ datos.mensajeDisponibilidad }}
+  @if (!datos.puedeParticipar) {
+  <div class="aviso">
+    {{ datos.mensajeDisponibilidad }}
+  </div>
+  }
+
+  <!-- ==================================== -->
+  <!-- CONTENIDO PRINCIPAL -->
+  <!-- ==================================== -->
+
+  <div class="participar-grid">
+
+    <!-- COLUMNA 1: SORTEO -->
+
+    <article class="panel">
+
+      <div class="imagen-sorteo">
+
+        @if (datos.imagenPortadaUrl) {
+
+        <img [src]="datos.imagenPortadaUrl" [alt]="datos.titulo" />
+
+        } @else {
+
+        <div class="imagen-placeholder">
+          <span>🎁</span>
+          <p>Imagen del sorteo</p>
+        </div>
+
+        }
+
       </div>
-    }
 
-    <!-- ==================================== -->
-    <!-- CONTENIDO PRINCIPAL -->
-    <!-- ==================================== -->
+      <div class="panel-contenido">
 
-    <div class="participar-grid">
+        <span class="estado-publicado">
+          Sorteo publicado
+        </span>
 
-      <!-- COLUMNA 1: SORTEO -->
+        <h2>{{ datos.titulo }}</h2>
 
-      <article class="panel">
+        <p class="descripcion">
+          {{ datos.descripcion }}
+        </p>
 
-        <div class="imagen-sorteo">
+        <div class="datos-fechas">
 
-          @if (datos.imagenPortadaUrl) {
-
-            <img
-              [src]="datos.imagenPortadaUrl"
-              [alt]="datos.titulo"
-            />
-
-          } @else {
-
-            <div class="imagen-placeholder">
-              <span>🎁</span>
-              <p>Imagen del sorteo</p>
-            </div>
-
-          }
-
-        </div>
-
-        <div class="panel-contenido">
-
-          <span class="estado-publicado">
-            Sorteo publicado
-          </span>
-
-          <h2>{{ datos.titulo }}</h2>
-
-          <p class="descripcion">
-            {{ datos.descripcion }}
-          </p>
-
-          <div class="datos-fechas">
-
-            <div>
-              <span>Inicio</span>
-
-              <strong>
-                {{
-                  datos.fechaInicio
-                  | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
-                }}
-              </strong>
-            </div>
-
-            <div>
-              <span>Cierre</span>
-
-              <strong>
-                {{
-                  datos.fechaCierre
-                  | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
-                }}
-              </strong>
-            </div>
-
-          </div>
-
-          <p class="mensaje-disponibilidad">
-            {{ datos.mensajeDisponibilidad }}
-          </p>
-
-        </div>
-
-      </article>
-
-      <!-- COLUMNA 2: APORTE -->
-
-      <div class="panel formulario-panel">
-
-        <div class="panel-contenido">
-
-          <h2>Configura tu aporte</h2>
-
-          <p class="texto-secundario">
-            Elige cuánto deseas aportar al sorteo.
-          </p>
-
-          <!-- MONTO SELECCIONADO -->
-
-          <div class="monto-resumen">
-
-            <span>Tu aporte</span>
+          <div>
+            <span>Inicio</span>
 
             <strong>
               {{
-                montoSeleccionado()
-                | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+              datos.fechaInicio
+              | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
               }}
+            </strong>
+          </div>
+
+          <div>
+            <span>Cierre</span>
+
+            <strong>
+              {{
+              datos.fechaCierre
+              | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
+              }}
+            </strong>
+          </div>
+
+        </div>
+
+        <p class="mensaje-disponibilidad">
+          {{ datos.mensajeDisponibilidad }}
+        </p>
+
+      </div>
+
+    </article>
+
+    <!-- COLUMNA 2: APORTE -->
+
+    <div class="panel formulario-panel">
+
+      <div class="panel-contenido">
+
+        <h2>Configura tu aporte</h2>
+
+        <p class="texto-secundario">
+          Elige cuánto deseas aportar al sorteo.
+        </p>
+
+        <!-- MONTO SELECCIONADO -->
+
+        <div class="monto-resumen">
+
+          <span>Tu aporte</span>
+
+          <strong>
+            {{
+            montoSeleccionado()
+            | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+            }}
+          </strong>
+
+        </div>
+
+        <!-- DESLIZADOR -->
+
+        <div class="campo-deslizador">
+
+          <input type="range" [min]="datos.aporteMinimo" [max]="datos.aporteMaximo" [step]="datos.pasoAporte"
+            [ngModel]="montoSeleccionado()" (ngModelChange)="cambiarMonto($event)"
+            [disabled]="!datos.puedeParticipar || registroExitoso()" aria-label="Seleccionar monto del aporte" />
+
+          <div class="limites-monto">
+
+            <span>
+              Mínimo:
+              {{
+              datos.aporteMinimo
+              | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+              }}
+            </span>
+
+            <span>
+              Máximo:
+              {{
+              datos.aporteMaximo
+              | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+              }}
+            </span>
+
+          </div>
+
+        </div>
+
+        <!-- PORCENTAJE SOBRE META -->
+
+        @if (porcentajeMeta() !== null) {
+
+        <div class="aporte-indicador">
+
+          <div class="indicador-cabecera">
+
+            <span>Porcentaje sobre la meta</span>
+
+            <strong>
+              {{ porcentajeMeta() | number:'1.2-2' }}%
             </strong>
 
           </div>
 
-          <!-- DESLIZADOR -->
+          <div class="barra-fondo">
 
-          <div class="campo-deslizador">
-
-            <input
-              type="range"
-              [min]="datos.aporteMinimo"
-              [max]="datos.aporteMaximo"
-              [step]="datos.pasoAporte"
-              [ngModel]="montoSeleccionado()"
-              (ngModelChange)="cambiarMonto($event)"
-              [disabled]="!datos.puedeParticipar || registroExitoso()"
-              aria-label="Seleccionar monto del aporte"
-            />
-
-            <div class="limites-monto">
-
-              <span>
-                Mínimo:
-                {{
-                  datos.aporteMinimo
-                  | currency:'PEN':'S/ ':'1.2-2':'es-PE'
-                }}
-              </span>
-
-              <span>
-                Máximo:
-                {{
-                  datos.aporteMaximo
-                  | currency:'PEN':'S/ ':'1.2-2':'es-PE'
-                }}
-              </span>
-
-            </div>
+            <div class="barra-progreso" [style.width.%]="porcentajeBarra()"></div>
 
           </div>
 
-          <!-- PORCENTAJE SOBRE META -->
+          <small>
+            Este porcentaje es una referencia de
+            recaudación, no la probabilidad real
+            de ganar el sorteo.
+          </small>
 
-          @if (porcentajeMeta() !== null) {
+        </div>
 
-            <div class="aporte-indicador">
+        }
 
-              <div class="indicador-cabecera">
+        <!-- CONTINUAR CON YAPE -->
 
-                <span>Porcentaje sobre la meta</span>
+        <div class="continuar-pago">
 
-                <strong>
-                  {{ porcentajeMeta() | number:'1.2-2' }}%
-                </strong>
+          <h3>Confirma tu participación</h3>
 
-              </div>
+          <p>
+            Tu aporte seleccionado es:
+            <strong>
+              {{
+              montoSeleccionado()
+              | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+              }}
+            </strong>
+          </p>
 
-              <div class="barra-fondo">
-
-                <div
-                  class="barra-progreso"
-                  [style.width.%]="porcentajeBarra()"
-                ></div>
-
-              </div>
-
-              <small>
-                Este porcentaje es una referencia de
-                recaudación, no la probabilidad real
-                de ganar el sorteo.
-              </small>
-
-            </div>
-
-          }
-
-          <!-- CONTINUAR CON YAPE -->
-
-          <div class="continuar-pago">
-
-            <h3>Confirma tu participación</h3>
-
-            <p>
-              Tu aporte seleccionado es:
-              <strong>
-                {{
-                  montoSeleccionado()
-                  | currency:'PEN':'S/ ':'1.2-2':'es-PE'
-                }}
-              </strong>
-            </p>
-
-            <p>
-              El pago se realizará mediante Yape
-              y será verificado por Corporación Charatec.
-            </p>
-
-            <button
-              type="button"
-              class="btn-principal"
-              [disabled]="!datos.puedeParticipar"
-              (click)="abrirModalYape()"
-            >
-              @if (registroExitoso()) {
-                Ver participación registrada
-              } @else {
-                Continuar con Yape
-              }
-            </button>
-
-          </div>
+          <button type="button" class="btn-principal" [disabled]="!datos.puedeParticipar" (click)="abrirModalYape()">
+            @if (registroExitoso()) {
+            Ver participación registrada
+            } @else {
+            Continuar con Yape
+            }
+          </button>
 
         </div>
 
@@ -278,296 +241,225 @@
 
     </div>
 
-    <!-- ==================================== -->
-    <!-- MODAL YAPE -->
-    <!-- ==================================== -->
+  </div>
 
-    @if (modalYapeAbierto()) {
+  <!-- ==================================== -->
+  <!-- MODAL YAPE -->
+  <!-- ==================================== -->
 
-      <div
-        class="yape-modal-overlay"
-        (click)="cerrarModalYape()"
-      >
+  @if (modalYapeAbierto()) {
 
-        <div
-          class="yape-modal"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="yape-modal-titulo"
-          (click)="$event.stopPropagation()"
-        >
+  <div class="yape-modal-overlay" (click)="cerrarModalYape()">
 
-          <!-- CABECERA -->
+    <div class="yape-modal" role="dialog" aria-modal="true" aria-labelledby="yape-modal-titulo"
+      (click)="$event.stopPropagation()">
 
-          <header class="yape-modal-header">
+      <!-- CABECERA -->
 
-            <div>
-              <h2 id="yape-modal-titulo">
-                Confirmar participación
-              </h2>
+      <header class="yape-modal-header">
 
-              <p>{{ datos.titulo }}</p>
-            </div>
+        <div>
+          <h2 id="yape-modal-titulo">
+            Confirmar participación
+          </h2>
 
-            <button
-              type="button"
-              class="yape-modal-cerrar"
-              [disabled]="enviandoParticipacion()"
-              (click)="cerrarModalYape()"
-              aria-label="Cerrar ventana"
-            >
-              &times;
-            </button>
+          <p>{{ datos.titulo }}</p>
+        </div>
 
-          </header>
+        <button type="button" class="yape-modal-cerrar" [disabled]="enviandoParticipacion()" (click)="cerrarModalYape()"
+          aria-label="Cerrar ventana">
+          &times;
+        </button>
 
-          <!-- CUERPO -->
+      </header>
 
-          <div class="yape-modal-body">
+      <!-- CUERPO -->
 
-            @if (registroExitoso()) {
+      <div class="yape-modal-body">
 
-              <!-- REGISTRO EXITOSO -->
+        @if (registroExitoso()) {
 
-              <div class="yape-exito">
+        <!-- REGISTRO EXITOSO -->
 
-                <h3>¡Solicitud registrada!</h3>
 
-                <p>
-                  Tu participación está pendiente
-                  de verificación por Charatec.
-                </p>
+        <div class="yape-exito">
 
-                @if (participacionRegistrada(); as registro) {
-
-                  <div class="registro-resumen">
-
-                    <span>Importe registrado</span>
-
-                    <strong>
-                      {{
-                        registro.monto
-                        | currency:'PEN':'S/ ':'1.2-2':'es-PE'
-                      }}
-                    </strong>
-
-                    <span>Referencia de orden</span>
-
-                    <strong class="referencia-orden">
-                      {{ registro.ordenPagoId }}
-                    </strong>
-
-                    <span>Estado</span>
-
-                    <strong>
-                      {{ registro.estadoVerificacion }}
-                    </strong>
-
-                  </div>
-
-                }
-
-                <p>
-                  Comparte tu comprobante por WhatsApp
-                  para facilitar la revisión.
-                </p>
-
-              </div>
-
-              @if (errorRegistro()) {
-                <div class="yape-modal-error">
-                  {{ errorRegistro() }}
-                </div>
-              }
-
-            } @else {
-
-              <!-- MONTO A TRANSFERIR -->
-
-              <div class="yape-modal-monto">
-
-                <span>Monto a transferir</span>
-
-                <strong>
-                  {{
-                    montoSeleccionado()
-                    | currency:'PEN':'S/ ':'1.2-2':'es-PE'
-                  }}
-                </strong>
-
-              </div>
-
-              <!-- QR OFICIAL -->
-
-              <div class="yape-modal-qr">
-
-                <img
-                  src="/images/yape-charatec.png"
-                  alt="Código QR de Yape de Charatec"
-                />
-
-              </div>
-
-              <p class="yape-modal-instruccion">
-                Escanea el QR desde Yape, transfiere
-                el importe exacto y registra el
-                código de operación.
-              </p>
-
-              <!-- FORMULARIO -->
-
-              <form
-                id="form-registro-yape"
-                #formYape="ngForm"
-                (ngSubmit)="registrarParticipacion()"
-              >
-
-                <div class="campo-formulario">
-
-                  <label for="yape-email">
-                    Correo electrónico
-                  </label>
-
-                  <input
-                    id="yape-email"
-                    name="emailContacto"
-                    type="email"
-                    [(ngModel)]="emailContacto"
-                    placeholder="correo@ejemplo.com"
-                    [disabled]="enviandoParticipacion()"
-                    required
-                    email
-                  />
-
-                </div>
-
-                <div class="campo-formulario">
-
-                  <label for="yape-whatsapp">
-                    Número de WhatsApp
-                  </label>
-
-                  <input
-                    id="yape-whatsapp"
-                    name="numeroWhatsapp"
-                    type="tel"
-                    [(ngModel)]="numeroWhatsapp"
-                    placeholder="999999999"
-                    inputmode="numeric"
-                    pattern="9[0-9]{8}"
-                    maxlength="9"
-                    [disabled]="enviandoParticipacion()"
-                    required
-                  />
-
-                </div>
-
-                <div class="campo-formulario">
-
-                  <label for="yape-codigo">
-                    Código de operación Yape
-                  </label>
-
-                  <input
-                    id="yape-codigo"
-                    name="codigoOperacionYape"
-                    type="text"
-                    [(ngModel)]="codigoOperacionYape"
-                    placeholder="Código de transferencia"
-                    maxlength="100"
-                    [disabled]="enviandoParticipacion()"
-                    required
-                  />
-
-                </div>
-
-                <label class="yape-terminos">
-
-                  <input
-                    name="aceptaTerminos"
-                    type="checkbox"
-                    [(ngModel)]="aceptaTerminos"
-                    [disabled]="enviandoParticipacion()"
-                    required
-                  />
-
-                  <span>
-                    Acepto los términos de participación
-                    y entiendo que mi pago está sujeto
-                    a verificación.
-                  </span>
-
-                </label>
-
-                @if (errorRegistro()) {
-
-                  <div class="yape-modal-error">
-                    {{ errorRegistro() }}
-                  </div>
-
-                }
-
-              </form>
-
-            }
-
+          <div class="yape-exito-icono">
+            ⏳
           </div>
 
-          <!-- PIE DEL MODAL -->
+          <h3>¡Solicitud recibida correctamente!</h3>
 
-          <footer class="yape-modal-footer">
+          <p>
+            Hemos registrado tu solicitud de participación.
+          </p>
 
-            @if (registroExitoso()) {
+          <div class="yape-estado-pendiente">
+            Pendiente de revisión
+          </div>
 
-              <button
-                type="button"
-                class="btn-principal"
-                (click)="compartirPorWhatsapp()"
-              >
-                Compartir por WhatsApp
-              </button>
+          <p>
+            Nuestro equipo verificará el pago realizado
+            mediante Yape.
+          </p>
 
-              <button
-                type="button"
-                class="btn-modal-cancelar"
-                (click)="cerrarModalYape()"
-              >
-                Cerrar
-              </button>
+          <p>
+            Te notificaremos el resultado al número de
+            WhatsApp que registraste:
+          </p>
 
-            } @else {
+          <strong class="yape-telefono">
+            {{ numeroWhatsapp }}
+          </strong>
 
-              <button
-                type="button"
-                class="btn-modal-cancelar"
-                [disabled]="enviandoParticipacion()"
-                (click)="cerrarModalYape()"
-              >
-                Cancelar
-              </button>
-
-              <button
-                type="submit"
-                form="form-registro-yape"
-                class="btn-principal"
-                [disabled]="enviandoParticipacion()"
-              >
-                @if (enviandoParticipacion()) {
-                  Registrando...
-                } @else {
-                  Registrar participación
-                }
-              </button>
-
-            }
-
-          </footer>
+          <p class="yape-aviso-final">
+            Tu participación será habilitada únicamente
+            cuando se confirme el pago.
+          </p>
 
         </div>
 
+
+        @if (errorRegistro()) {
+        <div class="yape-modal-error">
+          {{ errorRegistro() }}
+        </div>
+        }
+
+        } @else {
+
+        <!-- MONTO A TRANSFERIR -->
+
+        <div class="yape-modal-monto">
+
+          <span>Monto a transferir</span>
+
+          <strong>
+            {{
+            montoSeleccionado()
+            | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+            }}
+          </strong>
+
+        </div>
+
+        <!-- QR OFICIAL -->
+
+        <div class="yape-modal-qr">
+
+          <img src="/images/yape-charatec.png" alt="Código QR de Yape de Charatec" />
+
+        </div>
+
+        <p class="yape-modal-instruccion">
+          Escanea el QR desde Yape, transfiere
+          el importe exacto y registra el
+          código de operación.
+        </p>
+
+        <!-- FORMULARIO -->
+
+        <form id="form-registro-yape" #formYape="ngForm" (ngSubmit)="registrarParticipacion()">
+
+          <div class="campo-formulario">
+
+            <label for="yape-email">
+              Correo electrónico
+            </label>
+
+            <input id="yape-email" name="emailContacto" type="email" [(ngModel)]="emailContacto"
+              placeholder="correo@ejemplo.com" [disabled]="enviandoParticipacion()" required email />
+
+          </div>
+
+          <div class="campo-formulario">
+
+            <label for="yape-whatsapp">
+              Número de WhatsApp
+            </label>
+
+            <input id="yape-whatsapp" name="numeroWhatsapp" type="tel" [(ngModel)]="numeroWhatsapp"
+              placeholder="999999999" inputmode="numeric" pattern="9[0-9]{8}" maxlength="9"
+              [disabled]="enviandoParticipacion()" required />
+
+          </div>
+
+          <div class="campo-formulario">
+
+            <label for="yape-codigo">
+              Código de operación Yape
+            </label>
+
+            <input id="yape-codigo" name="codigoOperacionYape" type="text" [(ngModel)]="codigoOperacionYape"
+              placeholder="Código de transferencia" maxlength="100" [disabled]="enviandoParticipacion()" required />
+
+          </div>
+
+          <label class="yape-terminos">
+
+            <input name="aceptaTerminos" type="checkbox" [(ngModel)]="aceptaTerminos"
+              [disabled]="enviandoParticipacion()" required />
+
+            <span>
+              Acepto los términos de participación
+              y entiendo que mi pago está sujeto
+              a verificación.
+            </span>
+
+          </label>
+
+          @if (errorRegistro()) {
+
+          <div class="yape-modal-error">
+            {{ errorRegistro() }}
+          </div>
+
+          }
+
+        </form>
+
+        }
+
       </div>
 
-    }
+      <!-- PIE DEL MODAL -->
+
+      <footer class="yape-modal-footer">
+
+        @if (registroExitoso()) {
+
+        <button type="button" class="btn-principal" (click)="compartirPorWhatsapp()">
+          Compartir por WhatsApp
+        </button>
+
+        <button type="button" class="btn-modal-cancelar" (click)="cerrarModalYape()">
+          Cerrar
+        </button>
+
+        } @else {
+
+        <button type="button" class="btn-modal-cancelar" [disabled]="enviandoParticipacion()"
+          (click)="cerrarModalYape()">
+          Cancelar
+        </button>
+
+        <button type="submit" form="form-registro-yape" class="btn-principal" [disabled]="enviandoParticipacion()">
+          @if (enviandoParticipacion()) {
+          Registrando...
+          } @else {
+          Registrar participación
+          }
+        </button>
+
+        }
+
+      </footer>
+
+    </div>
+
+  </div>
+
+  }
 
   }
 
