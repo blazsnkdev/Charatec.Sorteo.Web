@@ -1,0 +1,296 @@
+
+<section class="mis-aportes">
+
+  <!-- ===================================== -->
+  <!-- ENCABEZADO -->
+  <!-- ===================================== -->
+
+  <header class="encabezado">
+
+    <div>
+      <h1>Mis aportes</h1>
+
+      <p>
+        Consulta tus aportes y revisa
+        el estado de cada participación.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="btn-actualizar"
+      [disabled]="cargando()"
+      (click)="cargarAportes()"
+    >
+      Actualizar
+    </button>
+
+  </header>
+
+  <!-- ===================================== -->
+  <!-- FILTROS -->
+  <!-- ===================================== -->
+
+  <div class="filtros">
+
+    <div class="campo">
+
+      <label for="estado">
+        Estado del aporte
+      </label>
+
+      <select
+        id="estado"
+        [value]="estado() ?? ''"
+        [disabled]="cargando()"
+        (change)="cambiarEstado($event)"
+      >
+        <option value="">
+          Todos los estados
+        </option>
+
+        <option value="Pendiente">
+          Pendiente de revisión
+        </option>
+
+        <option value="Confirmado">
+          Confirmado
+        </option>
+
+        <option value="Rechazado">
+          Rechazado
+        </option>
+
+        <option value="Reembolsado">
+          Reembolsado
+        </option>
+
+      </select>
+
+    </div>
+
+    <div class="campo">
+
+      <label for="tamano">
+        Registros por página
+      </label>
+
+      <select
+        id="tamano"
+        [value]="tamanoPagina()"
+        [disabled]="cargando()"
+        (change)="cambiarTamano($event)"
+      >
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+      </select>
+
+    </div>
+
+    <div class="contador">
+      Total:
+      <strong>
+        {{ totalRegistros() }}
+      </strong>
+    </div>
+
+  </div>
+
+  <!-- ===================================== -->
+  <!-- ERROR -->
+  <!-- ===================================== -->
+
+  @if (error()) {
+
+    <div class="mensaje-error">
+
+      <span>{{ error() }}</span>
+
+      <button
+        type="button"
+        (click)="cargarAportes()"
+      >
+        Reintentar
+      </button>
+
+    </div>
+
+  }
+
+  <!-- ===================================== -->
+  <!-- TABLA DE APORTES -->
+  <!-- ===================================== -->
+
+  <div class="tabla-contenedor">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Título del sorteo</th>
+          <th>Monto aportado</th>
+          <th>Fecha del aporte</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        @if (cargando()) {
+
+          <tr>
+            <td
+              colspan="4"
+              class="estado-tabla"
+            >
+              Cargando tus aportes...
+            </td>
+          </tr>
+
+        } @else if (error()) {
+
+          <tr>
+            <td
+              colspan="4"
+              class="estado-tabla"
+            >
+              No se pudo cargar el historial.
+            </td>
+          </tr>
+
+        } @else {
+
+          @for (aporte of aportes(); track aporte.id) {
+
+            <tr>
+
+              <!-- SORTEO -->
+
+              <td class="titulo-sorteo">
+
+                {{ aporte.tituloSorteo }}
+
+              </td>
+
+              <!-- MONTO -->
+
+              <td class="monto-aporte">
+
+                {{
+                  aporte.monto
+                  | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+                }}
+
+              </td>
+
+              <!-- FECHA -->
+
+              <td class="fecha-aporte">
+
+                {{
+                  aporte.fechaCreacion
+                  | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
+                }}
+
+              </td>
+
+              <!-- ESTADO -->
+
+              <td>
+
+                <span
+                  class="estado"
+                  [ngClass]="aporte.estado.toLowerCase()"
+                >
+
+                  {{ textoEstado(aporte.estado) }}
+
+                </span>
+
+              </td>
+
+            </tr>
+
+          } @empty {
+
+            <tr>
+
+              <td
+                colspan="4"
+                class="estado-tabla"
+              >
+
+                @if (estado()) {
+                  No tienes aportes con el estado seleccionado.
+                } @else {
+                  Todavía no has registrado aportes.
+                }
+
+              </td>
+
+            </tr>
+
+          }
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  <!-- ===================================== -->
+  <!-- PAGINACIÓN -->
+  <!-- ===================================== -->
+
+  @if (!error() && totalPaginas() > 0) {
+
+    <footer class="paginacion">
+
+      <p>
+        Página {{ pagina() }}
+        de {{ totalPaginas() }}
+      </p>
+
+      <nav aria-label="Paginación de mis aportes">
+
+        <button
+          type="button"
+          [disabled]="!tieneAnterior() || cargando()"
+          (click)="irPagina(pagina() - 1)"
+        >
+          Anterior
+        </button>
+
+        @for (numero of paginasVisibles(); track numero) {
+
+          <button
+            type="button"
+            [class.activa]="numero === pagina()"
+            [disabled]="cargando()"
+            [attr.aria-current]="numero === pagina() ? 'page' : null"
+            (click)="irPagina(numero)"
+          >
+            {{ numero }}
+          </button>
+
+        }
+
+        <button
+          type="button"
+          [disabled]="!tieneSiguiente() || cargando()"
+          (click)="irPagina(pagina() + 1)"
+        >
+          Siguiente
+        </button>
+
+      </nav>
+
+    </footer>
+
+  }
+
+</section>

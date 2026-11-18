@@ -78,25 +78,20 @@ builder.Services.Configure<ParticipacionOptions>(
     builder.Configuration.GetSection("Participacion")
 );
 
-//Repositories
+  
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<ISorteoRepository, SorteoRepository>();
 builder.Services.AddScoped<ISorteoClienteService, SorteoClienteService>();
-builder.Services.AddScoped<
-    IParticipacionYapeRepository,
-    ParticipacionYapeRepository
->();
+builder.Services.AddScoped<IParticipacionYapeRepository,ParticipacionYapeRepository>();
+builder.Services.AddScoped<IAporteRepository, AporteRepository>();
 
-//Services
 builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<ISorteoService, SorteoService>();
 builder.Services.AddScoped<IParticipacionService, ParticipacionService>();
+builder.Services.AddScoped<IAporteService, AporteService>();
 
-// ==========================================
-// 5. ASP.NET CORE IDENTITY
-// ==========================================
 
 builder.Services
     .AddIdentityCore<ApplicationUser>(options =>

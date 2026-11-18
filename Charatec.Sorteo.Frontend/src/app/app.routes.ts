@@ -28,6 +28,15 @@ export const routes: Routes = [
       import('./features/auth/pages/login/login')
         .then(m => m.Login)
   },
+  {
+    path: 'aportes',
+    loadComponent: () =>
+      import(
+        './features/mis-aportes/pages/mis-aportes/mis-aportes'
+      ).then(m => m.MisAportes),
+    canActivate: [clienteGuard]
+  },
+
 
   {
     path: 'sorteos',

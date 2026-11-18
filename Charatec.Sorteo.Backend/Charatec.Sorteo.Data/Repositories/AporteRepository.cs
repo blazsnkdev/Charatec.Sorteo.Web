@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Charatec.Sorteo.Data.Repositories
 {
-    internal class AporteRepository : IAporteRepository
+    public class AporteRepository : IAporteRepository
     {
         private readonly SorteoDbContext _dbContext;
 

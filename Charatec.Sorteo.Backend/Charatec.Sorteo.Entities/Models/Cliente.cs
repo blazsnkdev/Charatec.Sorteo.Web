@@ -4,16 +4,10 @@ namespace Charatec.Sorteo.Entities.Models;
 public class Cliente
 {
     public Guid Id { get; set; } = Guid.NewGuid();
-
-
     public Guid UsuarioId { get; set; }
-
     public DateOnly? FechaNacimiento { get; set; }
-
     public string Nombres { get; set; } = string.Empty;
-
     public string Apellidos { get; set; } = string.Empty;
-
     public string? NumeroDocumento { get; set; }
 
     public string? Telefono { get; set; }
