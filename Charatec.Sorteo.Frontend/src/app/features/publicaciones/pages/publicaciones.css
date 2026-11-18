@@ -791,3 +791,28 @@
   }
 
 }
+
+/* ======================================
+   BOTÓN VER APORTES - MODAL PUBLICACIÓN
+====================================== */
+
+.btn-ver-aportes {
+  padding: 11px 20px;
+  border: 1px solid #2563eb;
+  border-radius: 9px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-ver-aportes:hover:not(:disabled) {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.btn-ver-aportes:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

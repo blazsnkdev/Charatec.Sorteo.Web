@@ -1,0 +1,310 @@
+
+<section class="aportes-publicacion">
+
+  <!-- ===================================== -->
+  <!-- ENCABEZADO -->
+  <!-- ===================================== -->
+
+  <header class="encabezado">
+
+    <div class="encabezado-info">
+
+
+      <h1>Aportes de la publicación</h1>
+
+      <p>
+        Consulta los clientes que registraron pagos
+        mediante Yape para este sorteo.
+      </p>
+
+    </div>
+
+    <button
+      type="button"
+      class="btn-actualizar"
+      [disabled]="cargando()"
+      (click)="cargarAportes()"
+    >
+      Actualizar
+    </button>
+
+  </header>
+
+  <!-- ===================================== -->
+  <!-- FILTROS -->
+  <!-- ===================================== -->
+
+  <div class="filtros">
+
+    <div class="campo">
+
+      <label for="estado-aporte">
+        Estado del aporte
+      </label>
+
+      <select
+        id="estado-aporte"
+        [value]="estado() ?? ''"
+        [disabled]="cargando()"
+        (change)="cambiarEstado($event)"
+      >
+        <option value="">Todos los estados</option>
+        <option value="Pendiente">Pendiente de revisión</option>
+        <option value="Confirmado">Confirmado</option>
+        <option value="Rechazado">Rechazado</option>
+        <option value="Reembolsado">Reembolsado</option>
+      </select>
+
+    </div>
+
+    <div class="campo">
+
+      <label for="tamano-pagina">
+        Registros por página
+      </label>
+
+      <select
+        id="tamano-pagina"
+        [value]="tamanoPagina()"
+        [disabled]="cargando()"
+        (change)="cambiarTamano($event)"
+      >
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+      </select>
+
+    </div>
+
+    <div class="contador">
+      Total de aportes:
+      <strong>{{ totalRegistros() }}</strong>
+    </div>
+
+  </div>
+
+  <!-- ===================================== -->
+  <!-- MENSAJE DE ERROR -->
+  <!-- ===================================== -->
+
+  @if (error()) {
+
+    <div class="mensaje-error">
+
+      <span>{{ error() }}</span>
+
+      <button
+        type="button"
+        (click)="cargarAportes()"
+      >
+        Reintentar
+      </button>
+
+    </div>
+
+  }
+
+  <!-- ===================================== -->
+  <!-- TABLA -->
+  <!-- ===================================== -->
+
+  <div class="tabla-contenedor">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>WhatsApp</th>
+          <th>Aporte</th>
+          <th>Código Yape</th>
+          <th>Fecha de registro</th>
+          <th>Estado</th>
+          <th class="columna-acciones">Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        @if (cargando()) {
+
+          <tr>
+            <td colspan="7" class="estado-tabla">
+              Cargando aportes de la publicación...
+            </td>
+          </tr>
+
+        } @else if (error()) {
+
+          <tr>
+            <td colspan="7" class="estado-tabla">
+              No se pudo obtener el listado.
+            </td>
+          </tr>
+
+        } @else {
+
+          @for (aporte of aportes(); track aporte.aporteId) {
+
+            <tr>
+
+              <!-- CLIENTE -->
+
+              <td class="cliente">
+                {{ aporte.nombreCliente }}
+              </td>
+
+              <!-- WHATSAPP -->
+
+              <td>
+                @if (aporte.numeroWhatsapp) {
+                  {{ aporte.numeroWhatsapp }}
+                } @else {
+                  <span class="texto-secundario">
+                    No registrado
+                  </span>
+                }
+              </td>
+
+              <!-- MONTO -->
+
+              <td class="monto">
+                {{
+                  aporte.monto
+                  | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+                }}
+              </td>
+
+              <!-- CÓDIGO YAPE -->
+
+              <td class="codigo-yape">
+                @if (aporte.codigoOperacionYape) {
+                  {{ aporte.codigoOperacionYape }}
+                } @else {
+                  <span class="texto-secundario">
+                    Sin código
+                  </span>
+                }
+              </td>
+
+              <!-- FECHA -->
+
+              <td class="fecha">
+                {{
+                  aporte.fechaCreacion
+                  | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
+                }}
+              </td>
+
+              <!-- ESTADO -->
+
+              <td>
+                <span
+                  class="estado"
+                  [ngClass]="aporte.estado.toLowerCase()"
+                >
+                  {{ textoEstado(aporte.estado) }}
+                </span>
+              </td>
+
+              <!-- ACCIÓN -->
+
+              <td class="columna-acciones">
+
+                @if (aporte.estado === 'Pendiente') {
+
+                  <span
+                    class="accion-pendiente"
+                    title="La aprobación estará disponible al implementar el PATCH"
+                  >
+                    Pendiente de revisión
+                  </span>
+
+                } @else {
+
+                  <span class="accion-revisada">
+                    Revisado
+                  </span>
+
+                }
+
+              </td>
+
+            </tr>
+
+          } @empty {
+
+            <tr>
+              <td colspan="7" class="estado-tabla">
+
+                @if (estado()) {
+                  No hay aportes con el estado seleccionado.
+                } @else {
+                  Esta publicación todavía no tiene aportes registrados.
+                }
+
+              </td>
+            </tr>
+
+          }
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  <!-- ===================================== -->
+  <!-- PAGINACIÓN -->
+  <!-- ===================================== -->
+
+  @if (!error() && totalPaginas() > 0) {
+
+    <footer class="paginacion">
+
+      <p>
+        Página {{ pagina() }} de {{ totalPaginas() }}
+      </p>
+
+      <nav aria-label="Paginación de aportes">
+
+        <button
+          type="button"
+          [disabled]="!tienePaginaAnterior() || cargando()"
+          (click)="irPagina(pagina() - 1)"
+        >
+          Anterior
+        </button>
+
+        @for (numero of paginasVisibles(); track numero) {
+
+          <button
+            type="button"
+            [class.activa]="numero === pagina()"
+            [disabled]="cargando()"
+            [attr.aria-current]="numero === pagina() ? 'page' : null"
+            (click)="irPagina(numero)"
+          >
+            {{ numero }}
+          </button>
+
+        }
+
+        <button
+          type="button"
+          [disabled]="!tienePaginaSiguiente() || cargando()"
+          (click)="irPagina(pagina() + 1)"
+        >
+          Siguiente
+        </button>
+
+      </nav>
+
+    </footer>
+
+  }
+
+</section>

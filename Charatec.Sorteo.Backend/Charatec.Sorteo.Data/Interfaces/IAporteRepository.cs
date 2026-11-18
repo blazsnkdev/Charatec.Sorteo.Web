@@ -8,5 +8,10 @@ namespace Charatec.Sorteo.Data.Interfaces
     public interface IAporteRepository
     {
         IQueryable<Aporte> Consultar();
+
+        IQueryable<AporteRevisionConsulta> ConsultarPorSorteo(
+            Guid sorteoId
+        );
+
     }
 }

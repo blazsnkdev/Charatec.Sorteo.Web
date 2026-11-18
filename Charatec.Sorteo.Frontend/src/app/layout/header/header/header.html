@@ -23,42 +23,24 @@
       <div id="main-navigation" class="nav-links" [class.nav-open]="menuAbierto()">
 
 
+        <!-- SOLO ADMINISTRADOR -->
+        @if (sesionService.tieneRol('Administrador')) {
 
+        <a routerLink="/publicaciones" routerLinkActive="active" (click)="cerrarMenu()">
+          Publicaciones
+        </a>
+        }
+        <!-- SOLO CLIENTE -->
+        @if (sesionService.tieneRol('Cliente')) {
+
+        <a routerLink="/aportes" routerLinkActive="activo">
+          Mis aportes
+        </a>
         
-<!-- SOLO ADMINISTRADOR -->
-@if (sesionService.tieneRol('Administrador')) {
-
-  <a
-    routerLink="/publicaciones"
-    routerLinkActive="active"
-    (click)="cerrarMenu()"
-  >
-    Publicaciones
-  </a>
-
-}
-
-<!-- CLIENTE O ADMINISTRADOR CON ROL CLIENTE -->
-@if (sesionService.tieneRol('Cliente')) {
-
-  <a
-    routerLink="/sorteos"
-    routerLinkActive="active"
-    (click)="cerrarMenu()"
-  >
-    Sorteos
-  </a>
-
-<a
-  routerLink="/aportes"
-  routerLinkActive="activo"
->
-  Mis aportes
-</a>
-
-}
-
-
+        <a routerLink="/sorteos" routerLinkActive="active" (click)="cerrarMenu()">
+          Sorteos
+        </a>
+        }
 
 
         @if (!sesionService.autenticado()) {

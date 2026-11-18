@@ -1,4 +1,6 @@
-﻿using Charatec.Sorteo.Business.DTOs.Requests.Participaciones;
+﻿using Charatec.Sorteo.Business.DTOs.Requests.Aportes;
+using Charatec.Sorteo.Business.DTOs.Requests.Participaciones;
+using Charatec.Sorteo.Business.DTOs.Responses.Aportes;
 using Charatec.Sorteo.Business.DTOs.Responses.Participaciones;
 using Charatec.Sorteo.Business.Interfaces;
 using Charatec.Sorteo.Common.Pagination;
@@ -97,5 +99,65 @@ namespace Charatec.Sorteo.Business.Services
             return Result<ResultadoPaginado<AporteListadoResponse>>
                 .Success(respuesta);
         }
+
+        public async Task<Result<ResultadoPaginado<AportePublicacionResponse>>>
+            ListarPorPublicacionAsync(
+                Guid sorteoId,
+                ListarAportesPublicacionRequest request,
+                CancellationToken cancellationToken = default)
+        {
+            // 1. Consultar los aportes de una publicación.
+            var consulta = _uow._aporteRepository
+                .ConsultarPorSorteo(sorteoId);
+
+            // 2. Filtrar por estado.
+            if (request.Estado.HasValue)
+            {
+                consulta = consulta.Where(
+                    x => x.Estado == request.Estado.Value
+                );
+            }
+
+            // 3. Ordenar.
+            consulta = consulta
+                .OrderByDescending(x => x.FechaCreacion)
+                .ThenByDescending(x => x.AporteId);
+
+            // 4. Paginar con tu extensión existente.
+            var datosPaginados = await consulta.PaginarAsync(
+                request.ObtenerPaginacion(),
+                cancellationToken
+            );
+
+            // 5. Convertir a DTO.
+            var registros = datosPaginados.Registros
+                .Select(a => new AportePublicacionResponse(
+                    AporteId: a.AporteId,
+                    SorteoId: a.SorteoId,
+                    ClienteId: a.ClienteId,
+                    NombreCliente:
+                        $"{a.Nombres} {a.Apellidos}".Trim(),
+                    NumeroWhatsapp: a.NumeroWhatsapp,
+                    Monto: a.Monto,
+                    CodigoOperacionYape: a.CodigoOperacionYape,
+                    Estado: a.Estado.ToString(),
+                    FechaCreacion: a.FechaCreacion
+                ))
+                .ToList();
+
+            // 6. Respuesta paginada.
+            var respuesta =
+                new ResultadoPaginado<AportePublicacionResponse>(
+                    Registros: registros,
+                    Pagina: datosPaginados.Pagina,
+                    TamanoPagina: datosPaginados.TamanoPagina,
+                    TotalRegistros: datosPaginados.TotalRegistros
+                );
+
+            return Result<ResultadoPaginado<AportePublicacionResponse>>
+                .Success(respuesta);
+        }
+
+
     }
 }

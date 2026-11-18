@@ -38,6 +38,15 @@ export const routes: Routes = [
   },
 
 
+{
+  path: 'publicaciones/:sorteoId/aportes',
+  loadComponent: () =>
+    import(
+      './features/publicaciones/pages/aportes-publicacion/aportes-publicacion'
+    ).then(m => m.AportesPublicacion),
+  canActivate: [adminGuard]
+},
+
   {
     path: 'sorteos',
     loadComponent: () =>

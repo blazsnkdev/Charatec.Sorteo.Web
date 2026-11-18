@@ -1,4 +1,6 @@
-﻿using Charatec.Sorteo.Business.DTOs.Requests.Participaciones;
+﻿using Charatec.Sorteo.Business.DTOs.Requests.Aportes;
+using Charatec.Sorteo.Business.DTOs.Requests.Participaciones;
+using Charatec.Sorteo.Business.DTOs.Responses.Aportes;
 using Charatec.Sorteo.Business.DTOs.Responses.Participaciones;
 using Charatec.Sorteo.Common.Pagination;
 using Charatec.Sorteo.Common.Results;
@@ -14,6 +16,11 @@ namespace Charatec.Sorteo.Business.Interfaces
                 ListarAportesRequest request,
                 CancellationToken cancellationToken = default
             );
-
+        Task<Result<ResultadoPaginado<AportePublicacionResponse>>>
+            ListarPorPublicacionAsync(
+                Guid sorteoId,
+                ListarAportesPublicacionRequest request,
+                CancellationToken cancellationToken = default
+            );
     }
 }

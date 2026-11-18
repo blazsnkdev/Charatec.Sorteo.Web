@@ -8,7 +8,7 @@ import {
   inject,
   signal
 } from '@angular/core';
-
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription, firstValueFrom } from 'rxjs';
@@ -42,7 +42,7 @@ export class Publicaciones implements OnInit, OnDestroy {
 
   readonly cargando = signal(false);
   readonly error = signal<string | null>(null);
-
+  private readonly router = inject(Router);
   readonly estado = signal<number | null>(null);
   readonly pagina = signal(1);
   readonly tamanoPagina = signal(10);
@@ -243,6 +243,21 @@ export class Publicaciones implements OnInit, OnDestroy {
         this.cargando.set(false);
       }
     });
+  }
+
+
+  verAportes(sorteoId: string): void {
+
+    // Cerrar el modal de publicación.
+    this.cerrarDetalle();
+
+    // Enviar el ID del sorteo seleccionado.
+    this.router.navigate([
+      '/publicaciones',
+      sorteoId,
+      'aportes'
+    ]);
+
   }
 
   // ==========================================
@@ -499,7 +514,7 @@ export class Publicaciones implements OnInit, OnDestroy {
     // Meta de recaudación
     const meta =
       form.metaRecaudacion === null ||
-      form.metaRecaudacion === undefined
+        form.metaRecaudacion === undefined
         ? null
         : Number(form.metaRecaudacion);
 
@@ -768,9 +783,9 @@ export class Publicaciones implements OnInit, OnDestroy {
       this.detalleSorteo.update(actual =>
         actual
           ? {
-              ...actual,
-              estado: 'Publicado'
-            }
+            ...actual,
+            estado: 'Publicado'
+          }
           : actual
       );
 
@@ -1004,7 +1019,7 @@ export class Publicaciones implements OnInit, OnDestroy {
     // Validar meta.
     const meta =
       form.metaRecaudacion === null ||
-      form.metaRecaudacion === undefined
+        form.metaRecaudacion === undefined
         ? null
         : Number(form.metaRecaudacion);
 

@@ -410,33 +410,53 @@
     }
 
     <!-- ACCIONES -->
+
+    <!-- ====================================== -->
+    <!-- ACCIONES DEL MODAL DE DETALLE          -->
+    <!-- ====================================== -->
+
     <footer class="modal-footer modal-footer-editar">
 
+      <!-- CERRAR MODAL -->
       <button type="button" class="btn-cancelar-crear" [disabled]="procesandoDetalle()" (click)="cerrarDetalle()">
         Cerrar
       </button>
 
+      <!-- VER APORTES: SOLO PUBLICADOS -->
+      @if (detalleSorteo(); as sorteo) {
+
+      @if (sorteo.estado === 'Publicado') {
+
+      <button type="button" class="btn-ver-aportes" [disabled]="procesandoDetalle() || cargandoDetalle()"
+        (click)="verAportes(sorteo.id)">
+        Ver aportes
+      </button>
+
+      }
+
+      }
+
+      <!-- BOTONES EXISTENTES PARA BORRADOR -->
       @if (detalleSorteo() && detalleEditable) {
 
-      <!-- PUT -->
       <button type="button" class="btn-guardar-cambios" [disabled]="procesandoDetalle() || cargandoDetalle()"
         (click)="guardarCambiosDetalle()">
         @if (procesandoDetalle()) {
         Procesando...
         } @else {
-        Guardar 
+        Guardar
         }
       </button>
 
-      <!-- PATCH -->
       <button type="button" class="btn-publicar-sorteo" [disabled]="procesandoDetalle() || cargandoDetalle()"
         (click)="publicarSorteoDetalle()">
-        Publicar 
+        Publicar
       </button>
 
       }
 
     </footer>
+
 
   </div>
 </div>
