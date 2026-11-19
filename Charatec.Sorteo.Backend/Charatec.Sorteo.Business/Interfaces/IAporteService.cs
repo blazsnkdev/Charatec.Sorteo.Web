@@ -2,6 +2,7 @@
 using Charatec.Sorteo.Business.DTOs.Requests.Participaciones;
 using Charatec.Sorteo.Business.DTOs.Responses.Aportes;
 using Charatec.Sorteo.Business.DTOs.Responses.Participaciones;
+using Charatec.Sorteo.Business.DTOs.Responses.Ruleta;
 using Charatec.Sorteo.Common.Pagination;
 using Charatec.Sorteo.Common.Results;
 
@@ -30,6 +31,13 @@ namespace Charatec.Sorteo.Business.Interfaces
             VerificarAporteRequest request,
             CancellationToken cancellationToken = default
         );
+
+
+        Task<Result<RuletaDatosResponse>> ObtenerDatosRuletaAsync(
+            Guid sorteoId,
+            CancellationToken cancellationToken = default
+        );
+
 
     }
 }

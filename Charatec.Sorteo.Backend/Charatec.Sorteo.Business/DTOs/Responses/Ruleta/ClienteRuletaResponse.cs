@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Charatec.Sorteo.Business.DTOs.Responses.Ruleta
+﻿namespace Charatec.Sorteo.Business.DTOs.Responses.Ruleta
 {
     public sealed record ClienteRuletaResponse(
         Guid ClienteId,

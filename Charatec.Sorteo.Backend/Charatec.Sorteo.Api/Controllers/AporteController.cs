@@ -94,5 +94,24 @@ namespace Charatec.Sorteo.Api.Controllers
         }
 
 
+        [HttpGet("/api/v1/admin/publicaciones/{sorteoId:guid}/ruleta")]
+        [Authorize(Roles = "Administrador")]
+        public async Task<IActionResult> ObtenerDatosRuleta(
+            [FromRoute] Guid sorteoId,
+            CancellationToken cancellationToken)
+        {
+            var resultado = await aporteService.ObtenerDatosRuletaAsync(
+                sorteoId,
+                cancellationToken
+            );
+
+            Response.Headers.CacheControl = "no-store";
+
+            return ApiResults.FromResult(
+                resultado,
+                "Datos de la ruleta obtenidos correctamente."
+            );
+        }
+
     }
 }

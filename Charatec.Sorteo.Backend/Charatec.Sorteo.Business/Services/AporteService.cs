@@ -2,12 +2,14 @@
 using Charatec.Sorteo.Business.DTOs.Requests.Participaciones;
 using Charatec.Sorteo.Business.DTOs.Responses.Aportes;
 using Charatec.Sorteo.Business.DTOs.Responses.Participaciones;
+using Charatec.Sorteo.Business.DTOs.Responses.Ruleta;
 using Charatec.Sorteo.Business.Interfaces;
 using Charatec.Sorteo.Common.Pagination;
 using Charatec.Sorteo.Common.Results;
 using Charatec.Sorteo.Data.Extensions;
 using Charatec.Sorteo.Data.Interfaces;
 using Charatec.Sorteo.Entities.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace Charatec.Sorteo.Business.Services
 {
@@ -279,6 +281,124 @@ namespace Charatec.Sorteo.Business.Services
                 respuesta
             );
         }
+
+
+
+        public async Task<Result<RuletaDatosResponse>> ObtenerDatosRuletaAsync(
+            Guid sorteoId,
+            CancellationToken cancellationToken = default)
+        {
+            // ==========================================
+            // 1. CONSULTAR PUBLICACIÓN
+            // ==========================================
+
+            var sorteo = await _uow._sorteoRepository
+                .Consultar()
+                .Where(s => s.Id == sorteoId)
+                .Select(s => new
+                {
+                    s.Id,
+                    s.Titulo,
+                    s.Estado,
+                    s.FechaInicio,
+                    s.FechaSorteo
+                })
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (sorteo is null)
+            {
+                return Result<RuletaDatosResponse>.Failure(
+                    new Error(
+                        "NOT_FOUND",
+                        "No se encontró la publicación."
+                    )
+                );
+            }
+
+            // ==========================================
+            // 2. VALIDAR ESTADO PUBLICADO
+            // ==========================================
+
+            if (sorteo.Estado != EstadoSorteo.Publicado)
+            {
+                return Result<RuletaDatosResponse>.Failure(
+                    new Error(
+                        "BUSINESS_RULE_VIOLATION",
+                        "La publicación debe estar en estado Publicado."
+                    )
+                );
+            }
+
+            // ==========================================
+            // 3. CONSULTAR APORTES CONFIRMADOS
+            // ==========================================
+            // Agrupa por cliente y suma TODOS sus aportes
+            // confirmados de la misma publicación.
+
+            var clientes = await _uow._aporteRepository
+                .Consultar()
+                .Where(a =>
+                    a.Participacion.SorteoId == sorteoId &&
+                    a.Estado == EstadoAporte.Confirmado &&
+                    a.Monto > 0
+                )
+                .GroupBy(a => new
+                {
+                    a.Participacion.ClienteId,
+                    a.Participacion.Cliente.Nombres,
+                    a.Participacion.Cliente.Apellidos
+                })
+                .Select(g => new ClienteRuletaResponse(
+                    g.Key.ClienteId,
+                    g.Key.Nombres + " " + g.Key.Apellidos,
+                    g.Sum(a => a.Monto)
+                ))
+                .OrderBy(c => c.NombreCliente)
+                .ThenBy(c => c.ClienteId)
+                .ToListAsync(cancellationToken);
+
+            // ==========================================
+            // 4. CALCULAR TOTAL CONFIRMADO
+            // ==========================================
+
+            decimal totalConfirmado = clientes.Sum(
+                c => c.TotalAportado
+            );
+
+            // ==========================================
+            // 5. VALIDAR FECHA
+            // ==========================================
+
+            var ahora = DateTimeOffset.UtcNow;
+
+            bool puedeSortear =
+                ahora >= sorteo.FechaInicio &&
+                sorteo.FechaSorteo.HasValue &&
+                ahora >= sorteo.FechaSorteo.Value &&
+                clientes.Count > 0;
+
+            // ==========================================
+            // 6. RESPUESTA
+            // ==========================================
+
+            var respuesta = new RuletaDatosResponse(
+                SorteoId: sorteo.Id,
+                TituloSorteo: sorteo.Titulo,
+                Estado: sorteo.Estado.ToString(),
+                FechaInicio: sorteo.FechaInicio,
+                FechaSorteo: sorteo.FechaSorteo,
+                FechaServidor: ahora,
+                PuedeSortear: puedeSortear,
+                TotalConfirmado: totalConfirmado,
+                TotalClientes: clientes.Count,
+                Clientes: clientes
+            );
+
+            return Result<RuletaDatosResponse>.Success(
+                respuesta
+            );
+        }
+
 
 
     }
