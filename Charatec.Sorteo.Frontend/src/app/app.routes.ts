@@ -37,6 +37,16 @@ export const routes: Routes = [
     canActivate: [clienteGuard]
   },
 
+{
+  path: 'publicaciones/:sorteoId/ruleta',
+  loadComponent: () =>
+    import(
+      './features/publicaciones/pages/ruleta/ruleta'
+    ).then(m => m.Ruleta),
+  canActivate: [adminGuard]
+},
+
+
 
 {
   path: 'publicaciones/:sorteoId/aportes',

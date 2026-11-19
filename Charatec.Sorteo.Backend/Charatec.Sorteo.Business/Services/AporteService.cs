@@ -335,27 +335,43 @@ namespace Charatec.Sorteo.Business.Services
             // Agrupa por cliente y suma TODOS sus aportes
             // confirmados de la misma publicación.
 
-            var clientes = await _uow._aporteRepository
-                .Consultar()
-                .Where(a =>
-                    a.Participacion.SorteoId == sorteoId &&
-                    a.Estado == EstadoAporte.Confirmado &&
-                    a.Monto > 0
-                )
-                .GroupBy(a => new
-                {
-                    a.Participacion.ClienteId,
-                    a.Participacion.Cliente.Nombres,
-                    a.Participacion.Cliente.Apellidos
-                })
-                .Select(g => new ClienteRuletaResponse(
-                    g.Key.ClienteId,
-                    g.Key.Nombres + " " + g.Key.Apellidos,
-                    g.Sum(a => a.Monto)
+            var datosClientes = await _uow._aporteRepository
+    .Consultar()
+    .Where(a =>
+        a.Participacion.SorteoId == sorteoId &&
+        a.Estado == EstadoAporte.Confirmado &&
+        a.Monto > 0
+    )
+    .GroupBy(a => new
+    {
+        a.Participacion.ClienteId,
+        a.Participacion.Cliente.Nombres,
+        a.Participacion.Cliente.Apellidos
+    })
+    .Select(g => new
+    {
+        ClienteId = g.Key.ClienteId,
+        Nombres = g.Key.Nombres,
+        Apellidos = g.Key.Apellidos,
+        TotalAportado = g.Sum(a => a.Monto)
+    })
+    .ToListAsync(cancellationToken);
+
+            // ==========================================
+            // 4. CONVERTIR A DTO EN MEMORIA
+            // ==========================================
+            // Esta parte ya se ejecuta en C#, no en SQL.
+
+            var clientes = datosClientes
+                .Select(c => new ClienteRuletaResponse(
+                    ClienteId: c.ClienteId,
+                    NombreCliente:
+                        $"{c.Nombres} {c.Apellidos}".Trim(),
+                    TotalAportado: c.TotalAportado
                 ))
                 .OrderBy(c => c.NombreCliente)
                 .ThenBy(c => c.ClienteId)
-                .ToListAsync(cancellationToken);
+                .ToList();
 
             // ==========================================
             // 4. CALCULAR TOTAL CONFIRMADO

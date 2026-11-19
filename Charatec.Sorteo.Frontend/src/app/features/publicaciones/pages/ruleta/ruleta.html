@@ -1,0 +1,361 @@
+
+<section class="pagina-ruleta">
+
+  <!-- ==================================== -->
+  <!-- CABECERA -->
+  <!-- ==================================== -->
+
+  <header class="ruleta-encabezado">
+
+    <div>
+
+
+
+      <h1>Ruleta</h1>
+
+      <p>
+        Sorteo ponderado por los aportes confirmados
+        de cada cliente.
+      </p>
+
+    </div>
+
+    <button
+      type="button"
+      class="btn-recargar"
+      [disabled]="cargando() || girando()"
+      (click)="cargarDatos()"
+    >
+      Actualizar participantes
+    </button>
+
+  </header>
+
+  <!-- ==================================== -->
+  <!-- ERROR -->
+  <!-- ==================================== -->
+
+  @if (error()) {
+
+    <div class="ruleta-error">
+      {{ error() }}
+    </div>
+
+  }
+
+  <!-- ==================================== -->
+  <!-- DATOS DEL SORTEO -->
+  <!-- ==================================== -->
+
+  @if (datos(); as sorteo) {
+
+    <div class="info-publicacion">
+
+      <div>
+        <span>Publicación</span>
+        <strong>{{ sorteo.tituloSorteo }}</strong>
+      </div>
+
+      <div>
+        <span>Participantes</span>
+        <strong>{{ totalParticipantes() }}</strong>
+      </div>
+
+      <div>
+        <span>Recaudación confirmada</span>
+
+        <strong>
+          {{
+            sorteo.totalConfirmado
+            | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+          }}
+        </strong>
+      </div>
+
+      <div>
+        <span>Fecha programada</span>
+
+        <strong>
+          @if (sorteo.fechaSorteo) {
+            {{
+              sorteo.fechaSorteo
+              | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
+            }}
+          } @else {
+            Sin fecha
+          }
+        </strong>
+      </div>
+
+    </div>
+
+  }
+
+  <!-- ==================================== -->
+  <!-- CONTENIDO PRINCIPAL -->
+  <!-- ==================================== -->
+
+  <div class="ruleta-layout">
+
+    <!-- RULETA -->
+
+    <div class="panel-ruleta">
+
+      <div class="panel-titulo">
+        <h2>Ruleta de participantes</h2>
+        <span class="etiqueta-prueba">MODO PRUEBA</span>
+      </div>
+
+      <!-- El contenedor permanece montado para
+           que spin-wheel pueda inicializarse. -->
+
+      <div class="ruleta-area">
+
+        <div class="ruleta-contenedor">
+
+          <!-- Puntero superior -->
+          <div class="ruleta-puntero"></div>
+
+          <div
+            #wheelHost
+            class="ruleta-canvas"
+          ></div>
+
+          <!-- Centro decorativo -->
+          <div class="ruleta-centro">
+            ★
+          </div>
+
+        </div>
+
+      </div>
+
+      @if (cargando()) {
+
+        <p class="ruleta-mensaje">
+          Cargando participantes...
+        </p>
+
+      } @else if (!participantes().length) {
+
+        <p class="ruleta-mensaje">
+          No existen participantes con aportes confirmados.
+        </p>
+
+      }
+
+      <!-- BOTÓN GIRAR -->
+
+      <div class="controles-ruleta">
+
+        <button
+          type="button"
+          class="btn-girar"
+          [disabled]="!puedeGirar()"
+          (click)="girar()"
+        >
+
+          @if (girando()) {
+            🎡 Girando...
+          } @else {
+            🎯 GIRAR RULETA
+          }
+
+        </button>
+
+        @if (datos(); as sorteo) {
+
+          @if (!sorteo.puedeSortear) {
+
+            <p class="aviso-bloqueado">
+
+              @if (!sorteo.fechaSorteo) {
+
+                La publicación no tiene una fecha de sorteo.
+
+              } @else if (!participantes().length) {
+
+                Se necesitan aportes confirmados
+                para realizar el sorteo.
+
+              } @else {
+
+                El botón se habilitará cuando llegue
+                la fecha programada.
+                Pulsa "Actualizar participantes"
+                para comprobar nuevamente.
+
+              }
+
+            </p>
+
+          } @else {
+
+            <p class="aviso-habilitado">
+              La ruleta está habilitada para realizar una prueba.
+            </p>
+
+          }
+
+        }
+
+        <p class="nota-simulacion">
+          Esta simulación no registra ganadores
+          ni modifica la base de datos.
+        </p>
+
+      </div>
+
+    </div>
+
+    <!-- ==================================== -->
+    <!-- LISTADO DE PARTICIPANTES -->
+    <!-- ==================================== -->
+
+    <aside class="panel-participantes">
+
+      <div class="panel-titulo">
+        <h2>Participantes</h2>
+        <span>{{ totalParticipantes() }}</span>
+      </div>
+
+      <p class="descripcion-listado">
+        Cada cliente participa con una probabilidad
+        proporcional a su total aportado.
+      </p>
+
+      <div class="participantes-lista">
+
+        @for (
+          cliente of participantes();
+          track cliente.clienteId;
+          let i = $index
+        ) {
+
+          <div class="participante">
+
+            <div class="participante-posicion">
+              {{ i + 1 }}
+            </div>
+
+            <div class="participante-info">
+
+              <strong>
+                {{ cliente.nombreCliente }}
+              </strong>
+
+              <span>
+                {{
+                  cliente.totalAportado
+                  | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+                }}
+              </span>
+
+              <div class="probabilidad-barra">
+
+                <div
+                  class="probabilidad-progreso"
+                  [style.width.%]="cliente.probabilidad"
+                ></div>
+
+              </div>
+
+            </div>
+
+            <div class="participante-porcentaje">
+
+              {{ cliente.probabilidad | number:'1.2-2' }}%
+
+            </div>
+
+          </div>
+
+        } @empty {
+
+          <div class="sin-participantes">
+            No hay clientes registrados para esta ruleta.
+          </div>
+
+        }
+
+      </div>
+
+    </aside>
+
+  </div>
+
+</section>
+
+
+<!-- ==================================== -->
+<!-- MODAL DE GANADOR -->
+<!-- ==================================== -->
+
+@if (modalGanador() && ganador(); as cliente) {
+
+  <div
+    class="ganador-overlay"
+    (click)="cerrarGanador()"
+  >
+
+    <div
+      class="ganador-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-ganador"
+      (click)="$event.stopPropagation()"
+    >
+
+      <div class="ganador-icono">
+        🏆
+      </div>
+
+      <p class="ganador-subtitulo">
+        ¡TENEMOS UN GANADOR!
+      </p>
+
+      <h2 id="titulo-ganador">
+        {{ cliente.nombreCliente }}
+      </h2>
+
+      <div class="ganador-detalles">
+
+        <div>
+          <span>Total aportado</span>
+
+          <strong>
+            {{
+              cliente.totalAportado
+              | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+            }}
+          </strong>
+        </div>
+
+        <div>
+          <span>Probabilidad del giro</span>
+
+          <strong>
+            {{ cliente.probabilidad | number:'1.2-2' }}%
+          </strong>
+        </div>
+
+      </div>
+
+      <p class="ganador-aviso">
+        Resultado temporal de prueba.
+        No se ha registrado en PostgreSQL.
+      </p>
+
+      <button
+        type="button"
+        class="btn-cerrar-ganador"
+        (click)="cerrarGanador()"
+      >
+        Cerrar resultado
+      </button>
+
+    </div>
+
+  </div>
+
+}

@@ -15,14 +15,29 @@
       </p>
     </div>
 
-    <button
-      type="button"
-      class="btn-actualizar"
-      [disabled]="cargando()"
-      (click)="cargarAportes()"
-    >
-      Actualizar
-    </button>
+    
+<div class="acciones-encabezado">
+
+  <button
+    type="button"
+    class="btn-realizar-sorteo"
+    [disabled]="cargando() || !sorteoId()"
+    (click)="irRuleta()"
+  >
+    Iniciar Sorteo
+  </button>
+
+  <button
+    type="button"
+    class="btn-actualizar"
+    [disabled]="cargando()"
+    (click)="cargarAportes()"
+  >
+    Actualizar
+  </button>
+
+</div>
+
 
   </header>
 

@@ -23,7 +23,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-aportes-publicacion',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './aportes-publicacion.html',
   styleUrl: './aportes-publicacion.css'
 })
@@ -69,6 +69,21 @@ export class AportesPublicacion implements OnInit, OnDestroy {
   readonly tienePaginaAnterior = computed(
     () => this.pagina() > 1
   );
+
+
+  irRuleta(): void {
+    const id = this.sorteoId();
+
+    if (!id) {
+      return;
+    }
+
+    this.router.navigate([
+      '/publicaciones',
+      id,
+      'ruleta'
+    ]);
+  }
 
   readonly tienePaginaSiguiente = computed(
     () => this.pagina() < this.totalPaginas()
@@ -269,9 +284,9 @@ export class AportesPublicacion implements OnInit, OnDestroy {
   irPagina(numero: number): void {
 
     if (this.cargando() ||
-        numero < 1 ||
-        numero > this.totalPaginas() ||
-        numero === this.pagina()) {
+      numero < 1 ||
+      numero > this.totalPaginas() ||
+      numero === this.pagina()) {
       return;
     }
 
@@ -313,188 +328,188 @@ export class AportesPublicacion implements OnInit, OnDestroy {
 
 
 
-// ==========================================
-// ESTADOS DEL MODAL DE VERIFICACIÓN
-// ==========================================
+  // ==========================================
+  // ESTADOS DEL MODAL DE VERIFICACIÓN
+  // ==========================================
 
-readonly modalRevisionAbierto = signal(false);
+  readonly modalRevisionAbierto = signal(false);
 
-readonly aporteSeleccionado =
-  signal<AportePublicacion | null>(null);
+  readonly aporteSeleccionado =
+    signal<AportePublicacion | null>(null);
 
-readonly decisionSeleccionada =
-  signal<DecisionAporte | null>(null);
+  readonly decisionSeleccionada =
+    signal<DecisionAporte | null>(null);
 
-readonly guardandoRevision = signal(false);
+  readonly guardandoRevision = signal(false);
 
-readonly errorRevision = signal<string | null>(null);
+  readonly errorRevision = signal<string | null>(null);
 
-readonly mensajeRevision = signal<string | null>(null);
+  readonly mensajeRevision = signal<string | null>(null);
 
-observacionRevision = '';
+  observacionRevision = '';
 
-private peticionRevision?: Subscription;
+  private peticionRevision?: Subscription;
 
-// ==========================================
-// ABRIR MODAL
-// ==========================================
+  // ==========================================
+  // ABRIR MODAL
+  // ==========================================
 
-abrirRevision(aporte: AportePublicacion): void {
+  abrirRevision(aporte: AportePublicacion): void {
 
-  if (aporte.estado !== 'Pendiente') {
-    return;
+    if (aporte.estado !== 'Pendiente') {
+      return;
+    }
+
+    this.aporteSeleccionado.set(aporte);
+    this.decisionSeleccionada.set(null);
+
+    this.observacionRevision = '';
+    this.errorRevision.set(null);
+
+    this.modalRevisionAbierto.set(true);
   }
 
-  this.aporteSeleccionado.set(aporte);
-  this.decisionSeleccionada.set(null);
+  // ==========================================
+  // CERRAR MODAL
+  // ==========================================
 
-  this.observacionRevision = '';
-  this.errorRevision.set(null);
+  cerrarRevision(): void {
 
-  this.modalRevisionAbierto.set(true);
-}
+    if (this.guardandoRevision()) {
+      return;
+    }
 
-// ==========================================
-// CERRAR MODAL
-// ==========================================
-
-cerrarRevision(): void {
-
-  if (this.guardandoRevision()) {
-    return;
+    this.modalRevisionAbierto.set(false);
+    this.aporteSeleccionado.set(null);
+    this.decisionSeleccionada.set(null);
+    this.errorRevision.set(null);
   }
 
-  this.modalRevisionAbierto.set(false);
-  this.aporteSeleccionado.set(null);
-  this.decisionSeleccionada.set(null);
-  this.errorRevision.set(null);
-}
+  // ==========================================
+  // ELEGIR APROBAR O RECHAZAR
+  // ==========================================
 
-// ==========================================
-// ELEGIR APROBAR O RECHAZAR
-// ==========================================
+  seleccionarDecision(decision: DecisionAporte): void {
 
-seleccionarDecision(decision: DecisionAporte): void {
+    if (this.guardandoRevision()) {
+      return;
+    }
 
-  if (this.guardandoRevision()) {
-    return;
+    this.decisionSeleccionada.set(decision);
+    this.errorRevision.set(null);
   }
 
-  this.decisionSeleccionada.set(decision);
-  this.errorRevision.set(null);
-}
+  // ==========================================
+  // GUARDAR VERIFICACIÓN EN BACKEND
+  // ==========================================
 
-// ==========================================
-// GUARDAR VERIFICACIÓN EN BACKEND
-// ==========================================
+  confirmarRevision(): void {
 
-confirmarRevision(): void {
+    if (this.guardandoRevision()) {
+      return;
+    }
 
-  if (this.guardandoRevision()) {
-    return;
-  }
+    const aporte = this.aporteSeleccionado();
+    const decision = this.decisionSeleccionada();
+    const observacion = this.observacionRevision.trim();
 
-  const aporte = this.aporteSeleccionado();
-  const decision = this.decisionSeleccionada();
-  const observacion = this.observacionRevision.trim();
+    if (!aporte || !decision) {
+      this.errorRevision.set(
+        'Selecciona Aprobar o Rechazar.'
+      );
+      return;
+    }
 
-  if (!aporte || !decision) {
-    this.errorRevision.set(
-      'Selecciona Aprobar o Rechazar.'
-    );
-    return;
-  }
+    if (decision === 'Rechazar' && !observacion) {
+      this.errorRevision.set(
+        'Debes indicar el motivo del rechazo.'
+      );
+      return;
+    }
 
-  if (decision === 'Rechazar' && !observacion) {
-    this.errorRevision.set(
-      'Debes indicar el motivo del rechazo.'
-    );
-    return;
-  }
+    if (observacion.length > 1000) {
+      this.errorRevision.set(
+        'La observación no puede superar 1000 caracteres.'
+      );
+      return;
+    }
 
-  if (observacion.length > 1000) {
-    this.errorRevision.set(
-      'La observación no puede superar 1000 caracteres.'
-    );
-    return;
-  }
+    const request: VerificarAporteRequest = {
+      decision,
+      observacion: observacion || null
+    };
 
-  const request: VerificarAporteRequest = {
-    decision,
-    observacion: observacion || null
-  };
+    this.guardandoRevision.set(true);
+    this.errorRevision.set(null);
+    this.mensajeRevision.set(null);
 
-  this.guardandoRevision.set(true);
-  this.errorRevision.set(null);
-  this.mensajeRevision.set(null);
+    this.peticionRevision = this.service
+      .verificarAporte(aporte.aporteId, request)
+      .subscribe({
 
-  this.peticionRevision = this.service
-    .verificarAporte(aporte.aporteId, request)
-    .subscribe({
+        next: respuesta => {
 
-      next: respuesta => {
+          this.guardandoRevision.set(false);
 
-        this.guardandoRevision.set(false);
+          if (respuesta.success && respuesta.data) {
 
-        if (respuesta.success && respuesta.data) {
+            const estadoFinal = respuesta.data.estado;
 
-          const estadoFinal = respuesta.data.estado;
+            this.mensajeRevision.set(
+              estadoFinal === 'Confirmado'
+                ? 'El aporte fue aprobado correctamente.'
+                : 'El aporte fue rechazado correctamente.'
+            );
 
-          this.mensajeRevision.set(
-            estadoFinal === 'Confirmado'
-              ? 'El aporte fue aprobado correctamente.'
-              : 'El aporte fue rechazado correctamente.'
+            this.cerrarRevision();
+
+            // Consultar los datos actualizados
+            // desde PostgreSQL.
+            this.cargarAportes();
+
+            return;
+          }
+
+          this.errorRevision.set(
+            respuesta.message ||
+            'No se pudo verificar el aporte.'
           );
+        },
 
-          this.cerrarRevision();
+        error: err => {
 
-          // Consultar los datos actualizados
-          // desde PostgreSQL.
-          this.cargarAportes();
+          this.guardandoRevision.set(false);
 
-          return;
+          if (err.status === 401) {
+            this.errorRevision.set(
+              'Tu sesión no está autorizada.'
+            );
+          } else if (err.status === 403) {
+            this.errorRevision.set(
+              'No tienes permisos para verificar aportes.'
+            );
+          } else if (err.status === 404) {
+            this.errorRevision.set(
+              'No se encontró el aporte.'
+            );
+          } else if (
+            err.status === 400 ||
+            err.status === 409 ||
+            err.status === 422
+          ) {
+            this.errorRevision.set(
+              err.error?.message ||
+              'No se puede procesar esta revisión.'
+            );
+          } else {
+            this.errorRevision.set(
+              'No se pudo confirmar la operación. ' +
+              'Actualiza el listado y verifica el estado ' +
+              'antes de volver a intentarlo.'
+            );
+          }
         }
-
-        this.errorRevision.set(
-          respuesta.message ||
-          'No se pudo verificar el aporte.'
-        );
-      },
-
-      error: err => {
-
-        this.guardandoRevision.set(false);
-
-        if (err.status === 401) {
-          this.errorRevision.set(
-            'Tu sesión no está autorizada.'
-          );
-        } else if (err.status === 403) {
-          this.errorRevision.set(
-            'No tienes permisos para verificar aportes.'
-          );
-        } else if (err.status === 404) {
-          this.errorRevision.set(
-            'No se encontró el aporte.'
-          );
-        } else if (
-          err.status === 400 ||
-          err.status === 409 ||
-          err.status === 422
-        ) {
-          this.errorRevision.set(
-            err.error?.message ||
-            'No se puede procesar esta revisión.'
-          );
-        } else {
-          this.errorRevision.set(
-            'No se pudo confirmar la operación. ' +
-            'Actualiza el listado y verifica el estado ' +
-            'antes de volver a intentarlo.'
-          );
-        }
-      }
-    });
-}
+      });
+  }
 
 }
