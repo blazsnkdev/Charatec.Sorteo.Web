@@ -384,12 +384,34 @@
 
           <div class="campo-formulario">
 
-            <label for="yape-codigo">
-              Código de operación Yape
-            </label>
 
-            <input id="yape-codigo" name="codigoOperacionYape" type="text" [(ngModel)]="codigoOperacionYape"
-              placeholder="Código de transferencia" maxlength="100" [disabled]="enviandoParticipacion()" required />
+
+            <div class="field">
+              <label for="yape-codigo">
+                Código de operación Yape
+              </label>
+
+
+              <input id="yape-codigo" name="codigoOperacionYape" type="text" [(ngModel)]="codigoOperacionYape"
+                (input)="soloNumerosYape($event)" #codigoYape="ngModel" placeholder="Ingresa los 8 dígitos"
+                inputmode="numeric" minlength="8" maxlength="8" pattern="[0-9]{8}" [disabled]="enviandoParticipacion()"
+                required />
+
+              @if (codigoYape.touched && codigoYape.invalid) {
+              <small class="error-text">
+                El código Yape debe contener exactamente 8 números.
+              </small>
+              }
+
+
+              @if (codigoYape.touched && codigoYape.invalid) {
+              <small class="error-text">
+                El código de operación Yape debe contener exactamente 8 números.
+              </small>
+              }
+            </div>
+
+
 
           </div>
 

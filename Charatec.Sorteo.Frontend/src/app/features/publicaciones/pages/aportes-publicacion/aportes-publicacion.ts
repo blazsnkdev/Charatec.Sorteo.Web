@@ -327,18 +327,11 @@ export class AportesPublicacion implements OnInit, OnDestroy {
   }
 
 
-
-  // ==========================================
-  // ESTADOS DEL MODAL DE VERIFICACIÓN
-  // ==========================================
-
   readonly modalRevisionAbierto = signal(false);
 
-  readonly aporteSeleccionado =
-    signal<AportePublicacion | null>(null);
+  readonly aporteSeleccionado = signal<AportePublicacion | null>(null);
 
-  readonly decisionSeleccionada =
-    signal<DecisionAporte | null>(null);
+  readonly decisionSeleccionada = signal<DecisionAporte | null>(null);
 
   readonly guardandoRevision = signal(false);
 

@@ -1,9 +1,4 @@
-
 <section class="aportes-publicacion">
-
-  <!-- ===================================== -->
-  <!-- ENCABEZADO -->
-  <!-- ===================================== -->
 
   <header class="encabezado">
 
@@ -15,28 +10,18 @@
       </p>
     </div>
 
-    
-<div class="acciones-encabezado">
 
-  <button
-    type="button"
-    class="btn-realizar-sorteo"
-    [disabled]="cargando() || !sorteoId()"
-    (click)="irRuleta()"
-  >
-    Iniciar Sorteo
-  </button>
+    <div class="acciones-encabezado">
 
-  <button
-    type="button"
-    class="btn-actualizar"
-    [disabled]="cargando()"
-    (click)="cargarAportes()"
-  >
-    Actualizar
-  </button>
+      <button type="button" class="btn-realizar-sorteo" [disabled]="cargando() || !sorteoId()" (click)="irRuleta()">
+        Iniciar Sorteo
+      </button>
 
-</div>
+      <button type="button" class="btn-actualizar" [disabled]="cargando()" (click)="cargarAportes()">
+        Actualizar
+      </button>
+
+    </div>
 
 
   </header>
@@ -47,19 +32,15 @@
 
   @if (mensajeRevision()) {
 
-    <div class="mensaje-revision-exitosa">
+  <div class="mensaje-revision-exitosa">
 
-      <span>{{ mensajeRevision() }}</span>
+    <span>{{ mensajeRevision() }}</span>
 
-      <button
-        type="button"
-        (click)="mensajeRevision.set(null)"
-        aria-label="Cerrar mensaje"
-      >
-        &times;
-      </button>
+    <button type="button" (click)="mensajeRevision.set(null)" aria-label="Cerrar mensaje">
+      &times;
+    </button>
 
-    </div>
+  </div>
 
   }
 
@@ -75,12 +56,7 @@
         Estado del aporte
       </label>
 
-      <select
-        id="estado-aporte"
-        [value]="estado() ?? ''"
-        [disabled]="cargando()"
-        (change)="cambiarEstado($event)"
-      >
+      <select id="estado-aporte" [value]="estado() ?? ''" [disabled]="cargando()" (change)="cambiarEstado($event)">
         <option value="">Todos los estados</option>
         <option value="Pendiente">Pendiente de revisión</option>
         <option value="Confirmado">Confirmado</option>
@@ -96,12 +72,7 @@
         Registros por página
       </label>
 
-      <select
-        id="tamano-pagina"
-        [value]="tamanoPagina()"
-        [disabled]="cargando()"
-        (change)="cambiarTamano($event)"
-      >
+      <select id="tamano-pagina" [value]="tamanoPagina()" [disabled]="cargando()" (change)="cambiarTamano($event)">
         <option value="5">5</option>
         <option value="10">10</option>
         <option value="20">20</option>
@@ -123,18 +94,15 @@
 
   @if (error()) {
 
-    <div class="mensaje-error">
+  <div class="mensaje-error">
 
-      <span>{{ error() }}</span>
+    <span>{{ error() }}</span>
 
-      <button
-        type="button"
-        (click)="cargarAportes()"
-      >
-        Reintentar
-      </button>
+    <button type="button" (click)="cargarAportes()">
+      Reintentar
+    </button>
 
-    </div>
+  </div>
 
   }
 
@@ -162,133 +130,126 @@
 
         @if (cargando()) {
 
-          <tr>
-            <td colspan="7" class="estado-tabla">
-              Cargando aportes de la publicación...
-            </td>
-          </tr>
+        <tr>
+          <td colspan="7" class="estado-tabla">
+            Cargando aportes de la publicación...
+          </td>
+        </tr>
 
         } @else if (error()) {
 
-          <tr>
-            <td colspan="7" class="estado-tabla">
-              No se pudo obtener el listado.
-            </td>
-          </tr>
+        <tr>
+          <td colspan="7" class="estado-tabla">
+            No se pudo obtener el listado.
+          </td>
+        </tr>
 
         } @else {
 
-          @for (aporte of aportes(); track aporte.aporteId) {
+        @for (aporte of aportes(); track aporte.aporteId) {
 
-            <tr>
+        <tr>
 
-              <!-- CLIENTE -->
+          <!-- CLIENTE -->
 
-              <td class="cliente">
-                {{ aporte.nombreCliente }}
-              </td>
+          <td class="cliente">
+            {{ aporte.nombreCliente }}
+          </td>
 
-              <!-- WHATSAPP -->
+          <!-- WHATSAPP -->
 
-              <td>
+          <td>
 
-                @if (aporte.numeroWhatsapp) {
-                  {{ aporte.numeroWhatsapp }}
-                } @else {
-                  <span class="texto-secundario">
-                    No registrado
-                  </span>
-                }
+            @if (aporte.numeroWhatsapp) {
+            {{ aporte.numeroWhatsapp }}
+            } @else {
+            <span class="texto-secundario">
+              No registrado
+            </span>
+            }
 
-              </td>
+          </td>
 
-              <!-- MONTO -->
+          <!-- MONTO -->
 
-              <td class="monto">
-                {{
-                  aporte.monto
-                  | currency:'PEN':'S/ ':'1.2-2':'es-PE'
-                }}
-              </td>
+          <td class="monto">
+            {{
+            aporte.monto
+            | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+            }}
+          </td>
 
-              <!-- CÓDIGO YAPE -->
+          <!-- CÓDIGO YAPE -->
 
-              <td class="codigo-yape">
+          <td class="codigo-yape">
 
-                @if (aporte.codigoOperacionYape) {
-                  {{ aporte.codigoOperacionYape }}
-                } @else {
-                  <span class="texto-secundario">
-                    Sin código
-                  </span>
-                }
+            @if (aporte.codigoOperacionYape) {
+            {{ aporte.codigoOperacionYape }}
+            } @else {
+            <span class="texto-secundario">
+              Sin código
+            </span>
+            }
 
-              </td>
+          </td>
 
-              <!-- FECHA -->
+          <!-- FECHA -->
 
-              <td class="fecha">
-                {{
-                  aporte.fechaCreacion
-                  | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
-                }}
-              </td>
+          <td class="fecha">
+            {{
+            aporte.fechaCreacion
+            | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
+            }}
+          </td>
 
-              <!-- ESTADO -->
+          <!-- ESTADO -->
 
-              <td>
+          <td>
 
-                <span
-                  class="estado"
-                  [ngClass]="aporte.estado.toLowerCase()"
-                >
-                  {{ textoEstado(aporte.estado) }}
-                </span>
+            <span class="estado" [ngClass]="aporte.estado.toLowerCase()">
+              {{ textoEstado(aporte.estado) }}
+            </span>
 
-              </td>
+          </td>
 
-              <!-- ACCIONES -->
+          <!-- ACCIONES -->
 
-              <td class="columna-acciones">
+          <td class="columna-acciones">
 
-                @if (aporte.estado === 'Pendiente') {
+            @if (aporte.estado === 'Pendiente') {
 
-                  <button
-                    type="button"
-                    class="btn-revisar-aporte"
-                    (click)="abrirRevision(aporte)"
-                  >
-                    Revisar
-                  </button>
+            <button type="button" class="btn-revisar-aporte" (click)="abrirRevision(aporte)">
+              Revisar
+            </button>
 
-                } @else {
+            } @else {
 
-                  <span class="accion-revisada">
-                    Revisado
-                  </span>
+            <span class="accion-revisada">
+              Revisado
+            </span>
 
-                }
+            }
 
-              </td>
+          </td>
 
-            </tr>
+        </tr>
 
-          } @empty {
+        } @empty {
 
-            <tr>
-              <td colspan="7" class="estado-tabla">
+        <tr>
+          <td colspan="7" class="estado-tabla">
 
-                @if (estado()) {
-                  No hay aportes con el estado seleccionado.
-                } @else {
-                  Esta publicación todavía no tiene
-                  aportes registrados.
-                }
+            @if (estado()) {
+            No hay aportes con el estado seleccionado.
+            } @else {
+            Esta publicación todavía no tiene
+            aportes registrados.
+            }
 
-              </td>
-            </tr>
+          </td>
+        </tr>
 
-          }
+        }
 
         }
 
@@ -304,47 +265,34 @@
 
   @if (!error() && totalPaginas() > 0) {
 
-    <footer class="paginacion">
+  <footer class="paginacion">
 
-      <p>
-        Página {{ pagina() }} de {{ totalPaginas() }}
-      </p>
+    <p>
+      Página {{ pagina() }} de {{ totalPaginas() }}
+    </p>
 
-      <nav aria-label="Paginación de aportes">
+    <nav aria-label="Paginación de aportes">
 
-        <button
-          type="button"
-          [disabled]="!tienePaginaAnterior() || cargando()"
-          (click)="irPagina(pagina() - 1)"
-        >
-          Anterior
-        </button>
+      <button type="button" [disabled]="!tienePaginaAnterior() || cargando()" (click)="irPagina(pagina() - 1)">
+        Anterior
+      </button>
 
-        @for (numero of paginasVisibles(); track numero) {
+      @for (numero of paginasVisibles(); track numero) {
 
-          <button
-            type="button"
-            [class.activa]="numero === pagina()"
-            [disabled]="cargando()"
-            [attr.aria-current]="numero === pagina() ? 'page' : null"
-            (click)="irPagina(numero)"
-          >
-            {{ numero }}
-          </button>
+      <button type="button" [class.activa]="numero === pagina()" [disabled]="cargando()"
+        [attr.aria-current]="numero === pagina() ? 'page' : null" (click)="irPagina(numero)">
+        {{ numero }}
+      </button>
 
-        }
+      }
 
-        <button
-          type="button"
-          [disabled]="!tienePaginaSiguiente() || cargando()"
-          (click)="irPagina(pagina() + 1)"
-        >
-          Siguiente
-        </button>
+      <button type="button" [disabled]="!tienePaginaSiguiente() || cargando()" (click)="irPagina(pagina() + 1)">
+        Siguiente
+      </button>
 
-      </nav>
+    </nav>
 
-    </footer>
+  </footer>
 
   }
 
@@ -357,245 +305,207 @@
 
 @if (modalRevisionAbierto()) {
 
-  <div
-    class="revision-overlay"
-    (click)="cerrarRevision()"
-  >
+<div class="revision-overlay" (click)="cerrarRevision()">
 
-    <div
-      class="revision-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="titulo-revision"
-      (click)="$event.stopPropagation()"
-    >
+  <div class="revision-modal" role="dialog" aria-modal="true" aria-labelledby="titulo-revision"
+    (click)="$event.stopPropagation()">
 
-      <!-- CABECERA -->
+    <!-- CABECERA -->
 
-      <header class="revision-header">
+    <header class="revision-header">
+
+      <div>
+
+        <h2 id="titulo-revision">
+          Revisar aporte Yape
+        </h2>
+
+        <p>
+          Verificación administrativa del pago.
+        </p>
+
+      </div>
+
+      <button type="button" class="revision-cerrar" [disabled]="guardandoRevision()" (click)="cerrarRevision()"
+        aria-label="Cerrar">
+        &times;
+      </button>
+
+    </header>
+
+    <!-- CUERPO -->
+
+    @if (aporteSeleccionado(); as aporte) {
+
+    <div class="revision-body">
+
+      <!-- ESTADO ACTUAL -->
+
+      <div class="revision-estado">
+
+        <span>Estado actual</span>
+
+        <span class="estado pendiente">
+          Pendiente de revisión
+        </span>
+
+      </div>
+
+      <!-- DATOS DEL APORTE -->
+
+      <div class="revision-datos">
 
         <div>
-
-          <h2 id="titulo-revision">
-            Revisar aporte Yape
-          </h2>
-
-          <p>
-            Verificación administrativa del pago.
-          </p>
-
+          <span>Cliente</span>
+          <strong>
+            {{ aporte.nombreCliente }}
+          </strong>
         </div>
 
-        <button
-          type="button"
-          class="revision-cerrar"
-          [disabled]="guardandoRevision()"
-          (click)="cerrarRevision()"
-          aria-label="Cerrar"
-        >
-          &times;
-        </button>
-
-      </header>
-
-      <!-- CUERPO -->
-
-      @if (aporteSeleccionado(); as aporte) {
-
-        <div class="revision-body">
-
-          <!-- ESTADO ACTUAL -->
-
-          <div class="revision-estado">
-
-            <span>Estado actual</span>
-
-            <span class="estado pendiente">
-              Pendiente de revisión
-            </span>
-
-          </div>
-
-          <!-- DATOS DEL APORTE -->
-
-          <div class="revision-datos">
-
-            <div>
-              <span>Cliente</span>
-              <strong>
-                {{ aporte.nombreCliente }}
-              </strong>
-            </div>
-
-            <div>
-              <span>WhatsApp</span>
-              <strong>
-                {{ aporte.numeroWhatsapp || 'No registrado' }}
-              </strong>
-            </div>
-
-            <div>
-              <span>Monto declarado</span>
-
-              <strong class="revision-monto">
-                {{
-                  aporte.monto
-                  | currency:'PEN':'S/ ':'1.2-2':'es-PE'
-                }}
-              </strong>
-            </div>
-
-            <div>
-              <span>Código de operación Yape</span>
-
-              <strong>
-                {{ aporte.codigoOperacionYape || 'Sin código' }}
-              </strong>
-            </div>
-
-            <div>
-              <span>Fecha del aporte</span>
-
-              <strong>
-                {{
-                  aporte.fechaCreacion
-                  | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
-                }}
-              </strong>
-            </div>
-
-          </div>
-
-
-          <!-- SELECCIONAR DECISIÓN -->
-
-          <h3>Selecciona una decisión</h3>
-
-          <div class="revision-decisiones">
-
-            <button
-              type="button"
-              class="decision-aprobar"
-              [class.seleccionada]="decisionSeleccionada() === 'Aprobar'"
-              [disabled]="guardandoRevision()"
-              (click)="seleccionarDecision('Aprobar')"
-            >
-              ✓ Aprobar
-            </button>
-
-            <button
-              type="button"
-              class="decision-rechazar"
-              [class.seleccionada]="decisionSeleccionada() === 'Rechazar'"
-              [disabled]="guardandoRevision()"
-              (click)="seleccionarDecision('Rechazar')"
-            >
-              ✕ Rechazar
-            </button>
-
-          </div>
-
-          <!-- OBSERVACIÓN -->
-
-          <div class="revision-campo">
-
-            <label for="observacion-revision">
-
-              Observación
-
-              @if (decisionSeleccionada() === 'Rechazar') {
-
-                <span class="campo-obligatorio">*</span>
-
-              } @else {
-
-                <span class="campo-opcional">
-                  (opcional)
-                </span>
-
-              }
-
-            </label>
-
-            <textarea
-              id="observacion-revision"
-              name="observacionRevision"
-              rows="3"
-              maxlength="1000"
-              [(ngModel)]="observacionRevision"
-              [disabled]="guardandoRevision()"
-              placeholder="Indica el resultado de la verificación..."
-            ></textarea>
-
-            @if (decisionSeleccionada() === 'Rechazar') {
-
-              <small>
-                Indica por qué no se aprobó el pago.
-              </small>
-
-            }
-
-          </div>
-
-          <!-- ERROR DE VERIFICACIÓN -->
-
-          @if (errorRevision()) {
-
-            <div class="revision-error">
-              {{ errorRevision() }}
-            </div>
-
-          }
-
+        <div>
+          <span>WhatsApp</span>
+          <strong>
+            {{ aporte.numeroWhatsapp || 'No registrado' }}
+          </strong>
         </div>
 
-      }
+        <div>
+          <span>Monto declarado</span>
 
-      <!-- PIE DEL MODAL -->
+          <strong class="revision-monto">
+            {{
+            aporte.monto
+            | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+            }}
+          </strong>
+        </div>
 
-      <footer class="revision-footer">
+        <div>
+          <span>Código de operación Yape</span>
 
-        <button
-          type="button"
-          class="btn-revision-cancelar"
-          [disabled]="guardandoRevision()"
-          (click)="cerrarRevision()"
-        >
-          Cancelar
+          <strong>
+            {{ aporte.codigoOperacionYape || 'Sin código' }}
+          </strong>
+        </div>
+
+        <div>
+          <span>Fecha del aporte</span>
+
+          <strong>
+            {{
+            aporte.fechaCreacion
+            | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
+            }}
+          </strong>
+        </div>
+
+      </div>
+
+
+      <!-- SELECCIONAR DECISIÓN -->
+
+      <h3>Selecciona una decisión</h3>
+
+      <div class="revision-decisiones">
+
+        <button type="button" class="decision-aprobar" [class.seleccionada]="decisionSeleccionada() === 'Aprobar'"
+          [disabled]="guardandoRevision()" (click)="seleccionarDecision('Aprobar')">
+          ✓ Aprobar
         </button>
 
-        <button
-          type="button"
-          class="btn-revision-confirmar"
-          [class.confirmar-rechazo]="decisionSeleccionada() === 'Rechazar'"
-          [disabled]="guardandoRevision() || !decisionSeleccionada()"
-          (click)="confirmarRevision()"
-        >
+        <button type="button" class="decision-rechazar" [class.seleccionada]="decisionSeleccionada() === 'Rechazar'"
+          [disabled]="guardandoRevision()" (click)="seleccionarDecision('Rechazar')">
+          ✕ Rechazar
+        </button>
 
-          @if (guardandoRevision()) {
+      </div>
 
-            Guardando...
+      <!-- OBSERVACIÓN -->
 
-          } @else if (decisionSeleccionada() === 'Aprobar') {
+      <div class="revision-campo">
 
-            Confirmar aprobación
+        <label for="observacion-revision">
 
-          } @else if (decisionSeleccionada() === 'Rechazar') {
+          Observación
 
-            Confirmar rechazo
+          @if (decisionSeleccionada() === 'Rechazar') {
+
+          <span class="campo-obligatorio">*</span>
 
           } @else {
 
-            Selecciona una decisión
+          <span class="campo-opcional">
+            (opcional)
+          </span>
 
           }
 
-        </button>
+        </label>
 
-      </footer>
+        <textarea id="observacion-revision" name="observacionRevision" rows="3" maxlength="1000"
+          [(ngModel)]="observacionRevision" [disabled]="guardandoRevision()"
+          placeholder="Indica el resultado de la verificación..."></textarea>
+
+        @if (decisionSeleccionada() === 'Rechazar') {
+
+        <small>
+          Indica por qué no se aprobó el pago.
+        </small>
+
+        }
+
+      </div>
+
+      <!-- ERROR DE VERIFICACIÓN -->
+
+      @if (errorRevision()) {
+
+      <div class="revision-error">
+        {{ errorRevision() }}
+      </div>
+
+      }
 
     </div>
 
+    }
+
+    <!-- PIE DEL MODAL -->
+
+    <footer class="revision-footer">
+
+      <button type="button" class="btn-revision-cancelar" [disabled]="guardandoRevision()" (click)="cerrarRevision()">
+        Cancelar
+      </button>
+
+      <button type="button" class="btn-revision-confirmar"
+        [class.confirmar-rechazo]="decisionSeleccionada() === 'Rechazar'"
+        [disabled]="guardandoRevision() || !decisionSeleccionada()" (click)="confirmarRevision()">
+
+        @if (guardandoRevision()) {
+
+        Guardando...
+
+        } @else if (decisionSeleccionada() === 'Aprobar') {
+
+        Confirmar aprobación
+
+        } @else if (decisionSeleccionada() === 'Rechazar') {
+
+        Confirmar rechazo
+
+        } @else {
+
+        Selecciona una decisión
+
+        }
+
+      </button>
+
+    </footer>
+
   </div>
+
+</div>
 
 }

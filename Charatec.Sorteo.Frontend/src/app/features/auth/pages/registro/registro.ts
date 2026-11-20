@@ -5,13 +5,14 @@ import {
   Validators
 } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
-
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ApiResponse } from '../../../../core/models/api-response.model';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-registro',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './registro.html',
   styleUrl: './registro.css'
 })
@@ -24,7 +25,7 @@ export class Registro {
   readonly mensajeExito = signal('');
   readonly mensajeError = signal('');
   readonly errores = signal<string[]>([]);
-
+  private readonly router = inject(Router);
   readonly formulario = this.formBuilder.nonNullable.group({
     nombres: ['', [
       Validators.required,
@@ -76,12 +77,14 @@ export class Registro {
 
     this.authService.registrar(request).subscribe({
 
+
       next: (response) => {
         this.cargando.set(false);
 
         if (response.success) {
-          this.mensajeExito.set(response.message);
           this.formulario.reset();
+
+          void this.router.navigate(['/login']);
         } else {
           this.mensajeError.set(response.message);
         }

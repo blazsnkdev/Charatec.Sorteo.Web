@@ -1,4 +1,3 @@
-
 import {
   Component,
   OnInit,
@@ -12,13 +11,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-
 import { ParticiparService } from '../../services/participar.service';
-
 import {
   PrepararParticipacionResponse
 } from '../../models/preparar-participacion.model';
-
 import {
   RegistrarParticipacionRequest,
   RegistrarParticipacionResponse
@@ -64,7 +60,7 @@ export class Participar implements OnInit, OnDestroy {
     const datos = this.configuracion();
 
     if (!datos?.metaRecaudacion ||
-        datos.metaRecaudacion <= 0) {
+      datos.metaRecaudacion <= 0) {
       return null;
     }
 
@@ -143,59 +139,40 @@ export class Participar implements OnInit, OnDestroy {
   // GET: CONFIGURACIÓN
   // ==========================================
 
-  cargarConfiguracion(id: string): void {
-    this.peticion?.unsubscribe();
 
-    this.cargando.set(true);
-    this.error.set(null);
-    this.configuracion.set(null);
+cargarConfiguracion(id: string): void {
+  this.peticion?.unsubscribe();
 
-    this.peticion = this.participarService
-      .obtenerConfiguracion(id)
-      .subscribe({
-        next: respuesta => {
-          if (respuesta.success && respuesta.data) {
-            const datos = respuesta.data;
+  this.cargando.set(true);
+  this.error.set(null);
+  this.configuracion.set(null);
 
-            this.configuracion.set(datos);
-            this.montoSeleccionado.set(
-              datos.montoInicial
-            );
+  this.peticion = this.participarService
+    .obtenerConfiguracion(id)
+    .subscribe({
+      next: respuesta => {
+        if (respuesta.success && respuesta.data) {
+          const datos = respuesta.data;
 
-            this.emailContacto = datos.email ?? '';
-          } else {
-            this.error.set(
-              respuesta.message ||
-              'No se pudo cargar el sorteo.'
-            );
-          }
-
-          this.cargando.set(false);
-        },
-
-        error: err => {
-          if (err.status === 401) {
-            this.error.set(
-              'No se pudo autenticar tu sesión. Inicia sesión nuevamente.'
-            );
-          } else if (err.status === 403) {
-            this.error.set(
-              'No tienes permisos para participar.'
-            );
-          } else if (err.status === 404) {
-            this.error.set(
-              'El sorteo no existe o no está publicado.'
-            );
-          } else {
-            this.error.set(
-              'Ocurrió un error al consultar el sorteo.'
-            );
-          }
-
-          this.cargando.set(false);
+          this.configuracion.set(datos);
+          this.montoSeleccionado.set(datos.montoInicial);
+          this.emailContacto = datos.email ?? '';
         }
-      });
-  }
+
+        this.cargando.set(false);
+      },
+
+      error: err => {
+        this.cargando.set(false);
+
+        console.error(
+          'Error al cargar la configuración del sorteo:',
+          err
+        );
+      }
+    });
+}
+
 
   // ==========================================
   // ACTUALIZAR APORTE
@@ -299,22 +276,45 @@ export class Participar implements OnInit, OnDestroy {
       return 'Ingresa un WhatsApp peruano de 9 dígitos.';
     }
 
-    if (codigo.length > 100) {
-      return 'El código de operación es demasiado largo.';
+
+    if (!/^[0-9]{8}$/.test(codigo)) {
+      return 'El código de operación Yape debe contener exactamente 8 dígitos numéricos.';
     }
+
 
     if (!this.aceptaTerminos) {
       return 'Debes aceptar los términos de participación.';
     }
 
     if (!Number.isFinite(monto) ||
-        monto < datos.aporteMinimo ||
-        monto > datos.aporteMaximo) {
+      monto < datos.aporteMinimo ||
+      monto > datos.aporteMaximo) {
       return 'El monto está fuera del rango permitido.';
     }
 
     return null;
   }
+
+
+
+filtrarCodigoYape(valor: string): void {
+  this.codigoOperacionYape = (valor ?? '')
+    .replace(/[^0-9]/g, '')
+    .slice(0, 8);
+}
+soloNumerosYape(event: Event): void {
+  const input = event.target as HTMLInputElement;
+
+  const valorFiltrado = input.value
+    .replace(/[^0-9]/g, '')
+    .slice(0, 8);
+
+  input.value = valorFiltrado;
+  this.codigoOperacionYape = valorFiltrado;
+}
+
+
+
 
   // ==========================================
   // POST: REGISTRAR PARTICIPACIÓN
@@ -322,7 +322,7 @@ export class Participar implements OnInit, OnDestroy {
 
   registrarParticipacion(): void {
     if (this.enviandoParticipacion() ||
-        this.registroExitoso()) {
+      this.registroExitoso()) {
       return;
     }
 
@@ -355,7 +355,7 @@ export class Participar implements OnInit, OnDestroy {
     });
 
     if (!this.solicitudId ||
-        this.huellaSolicitud !== huella) {
+      this.huellaSolicitud !== huella) {
       this.solicitudId = crypto.randomUUID();
       this.huellaSolicitud = huella;
     }
