@@ -63,27 +63,17 @@ namespace Charatec.Sorteo.Api.Controllers
             [FromBody] VerificarAporteRequest request,
             CancellationToken cancellationToken)
         {
-            var usuarioIdTexto = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (!Guid.TryParse(
-                usuarioIdTexto,
-                out var administradorUsuarioId))
+            if (!User.TryObtenerUsuarioId(out var administradorUsuarioId))
             {
-                return ApiResults.Unauthorized(
-                    "No se pudo identificar al administrador."
-                );
+                return ApiResults.Unauthorized("No se pudo identificar al administrador.");
             }
 
-            var result = await aporteService.VerificarAsync(
-                aporteId,
-                administradorUsuarioId,
-                request,
-                cancellationToken
-            );
-
-            return ApiResults.FromResult(
-                result,
-                "Verificación del aporte procesada correctamente."
+            return ApiResults.FromResult(await aporteService.VerificarAsync(
+                    aporteId,
+                    administradorUsuarioId,
+                    request,
+                    cancellationToken
+                ), "Verificación del aporte procesada correctamente."
             );
         }
 
@@ -106,6 +96,5 @@ namespace Charatec.Sorteo.Api.Controllers
                 "Datos de la ruleta obtenidos correctamente."
             );
         }
-
     }
 }
