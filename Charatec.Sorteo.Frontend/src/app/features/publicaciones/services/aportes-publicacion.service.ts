@@ -4,7 +4,7 @@ import {
   HttpHeaders,
   HttpParams
 } from '@angular/common/http';
-
+import { AportesPublicacionResponse } from '../models/aportes-publicacion.model';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
@@ -34,36 +34,44 @@ export class AportesPublicacionService {
   private readonly apiUrl =
     `${environment.apiUrl}/admin/publicaciones`;
 
-  listar(
-    sorteoId: string,
-    request: ListarAportesPublicacionRequest
-  ): Observable<ApiResponse<ResultadoPaginado<AportePublicacion>>> {
 
-    const token = this.sesionService.obtenerToken();
+listar(
+  sorteoId: string,
+  request: ListarAportesPublicacionRequest
+): Observable<ApiResponse<AportesPublicacionResponse>> {
 
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token ?? ''}`
-    });
+  const token = this.sesionService.obtenerToken();
 
-    let params = new HttpParams()
-      .set('pagina', request.pagina.toString())
-      .set('tamanoPagina', request.tamanoPagina.toString());
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token ?? ''}`
+  });
 
-    if (request.estado) {
-      params = params.set('estado', request.estado);
-    }
+  let params = new HttpParams()
+    .set('pagina', request.pagina.toString())
+    .set('tamanoPagina', request.tamanoPagina.toString());
 
-    return this.http.get<
-      ApiResponse<ResultadoPaginado<AportePublicacion>>
-    >(
-      `${this.apiUrl}/${encodeURIComponent(sorteoId)}/aportes`,
-      {
-        headers,
-        params
-      }
-    );
+  if (request.estado) {
+    params = params.set('estado', request.estado);
   }
 
+  return this.http.get<ApiResponse<AportesPublicacionResponse>>(
+    `${this.apiUrl}/${encodeURIComponent(sorteoId)}/aportes`,
+    {
+      headers,
+      params
+    }
+  );
+}
+
+
+  obtenerResumen(sorteoId: string) {
+    return this.http.get<ApiResponse<{
+      tituloSorteo: string;
+      totalConfirmado: number;
+    }>>(
+      `${this.apiUrl}/api/v1/admin/publicaciones/${sorteoId}/ruleta`
+    );
+  }
 
   verificarAporte(
     aporteId: string,
@@ -73,12 +81,10 @@ export class AportesPublicacionService {
     const token = this.sesionService.obtenerToken();
 
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token ?? ''}`
+      Authorization: `Bearer ${token ?? ''}`//si el token es null, envia un string vacío
     });
 
-    return this.http.patch<
-      ApiResponse<VerificarAporteResponse>
-    >(
+    return this.http.patch<ApiResponse<VerificarAporteResponse>>(
       `${environment.apiUrl}/admin/aportes/${encodeURIComponent(aporteId)}/verificacion`,
       request,
       { headers }

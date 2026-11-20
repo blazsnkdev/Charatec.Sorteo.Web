@@ -3,32 +3,37 @@
   <header class="encabezado">
 
     <div class="encabezado-info">
-      <h1>Aportes de la publicación</h1>
-      <p>
-        Consulta los clientes que registraron pagos
-        mediante Yape para este sorteo.
-      </p>
-    </div>
 
+      <h1>Aportes de la publicación</h1>
+      @if (tituloSorteo()) {
+      <p class="nombre-sorteo">Sorteo: <strong>{{ tituloSorteo() }}</strong></p>
+      }
+
+    </div>
 
     <div class="acciones-encabezado">
 
       <button type="button" class="btn-realizar-sorteo" [disabled]="cargando() || !sorteoId()" (click)="irRuleta()">
+
         Iniciar Sorteo
+
       </button>
 
       <button type="button" class="btn-actualizar" [disabled]="cargando()" (click)="cargarAportes()">
+
         Actualizar
+
       </button>
 
     </div>
 
-
   </header>
 
-  <!-- ===================================== -->
-  <!-- MENSAJE DE VERIFICACIÓN -->
-  <!-- ===================================== -->
+  <!--* ===================================== *-->
+
+  <!--* MENSAJE DE VERIFICACIÓN *-->
+
+  <!--* ===================================== *-->
 
   @if (mensajeRevision()) {
 
@@ -37,21 +42,26 @@
     <span>{{ mensajeRevision() }}</span>
 
     <button type="button" (click)="mensajeRevision.set(null)" aria-label="Cerrar mensaje">
-      &times;
+
+      ×
+
     </button>
 
   </div>
 
   }
 
-  <!-- ===================================== -->
-  <!-- FILTROS -->
-  <!-- ===================================== -->
+  <!--* ===================================== *-->
 
+  <!--* FILTROS *-->
+
+  <!--* ===================================== *-->
+
+
+  <!-- FILTROS Y RESUMEN -->
   <div class="filtros">
 
     <div class="campo">
-
       <label for="estado-aporte">
         Estado del aporte
       </label>
@@ -63,11 +73,9 @@
         <option value="Rechazado">Rechazado</option>
         <option value="Reembolsado">Reembolsado</option>
       </select>
-
     </div>
 
     <div class="campo">
-
       <label for="tamano-pagina">
         Registros por página
       </label>
@@ -78,19 +86,30 @@
         <option value="20">20</option>
         <option value="50">50</option>
       </select>
-
     </div>
 
-    <div class="contador">
-      Total de aportes:
-      <strong>{{ totalRegistros() }}</strong>
+    <!-- RESUMEN -->
+    <div class="resumen-aportes">
+
+      <div class="contador">
+        <span>Total de aportes</span>
+        <strong>{{ totalRegistros() }}</strong>
+      </div>
+
+      <div class="contador">
+        <span>Monto juntado</span>
+        <strong>
+          {{
+          montoJuntado()
+          | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+          }}
+        </strong>
+      </div>
+
     </div>
 
   </div>
 
-  <!-- ===================================== -->
-  <!-- MENSAJE DE ERROR -->
-  <!-- ===================================== -->
 
   @if (error()) {
 
@@ -99,21 +118,18 @@
     <span>{{ error() }}</span>
 
     <button type="button" (click)="cargarAportes()">
+
       Reintentar
+
     </button>
 
   </div>
 
   }
 
-  <!-- ===================================== -->
-  <!-- TABLA DE APORTES -->
-  <!-- ===================================== -->
 
   <div class="tabla-contenedor">
-
     <table>
-
       <thead>
         <tr>
           <th>Cliente</th>
@@ -125,12 +141,12 @@
           <th class="columna-acciones">Acciones</th>
         </tr>
       </thead>
-
       <tbody>
 
         @if (cargando()) {
 
         <tr>
+
           <td colspan="7" class="estado-tabla">
             Cargando aportes de la publicación...
           </td>
@@ -150,82 +166,112 @@
 
         <tr>
 
-          <!-- CLIENTE -->
+          <!--* CLIENTE *-->
 
           <td class="cliente">
+
             {{ aporte.nombreCliente }}
+
           </td>
 
-          <!-- WHATSAPP -->
+          <!--* WHATSAPP *-->
 
           <td>
 
             @if (aporte.numeroWhatsapp) {
+
             {{ aporte.numeroWhatsapp }}
+
             } @else {
+
             <span class="texto-secundario">
+
               No registrado
+
             </span>
+
             }
 
           </td>
 
-          <!-- MONTO -->
+          <!--* MONTO *-->
 
           <td class="monto">
+
             {{
+
             aporte.monto
+
             | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+
             }}
+
           </td>
 
-          <!-- CÓDIGO YAPE -->
+          <!--* CÓDIGO YAPE *-->
 
           <td class="codigo-yape">
 
             @if (aporte.codigoOperacionYape) {
+
             {{ aporte.codigoOperacionYape }}
+
             } @else {
+
             <span class="texto-secundario">
+
               Sin código
+
             </span>
+
             }
 
           </td>
 
-          <!-- FECHA -->
+          <!--* FECHA *-->
 
           <td class="fecha">
+
             {{
+
             aporte.fechaCreacion
+
             | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
+
             }}
+
           </td>
 
-          <!-- ESTADO -->
+          <!--* ESTADO *-->
 
           <td>
 
             <span class="estado" [ngClass]="aporte.estado.toLowerCase()">
+
               {{ textoEstado(aporte.estado) }}
+
             </span>
 
           </td>
 
-          <!-- ACCIONES -->
+          <!--* ACCIONES *-->
 
           <td class="columna-acciones">
 
             @if (aporte.estado === 'Pendiente') {
 
             <button type="button" class="btn-revisar-aporte" (click)="abrirRevision(aporte)">
+
               Revisar
+
             </button>
 
             } @else {
 
             <span class="accion-revisada">
+
               Revisado
+
             </span>
 
             }
@@ -237,16 +283,23 @@
         } @empty {
 
         <tr>
+
           <td colspan="7" class="estado-tabla">
 
             @if (estado()) {
+
             No hay aportes con el estado seleccionado.
+
             } @else {
+
             Esta publicación todavía no tiene
+
             aportes registrados.
+
             }
 
           </td>
+
         </tr>
 
         }
@@ -259,35 +312,45 @@
 
   </div>
 
-  <!-- ===================================== -->
-  <!-- PAGINACIÓN -->
-  <!-- ===================================== -->
+  <!--* ===================================== *-->
+
+  <!--* PAGINACIÓN *-->
+
+  <!--* ===================================== *-->
 
   @if (!error() && totalPaginas() > 0) {
 
   <footer class="paginacion">
 
     <p>
+
       Página {{ pagina() }} de {{ totalPaginas() }}
+
     </p>
 
     <nav aria-label="Paginación de aportes">
 
       <button type="button" [disabled]="!tienePaginaAnterior() || cargando()" (click)="irPagina(pagina() - 1)">
+
         Anterior
+
       </button>
 
       @for (numero of paginasVisibles(); track numero) {
 
       <button type="button" [class.activa]="numero === pagina()" [disabled]="cargando()"
         [attr.aria-current]="numero === pagina() ? 'page' : null" (click)="irPagina(numero)">
+
         {{ numero }}
+
       </button>
 
       }
 
       <button type="button" [disabled]="!tienePaginaSiguiente() || cargando()" (click)="irPagina(pagina() + 1)">
+
         Siguiente
+
       </button>
 
     </nav>
@@ -298,10 +361,11 @@
 
 </section>
 
+<!--* ======================================= *-->
 
-<!-- ======================================= -->
-<!-- MODAL: REVISIÓN DE APORTE YAPE -->
-<!-- ======================================= -->
+<!--* MODAL: REVISIÓN DE APORTE YAPE *-->
+
+<!--* ======================================= *-->
 
 @if (modalRevisionAbierto()) {
 
@@ -310,7 +374,7 @@
   <div class="revision-modal" role="dialog" aria-modal="true" aria-labelledby="titulo-revision"
     (click)="$event.stopPropagation()">
 
-    <!-- CABECERA -->
+    <!--* CABECERA *-->
 
     <header class="revision-header">
 
@@ -320,89 +384,113 @@
           Revisar aporte Yape
         </h2>
 
-        <p>
-          Verificación administrativa del pago.
-        </p>
-
       </div>
 
       <button type="button" class="revision-cerrar" [disabled]="guardandoRevision()" (click)="cerrarRevision()"
         aria-label="Cerrar">
-        &times;
+
+        ×
+
       </button>
 
     </header>
 
-    <!-- CUERPO -->
+    <!--* CUERPO *-->
 
     @if (aporteSeleccionado(); as aporte) {
 
     <div class="revision-body">
 
-      <!-- ESTADO ACTUAL -->
+      <!--* ESTADO ACTUAL *-->
 
       <div class="revision-estado">
 
         <span>Estado actual</span>
 
         <span class="estado pendiente">
+
           Pendiente de revisión
+
         </span>
 
       </div>
 
-      <!-- DATOS DEL APORTE -->
+      <!--* DATOS DEL APORTE *-->
 
       <div class="revision-datos">
 
         <div>
+
           <span>Cliente</span>
+
           <strong>
+
             {{ aporte.nombreCliente }}
+
           </strong>
+
         </div>
 
         <div>
+
           <span>WhatsApp</span>
+
           <strong>
+
             {{ aporte.numeroWhatsapp || 'No registrado' }}
+
           </strong>
+
         </div>
 
         <div>
+
           <span>Monto declarado</span>
 
           <strong class="revision-monto">
+
             {{
-            aporte.monto
-            | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+              aporte.monto
+              | currency:'PEN':'S/ ':'1.2-2':'es-PE'  
             }}
+
           </strong>
+
         </div>
 
         <div>
+
           <span>Código de operación Yape</span>
 
           <strong>
+
             {{ aporte.codigoOperacionYape || 'Sin código' }}
+
           </strong>
+
         </div>
 
         <div>
+
           <span>Fecha del aporte</span>
 
           <strong>
+
             {{
+
             aporte.fechaCreacion
+
             | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
+
             }}
+
           </strong>
+
         </div>
 
       </div>
 
-
-      <!-- SELECCIONAR DECISIÓN -->
+      <!--* SELECCIONAR DECISIÓN *-->
 
       <h3>Selecciona una decisión</h3>
 
@@ -410,17 +498,21 @@
 
         <button type="button" class="decision-aprobar" [class.seleccionada]="decisionSeleccionada() === 'Aprobar'"
           [disabled]="guardandoRevision()" (click)="seleccionarDecision('Aprobar')">
+
           ✓ Aprobar
+
         </button>
 
         <button type="button" class="decision-rechazar" [class.seleccionada]="decisionSeleccionada() === 'Rechazar'"
           [disabled]="guardandoRevision()" (click)="seleccionarDecision('Rechazar')">
+
           ✕ Rechazar
+
         </button>
 
       </div>
 
-      <!-- OBSERVACIÓN -->
+      <!--* OBSERVACIÓN *-->
 
       <div class="revision-campo">
 
@@ -435,7 +527,9 @@
           } @else {
 
           <span class="campo-opcional">
+
             (opcional)
+
           </span>
 
           }
@@ -449,19 +543,23 @@
         @if (decisionSeleccionada() === 'Rechazar') {
 
         <small>
+
           Indica por qué no se aprobó el pago.
+
         </small>
 
         }
 
       </div>
 
-      <!-- ERROR DE VERIFICACIÓN -->
+      <!--* ERROR DE VERIFICACIÓN *-->
 
       @if (errorRevision()) {
 
       <div class="revision-error">
+
         {{ errorRevision() }}
+
       </div>
 
       }
@@ -470,12 +568,14 @@
 
     }
 
-    <!-- PIE DEL MODAL -->
+    <!--* PIE DEL MODAL *-->
 
     <footer class="revision-footer">
 
       <button type="button" class="btn-revision-cancelar" [disabled]="guardandoRevision()" (click)="cerrarRevision()">
+
         Cancelar
+
       </button>
 
       <button type="button" class="btn-revision-confirmar"

@@ -77,21 +77,64 @@ namespace Charatec.Sorteo.Business.Services
                 .Success(respuesta);
         }
 
-        public async Task<Result<ResultadoPaginado<AportePublicacionResponse>>>
+
+        public async Task<Result<AportesPublicacionResponse>>
             ListarPorPublicacionAsync(
                 Guid sorteoId,
                 ListarAportesPublicacionRequest request,
                 CancellationToken cancellationToken = default)
         {
-            
-            var consulta = _uow._aporteRepository.ConsultarPorSorteo(sorteoId);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (sorteoId == Guid.Empty || request is null)
+            {
+                return Result<AportesPublicacionResponse>.Failure(
+                    Error.Validation("Los datos de consulta no son válidos.")
+                );
+            }
+
+            // Obtener el título del sorteo.
+            var sorteo = await _uow._sorteoRepository
+                .Consultar()
+                .AsNoTracking()
+                .Where(x => x.Id == sorteoId)
+                .Select(x => new
+                {
+                    x.Id,
+                    x.Titulo
+                })
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (sorteo is null)
+            {
+                return Result<AportesPublicacionResponse>.Failure(
+                    Error.NotFound("No se encontró el sorteo.")
+                );
+            }
+
+            // Consulta base de todos los aportes del sorteo.
+            var consultaBase = _uow._aporteRepository
+                .ConsultarPorSorteo(sorteoId);
+
+            var montoJuntado = await consultaBase
+                .Where(x => x.Estado == EstadoAporte.Confirmado)
+                .SumAsync(
+                    x => (decimal?)x.Monto,
+                    cancellationToken
+                ) ?? 0m;
+
+            var consulta = consultaBase;
 
             if (request.Estado.HasValue)
             {
-                consulta = consulta.Where(x => x.Estado == request.Estado.Value);
+                consulta = consulta.Where(
+                    x => x.Estado == request.Estado.Value
+                );
             }
 
-            consulta = consulta.OrderByDescending(x => x.FechaCreacion).ThenByDescending(x => x.AporteId);
+            consulta = consulta
+                .OrderByDescending(x => x.FechaCreacion)
+                .ThenByDescending(x => x.AporteId);
 
             var datosPaginados = await consulta.PaginarAsync(
                 request.ObtenerPaginacion(),
@@ -112,15 +155,23 @@ namespace Charatec.Sorteo.Business.Services
                 ))
                 .ToList();
 
-            return Result<ResultadoPaginado<AportePublicacionResponse>>
-                .Success(
-                new ResultadoPaginado<AportePublicacionResponse>(
-                    Registros: registros,
-                    Pagina: datosPaginados.Pagina,
-                    TamanoPagina: datosPaginados.TamanoPagina,
-                    TotalRegistros: datosPaginados.TotalRegistros
-                ));
+            var paginacion = new ResultadoPaginado<AportePublicacionResponse>(
+                Registros: registros,
+                Pagina: datosPaginados.Pagina,
+                TamanoPagina: datosPaginados.TamanoPagina,
+                TotalRegistros: datosPaginados.TotalRegistros
+            );
+
+            return Result<AportesPublicacionResponse>.Success(
+                new AportesPublicacionResponse(
+                    SorteoId: sorteo.Id,
+                    TituloSorteo: sorteo.Titulo,
+                    MontoJuntado: montoJuntado,
+                    Aportes: paginacion
+                )
+            );
         }
+
 
         public async Task<Result<VerificarAporteResponse>> VerificarAsync(
             Guid aporteId,

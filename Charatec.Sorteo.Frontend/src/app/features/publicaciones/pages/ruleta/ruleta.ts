@@ -1,4 +1,3 @@
-
 import {
   AfterViewInit,
   Component,
@@ -50,7 +49,7 @@ export class Ruleta implements AfterViewInit, OnDestroy {
   private peticion?: Subscription;
 
   private indiceGanadorPendiente: number | null = null;
-
+  readonly mostrarRecaudacion = signal(false);
   // ==========================================
   // ESTADO GENERAL
   // ==========================================
@@ -277,7 +276,7 @@ export class Ruleta implements AfterViewInit, OnDestroy {
         isInteractive: false,
 
         // Puntero situado en la parte superior.
-        pointerAngle: 270,
+        pointerAngle: 0,
 
         itemLabelFontSizeMax: 16,
         itemLabelRadius: 0.86,

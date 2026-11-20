@@ -24,7 +24,7 @@ namespace Charatec.Sorteo.Data.Repositories
 
         public async Task<TblSorteo?> ObtenerPorIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-                return await _dbContext.Set<TblSorteo>()
+            return await _dbContext.Set<TblSorteo>()
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 x => x.Id == id,

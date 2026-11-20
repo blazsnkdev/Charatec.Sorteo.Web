@@ -17,12 +17,11 @@ namespace Charatec.Sorteo.Business.Interfaces
                 ListarAportesRequest request,
                 CancellationToken cancellationToken = default
             );
-        Task<Result<ResultadoPaginado<AportePublicacionResponse>>>
-            ListarPorPublicacionAsync(
-                Guid sorteoId,
-                ListarAportesPublicacionRequest request,
-                CancellationToken cancellationToken = default
-            );
+        Task<Result<AportesPublicacionResponse>>
+    ListarPorPublicacionAsync(
+        Guid sorteoId,
+        ListarAportesPublicacionRequest request,
+        CancellationToken cancellationToken = default);
 
 
         Task<Result<VerificarAporteResponse>> VerificarAsync(

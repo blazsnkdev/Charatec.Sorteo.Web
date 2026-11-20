@@ -123,15 +123,7 @@
   color: #111827;
 }
 
-.etiqueta-prueba {
-  padding: 7px 10px;
-  border-radius: 6px;
-  background: #f3e8ff;
-  color: #7e22ce;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .5px;
-}
+
 
 /* RULETA */
 
@@ -484,6 +476,7 @@
 
   .btn-recargar {
     width: 100%;
+    background: #003bff;
   }
 
   .info-publicacion {
@@ -499,4 +492,41 @@
   .ganador-modal h2 {
     font-size: 24px;
   }
+}
+
+
+.recaudacion-card {
+  min-width: 0;
+}
+
+.recaudacion-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.btn-ver-recaudacion {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 8px;
+  background: #f3f0ff;
+  color: #7c3aed;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-ver-recaudacion:hover {
+  background: #ede9fe;
+}
+
+.recaudacion-valor {
+  display: block;
+  margin-top: 4px;
+  white-space: nowrap;
 }

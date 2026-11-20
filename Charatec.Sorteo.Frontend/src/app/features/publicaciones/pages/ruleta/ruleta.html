@@ -1,4 +1,3 @@
-
 <section class="pagina-ruleta">
 
 
@@ -17,12 +16,7 @@
 
     </div>
 
-    <button
-      type="button"
-      class="btn-recargar"
-      [disabled]="cargando() || girando()"
-      (click)="cargarDatos()"
-    >
+    <button type="button" class="btn-recargar" [disabled]="cargando() || girando()" (click)="cargarDatos()">
       Actualizar participantes
     </button>
 
@@ -34,9 +28,9 @@
 
   @if (error()) {
 
-    <div class="ruleta-error">
-      {{ error() }}
-    </div>
+  <div class="ruleta-error">
+    {{ error() }}
+  </div>
 
   }
 
@@ -46,45 +40,66 @@
 
   @if (datos(); as sorteo) {
 
-    <div class="info-publicacion">
+  <div class="info-publicacion">
 
-      <div>
-        <span>Publicación</span>
-        <strong>{{ sorteo.tituloSorteo }}</strong>
-      </div>
+    <div>
+      <span>Publicación</span>
+      <strong>{{ sorteo.tituloSorteo }}</strong>
+    </div>
 
-      <div>
-        <span>Participantes</span>
-        <strong>{{ totalParticipantes() }}</strong>
-      </div>
+    <div>
+      <span>Participantes</span>
+      <strong>{{ totalParticipantes() }}</strong>
+    </div>
 
-      <div>
+
+    <div class="recaudacion-card">
+
+      <div class="recaudacion-cabecera">
         <span>Recaudación confirmada</span>
 
-        <strong>
-          {{
-            sorteo.totalConfirmado
-            | currency:'PEN':'S/ ':'1.2-2':'es-PE'
-          }}
-        </strong>
-      </div>
-
-      <div>
-        <span>Fecha programada</span>
-
-        <strong>
-          @if (sorteo.fechaSorteo) {
-            {{
-              sorteo.fechaSorteo
-              | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
-            }}
+        <button type="button" class="btn-ver-recaudacion" [attr.aria-label]="mostrarRecaudacion()
+        ? 'Ocultar recaudación'
+        : 'Mostrar recaudación'" [attr.aria-pressed]="mostrarRecaudacion()"
+          (click)="mostrarRecaudacion.set(!mostrarRecaudacion())">
+          @if (mostrarRecaudacion()) {
+          <span aria-hidden="true">◉</span>
           } @else {
-            Sin fecha
+          <span aria-hidden="true">◉̸</span>
           }
-        </strong>
+        </button>
       </div>
+
+      <strong class="recaudacion-valor">
+        @if (mostrarRecaudacion()) {
+        {{
+        sorteo.totalConfirmado
+        | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+        }}
+        } @else {
+        S/ ••••••
+        }
+      </strong>
 
     </div>
+
+
+    <div>
+      <span>Fecha programada</span>
+
+      <strong>
+        @if (sorteo.fechaSorteo) {
+        {{
+        sorteo.fechaSorteo
+        | date:'dd/MM/yyyy HH:mm':'-0500':'es-PE'
+        }}
+        } @else {
+        Sin fecha
+        }
+      </strong>
+    </div>
+
+  </div>
 
   }
 
@@ -100,7 +115,6 @@
 
       <div class="panel-titulo">
         <h2>Ruleta de participantes</h2>
-        <span class="etiqueta-prueba">MODO PRUEBA</span>
       </div>
 
       <!-- El contenedor permanece montado para
@@ -113,10 +127,7 @@
           <!-- Puntero superior -->
           <div class="ruleta-puntero"></div>
 
-          <div
-            #wheelHost
-            class="ruleta-canvas"
-          ></div>
+          <div #wheelHost class="ruleta-canvas"></div>
 
           <!-- Centro decorativo -->
           <div class="ruleta-centro">
@@ -129,15 +140,15 @@
 
       @if (cargando()) {
 
-        <p class="ruleta-mensaje">
-          Cargando participantes...
-        </p>
+      <p class="ruleta-mensaje">
+        Cargando participantes...
+      </p>
 
       } @else if (!participantes().length) {
 
-        <p class="ruleta-mensaje">
-          No existen participantes con aportes confirmados.
-        </p>
+      <p class="ruleta-mensaje">
+        No existen participantes con aportes confirmados.
+      </p>
 
       }
 
@@ -145,54 +156,49 @@
 
       <div class="controles-ruleta">
 
-        <button
-          type="button"
-          class="btn-girar"
-          [disabled]="!puedeGirar()"
-          (click)="girar()"
-        >
+        <button type="button" class="btn-girar" [disabled]="!puedeGirar()" (click)="girar()">
 
           @if (girando()) {
-            🎡 Girando...
+          🎡 Girando...
           } @else {
-            🎯 GIRAR RULETA
+          🎯 GIRAR RULETA
           }
 
         </button>
 
         @if (datos(); as sorteo) {
 
-          @if (!sorteo.puedeSortear) {
+        @if (!sorteo.puedeSortear) {
 
-            <p class="aviso-bloqueado">
+        <p class="aviso-bloqueado">
 
-              @if (!sorteo.fechaSorteo) {
+          @if (!sorteo.fechaSorteo) {
 
-                La publicación no tiene una fecha de sorteo.
+          La publicación no tiene una fecha de sorteo.
 
-              } @else if (!participantes().length) {
+          } @else if (!participantes().length) {
 
-                Se necesitan aportes confirmados
-                para realizar el sorteo.
-
-              } @else {
-
-                El botón se habilitará cuando llegue
-                la fecha programada.
-                Pulsa "Actualizar participantes"
-                para comprobar nuevamente.
-
-              }
-
-            </p>
+          Se necesitan aportes confirmados
+          para realizar el sorteo.
 
           } @else {
 
-            <p class="aviso-habilitado">
-              La ruleta está habilitada para realizar una prueba.
-            </p>
+          El botón se habilitará cuando llegue
+          la fecha programada.
+          Pulsa "Actualizar participantes"
+          para comprobar nuevamente.
 
           }
+
+        </p>
+
+        } @else {
+
+        <p class="aviso-habilitado">
+          La ruleta está habilitada para realizar una prueba.
+        </p>
+
+        }
 
         }
 
@@ -220,54 +226,51 @@
       <div class="participantes-lista">
 
         @for (
-          cliente of participantes();
-          track cliente.clienteId;
-          let i = $index
+        cliente of participantes();
+        track cliente.clienteId;
+        let i = $index
         ) {
 
-          <div class="participante">
+        <div class="participante">
 
-            <div class="participante-posicion">
-              {{ i + 1 }}
-            </div>
+          <div class="participante-posicion">
+            {{ i + 1 }}
+          </div>
 
-            <div class="participante-info">
+          <div class="participante-info">
 
-              <strong>
-                {{ cliente.nombreCliente }}
-              </strong>
+            <strong>
+              {{ cliente.nombreCliente }}
+            </strong>
 
-              <span>
-                {{
-                  cliente.totalAportado
-                  | currency:'PEN':'S/ ':'1.2-2':'es-PE'
-                }}
-              </span>
+            <span>
+              {{
+              cliente.totalAportado
+              | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+              }}
+            </span>
 
-              <div class="probabilidad-barra">
+            <div class="probabilidad-barra">
 
-                <div
-                  class="probabilidad-progreso"
-                  [style.width.%]="cliente.probabilidad"
-                ></div>
-
-              </div>
-
-            </div>
-
-            <div class="participante-porcentaje">
-
-              {{ cliente.probabilidad | number:'1.2-2' }}%
+              <div class="probabilidad-progreso" [style.width.%]="cliente.probabilidad"></div>
 
             </div>
 
           </div>
+
+          <div class="participante-porcentaje">
+
+            {{ cliente.probabilidad | number:'1.2-2' }}%
+
+          </div>
+
+        </div>
 
         } @empty {
 
-          <div class="sin-participantes">
-            No hay clientes registrados para esta ruleta.
-          </div>
+        <div class="sin-participantes">
+          No hay clientes registrados para esta ruleta.
+        </div>
 
         }
 
@@ -286,69 +289,52 @@
 
 @if (modalGanador() && ganador(); as cliente) {
 
-  <div
-    class="ganador-overlay"
-    (click)="cerrarGanador()"
-  >
+<div class="ganador-overlay" (click)="cerrarGanador()">
 
-    <div
-      class="ganador-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="titulo-ganador"
-      (click)="$event.stopPropagation()"
-    >
+  <div class="ganador-modal" role="dialog" aria-modal="true" aria-labelledby="titulo-ganador"
+    (click)="$event.stopPropagation()">
 
-      <div class="ganador-icono">
-        🏆
+    <div class="ganador-icono">
+      🏆
+    </div>
+
+    <p class="ganador-subtitulo">
+      ¡TENEMOS UN GANADOR!
+    </p>
+
+    <h2 id="titulo-ganador">
+      {{ cliente.nombreCliente }}
+    </h2>
+
+    <div class="ganador-detalles">
+
+      <div>
+        <span>Total aportado</span>
+
+        <strong>
+          {{
+          cliente.totalAportado
+          | currency:'PEN':'S/ ':'1.2-2':'es-PE'
+          }}
+        </strong>
       </div>
 
-      <p class="ganador-subtitulo">
-        ¡TENEMOS UN GANADOR!
-      </p>
+      <div>
+        <span>Probabilidad del giro</span>
 
-      <h2 id="titulo-ganador">
-        {{ cliente.nombreCliente }}
-      </h2>
-
-      <div class="ganador-detalles">
-
-        <div>
-          <span>Total aportado</span>
-
-          <strong>
-            {{
-              cliente.totalAportado
-              | currency:'PEN':'S/ ':'1.2-2':'es-PE'
-            }}
-          </strong>
-        </div>
-
-        <div>
-          <span>Probabilidad del giro</span>
-
-          <strong>
-            {{ cliente.probabilidad | number:'1.2-2' }}%
-          </strong>
-        </div>
-
+        <strong>
+          {{ cliente.probabilidad | number:'1.2-2' }}%
+        </strong>
       </div>
-
-      <p class="ganador-aviso">
-        Resultado temporal de prueba.
-        No se ha registrado en PostgreSQL.
-      </p>
-
-      <button
-        type="button"
-        class="btn-cerrar-ganador"
-        (click)="cerrarGanador()"
-      >
-        Cerrar resultado
-      </button>
 
     </div>
 
+    <button type="button" class="btn-cerrar-ganador" (click)="cerrarGanador()">
+      Cerrar resultado
+    </button>
+
   </div>
+
+</div>
 
 }

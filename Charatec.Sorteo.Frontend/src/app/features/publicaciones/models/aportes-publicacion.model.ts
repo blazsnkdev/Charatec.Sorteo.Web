@@ -36,3 +36,13 @@ export interface VerificarAporteResponse {
     fechaRevision: string;
     mensaje: string;
 }
+
+
+import { ResultadoPaginado } from '../../../core/models/resultado-paginado.model';
+
+export interface AportesPublicacionResponse {
+  sorteoId: string;
+  tituloSorteo: string;
+  montoJuntado: number;
+  aportes: ResultadoPaginado<AportePublicacion>;
+}
