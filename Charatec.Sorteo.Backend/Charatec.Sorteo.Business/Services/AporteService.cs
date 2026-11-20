@@ -174,6 +174,7 @@ namespace Charatec.Sorteo.Business.Services
                     cancellationToken
                 );
 
+
             if (revision.Resultado == ResultadoRevisionAporte.NoEncontrado)
             {
                 return Result<VerificarAporteResponse>.Failure(
@@ -200,6 +201,16 @@ namespace Charatec.Sorteo.Business.Services
                     new Error(
                         "BUSINESS_RULE_VIOLATION",
                         "No se encontró la información completa del pago Yape."
+                    )
+                );
+            }
+
+            if (revision.Resultado == ResultadoRevisionAporte.ParticipacionNoEncontrada)
+            {
+                return Result<VerificarAporteResponse>.Failure(
+                    new Error(
+                        "BUSINESS_RULE_VIOLATION",
+                        "No se pudo verificar el aporte porque la participación asociada no existe."
                     )
                 );
             }

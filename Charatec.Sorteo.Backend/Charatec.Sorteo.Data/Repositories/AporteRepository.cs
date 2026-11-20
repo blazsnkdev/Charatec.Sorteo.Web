@@ -220,20 +220,29 @@ namespace Charatec.Sorteo.Data.Repositories
                 administradorUsuarioId;
             evidencia.Observacion = observacion;
 
+
             if (aprobar)
             {
-                var participacion =
-                    await _dbContext.Set<Participacion>()
-                        .FirstOrDefaultAsync(
-                            x => x.Id == aporte.ParticipacionId,
-                            cancellationToken
-                        );
+                var participacion = await _dbContext.Set<Participacion>()
+                    .FirstOrDefaultAsync(
+                        x => x.Id == aporte.ParticipacionId,
+                        cancellationToken
+                    );
 
-                if (participacion is not null)
+                if (participacion is null)
                 {
-                    participacion.Estado = EstadoParticipacion.Habilitada;
+                    await transaccion.RollbackAsync(cancellationToken);
+
+                    return Resultado(
+                        ResultadoRevisionAporte.ParticipacionNoEncontrada,
+                        aporte.Monto,
+                        aporte.Estado
+                    );
                 }
+
+                participacion.Estado = EstadoParticipacion.Habilitada;
             }
+
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
