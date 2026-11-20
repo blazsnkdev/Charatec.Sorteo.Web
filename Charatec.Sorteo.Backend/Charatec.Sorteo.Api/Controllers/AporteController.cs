@@ -14,13 +14,9 @@ namespace Charatec.Sorteo.Api.Controllers
     {
         [HttpGet]
         [Authorize(Roles = "Cliente")]
-        public async Task<IActionResult> ListarMisAportes(
-            [FromQuery] ListarAportesRequest request,
-            CancellationToken cancellationToken)
+        public async Task<IActionResult> ListarMisAportes([FromQuery] ListarAportesRequest request,CancellationToken cancellationToken)
         {
-            
-            var usuarioIdTexto =
-                User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var usuarioIdTexto =User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (!Guid.TryParse(usuarioIdTexto, out var usuarioId))
             {
