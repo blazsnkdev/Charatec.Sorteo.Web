@@ -3,9 +3,6 @@ using Charatec.Sorteo.Data.Interfaces;
 using Charatec.Sorteo.Entities.Enums;
 using Charatec.Sorteo.Entities.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Charatec.Sorteo.Data.Repositories
 {
@@ -23,8 +20,7 @@ namespace Charatec.Sorteo.Data.Repositories
             return _dbContext.Set<Aporte>().AsNoTracking();
         }
 
-        public IQueryable<AporteRevisionConsulta> ConsultarPorSorteo(
-            Guid sorteoId)
+        public IQueryable<AporteRevisionConsulta> ConsultarPorSorteo(Guid sorteoId)
         {
             var consulta =
                 from aporte in _dbContext.Set<Aporte>().AsNoTracking()
@@ -97,18 +93,10 @@ namespace Charatec.Sorteo.Data.Repositories
                 );
             }
 
-            // ==========================================
-            // 1. INICIAR TRANSACCIÓN
-            // ==========================================
-
             await using var transaccion =
                 await _dbContext.Database.BeginTransactionAsync(
                     cancellationToken
                 );
-
-            // ==========================================
-            // 2. OBTENER APORTE
-            // ==========================================
 
             var aporte = await _dbContext.Set<Aporte>()
                 .AsNoTracking()
@@ -124,10 +112,6 @@ namespace Charatec.Sorteo.Data.Repositories
                 );
             }
 
-            // ==========================================
-            // 3. VERIFICAR ESTADO ACTUAL
-            // ==========================================
-
             if (aporte.Estado != EstadoAporte.Pendiente)
             {
                 return Resultado(
@@ -137,10 +121,6 @@ namespace Charatec.Sorteo.Data.Repositories
                     aporte.FechaConfirmacion
                 );
             }
-
-            // ==========================================
-            // 4. OBTENER ORDEN Y EVIDENCIA
-            // ==========================================
 
             var orden = await _dbContext.Set<OrdenPago>()
                 .FirstOrDefaultAsync(
@@ -171,12 +151,6 @@ namespace Charatec.Sorteo.Data.Repositories
                     aporte.Estado
                 );
             }
-
-            // ==========================================
-            // 5. ACTUALIZACIÓN CONDICIONAL
-            // ==========================================
-            // Solo una petición puede cambiar este aporte
-            // desde Pendiente al estado definitivo.
 
             var nuevoEstado = aprobar
                 ? EstadoAporte.Confirmado
@@ -234,29 +208,17 @@ namespace Charatec.Sorteo.Data.Repositories
                 );
             }
 
-            // ==========================================
-            // 6. ACTUALIZAR ORDEN DE PAGO
-            // ==========================================
-
             orden.Estado = aprobar
                 ? EstadoOrdenPago.Pagada
                 : EstadoOrdenPago.Fallida;
 
             orden.FechaActualizacion = ahora;
 
-            // ==========================================
-            // 7. REGISTRAR REVISIÓN YAPE
-            // ==========================================
-
             evidencia.Verificado = aprobar;
             evidencia.FechaVerificacion = ahora;
             evidencia.AdministradorRevisorId =
                 administradorUsuarioId;
             evidencia.Observacion = observacion;
-
-            // ==========================================
-            // 8. ACTUALIZAR PARTICIPACIÓN
-            // ==========================================
 
             if (aprobar)
             {
@@ -269,30 +231,13 @@ namespace Charatec.Sorteo.Data.Repositories
 
                 if (participacion is not null)
                 {
-                    participacion.Estado =
-                        EstadoParticipacion.Habilitada;
+                    participacion.Estado = EstadoParticipacion.Habilitada;
                 }
             }
 
-            // Al rechazar, no deshabilitamos la
-            // participación: podría tener otros
-            // aportes confirmados.
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
-            // ==========================================
-            // 9. GUARDAR CAMBIOS
-            // ==========================================
-
-            await _dbContext.SaveChangesAsync(
-                cancellationToken
-            );
-
-            await transaccion.CommitAsync(
-                cancellationToken
-            );
-
-            // ==========================================
-            // 10. RESULTADO
-            // ==========================================
+            await transaccion.CommitAsync(cancellationToken);
 
             return Resultado(
                 ResultadoRevisionAporte.Actualizado,

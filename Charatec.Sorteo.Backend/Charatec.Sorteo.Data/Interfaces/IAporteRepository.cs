@@ -1,7 +1,4 @@
 ﻿using Charatec.Sorteo.Entities.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Charatec.Sorteo.Data.Interfaces
 {

@@ -1,4 +1,5 @@
-﻿using Charatec.Sorteo.Api.Responses;
+﻿using Charatec.Sorteo.Api.Extensions;
+using Charatec.Sorteo.Api.Responses;
 using Charatec.Sorteo.Business.DTOs.Requests.Aportes;
 using Charatec.Sorteo.Business.DTOs.Requests.Participaciones;
 using Charatec.Sorteo.Business.Interfaces;
@@ -16,9 +17,7 @@ namespace Charatec.Sorteo.Api.Controllers
         [Authorize(Roles = "Cliente")]
         public async Task<IActionResult> ListarMisAportes([FromQuery] ListarAportesRequest request,CancellationToken cancellationToken)
         {
-            var usuarioIdTexto =User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (!Guid.TryParse(usuarioIdTexto, out var usuarioId))
+            if (!User.TryObtenerUsuarioId(out var usuarioId))
             {
                 return ApiResults.Unauthorized(
                     "No se pudo identificar al usuario autenticado."
@@ -64,8 +63,7 @@ namespace Charatec.Sorteo.Api.Controllers
             [FromBody] VerificarAporteRequest request,
             CancellationToken cancellationToken)
         {
-            var usuarioIdTexto =
-                User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var usuarioIdTexto = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (!Guid.TryParse(
                 usuarioIdTexto,

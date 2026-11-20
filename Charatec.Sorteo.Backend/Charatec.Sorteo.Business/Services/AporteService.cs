@@ -84,19 +84,14 @@ namespace Charatec.Sorteo.Business.Services
                 CancellationToken cancellationToken = default)
         {
             
-            var consulta = _uow._aporteRepository
-                .ConsultarPorSorteo(sorteoId);
+            var consulta = _uow._aporteRepository.ConsultarPorSorteo(sorteoId);
 
             if (request.Estado.HasValue)
             {
-                consulta = consulta.Where(
-                    x => x.Estado == request.Estado.Value
-                );
+                consulta = consulta.Where(x => x.Estado == request.Estado.Value);
             }
 
-            consulta = consulta
-                .OrderByDescending(x => x.FechaCreacion)
-                .ThenByDescending(x => x.AporteId);
+            consulta = consulta.OrderByDescending(x => x.FechaCreacion).ThenByDescending(x => x.AporteId);
 
             var datosPaginados = await consulta.PaginarAsync(
                 request.ObtenerPaginacion(),
@@ -108,8 +103,7 @@ namespace Charatec.Sorteo.Business.Services
                     AporteId: a.AporteId,
                     SorteoId: a.SorteoId,
                     ClienteId: a.ClienteId,
-                    NombreCliente:
-                        $"{a.Nombres} {a.Apellidos}".Trim(),
+                    NombreCliente: $"{a.Nombres} {a.Apellidos}".Trim(),
                     NumeroWhatsapp: a.NumeroWhatsapp,
                     Monto: a.Monto,
                     CodigoOperacionYape: a.CodigoOperacionYape,
@@ -118,16 +112,14 @@ namespace Charatec.Sorteo.Business.Services
                 ))
                 .ToList();
 
-            var respuesta =
+            return Result<ResultadoPaginado<AportePublicacionResponse>>
+                .Success(
                 new ResultadoPaginado<AportePublicacionResponse>(
                     Registros: registros,
                     Pagina: datosPaginados.Pagina,
                     TamanoPagina: datosPaginados.TamanoPagina,
                     TotalRegistros: datosPaginados.TotalRegistros
-                );
-
-            return Result<ResultadoPaginado<AportePublicacionResponse>>
-                .Success(respuesta);
+                ));
         }
 
         public async Task<Result<VerificarAporteResponse>> VerificarAsync(
@@ -163,8 +155,7 @@ namespace Charatec.Sorteo.Business.Services
             var aprobar = decision == "Aprobar";
             var observacion = request.Observacion?.Trim();
 
-            if (!aprobar &&
-                string.IsNullOrWhiteSpace(observacion))
+            if (!aprobar && string.IsNullOrWhiteSpace(observacion))
             {
                 return Result<VerificarAporteResponse>.Failure(
                     new Error(
@@ -183,8 +174,7 @@ namespace Charatec.Sorteo.Business.Services
                     cancellationToken
                 );
 
-            if (revision.Resultado ==
-                ResultadoRevisionAporte.NoEncontrado)
+            if (revision.Resultado == ResultadoRevisionAporte.NoEncontrado)
             {
                 return Result<VerificarAporteResponse>.Failure(
                     new Error(
@@ -194,8 +184,7 @@ namespace Charatec.Sorteo.Business.Services
                 );
             }
 
-            if (revision.Resultado ==
-                ResultadoRevisionAporte.YaRevisado)
+            if (revision.Resultado == ResultadoRevisionAporte.YaRevisado)
             {
                 return Result<VerificarAporteResponse>.Failure(
                     new Error(
@@ -205,8 +194,7 @@ namespace Charatec.Sorteo.Business.Services
                 );
             }
 
-            if (revision.Resultado ==
-                ResultadoRevisionAporte.EvidenciaNoEncontrada)
+            if (revision.Resultado == ResultadoRevisionAporte.EvidenciaNoEncontrada)
             {
                 return Result<VerificarAporteResponse>.Failure(
                     new Error(
@@ -216,7 +204,8 @@ namespace Charatec.Sorteo.Business.Services
                 );
             }
 
-            var respuesta = new VerificarAporteResponse(
+            return Result<VerificarAporteResponse>.Success(
+                new VerificarAporteResponse(
                 AporteId: revision.AporteId,
                 Estado: revision.Estado.ToString(),
                 Monto: revision.Monto,
@@ -224,10 +213,7 @@ namespace Charatec.Sorteo.Business.Services
                 Mensaje: aprobar
                     ? "El aporte fue confirmado correctamente."
                     : "El aporte fue rechazado correctamente."
-            );
-
-            return Result<VerificarAporteResponse>.Success(
-                respuesta
+                )
             );
         }
 
