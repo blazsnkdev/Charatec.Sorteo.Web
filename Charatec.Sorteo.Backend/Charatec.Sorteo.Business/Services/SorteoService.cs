@@ -18,11 +18,8 @@ namespace Charatec.Sorteo.Business.Services
         {
             _uow = uow;
         }
-        #region LISTADO PAGINADO POR ESTADO
-        public async Task<Result<ResultadoPaginado<SorteoListadoResponse>>>
-            ListarSorteosAsync(
-                ListarSorteosRequest request,
-                CancellationToken cancellationToken = default)
+        #region LISTAR POR ESTADO PAGINADO
+        public async Task<Result<ResultadoPaginado<SorteoListadoResponse>>>ListarSorteosAsync(ListarSorteosRequest request, CancellationToken cancellationToken = default)
         {
             var consulta = _uow._sorteoRepository.Consultar();
 
@@ -75,7 +72,7 @@ namespace Charatec.Sorteo.Business.Services
             Guid id,
             CancellationToken cancellationToken = default)
         {
-            // 1. Validar identificador
+            
             if (id == Guid.Empty)
             {
                 return Result<SorteoListadoResponse>.Failure(
@@ -86,13 +83,13 @@ namespace Charatec.Sorteo.Business.Services
                 );
             }
 
-            // 2. Consultar repositorio
+            
             var sorteo = await _uow._sorteoRepository.ObtenerPorIdAsync(
                 id,
                 cancellationToken
             );
 
-            // 3. Comprobar existencia
+            
             if (sorteo is null)
             {
                 return Result<SorteoListadoResponse>.Failure(
@@ -102,9 +99,7 @@ namespace Charatec.Sorteo.Business.Services
                     )
                 );
             }
-
-            // 4. Construir DTO de respuesta
-            var response = new SorteoListadoResponse(
+            return Result<SorteoListadoResponse>.Success(new SorteoListadoResponse(
                 Id: sorteo.Id,
                 AdministradorUsuarioId: sorteo.AdministradorUsuarioId,
                 Titulo: sorteo.Titulo,
@@ -117,10 +112,7 @@ namespace Charatec.Sorteo.Business.Services
                 FechaSorteo: sorteo.FechaSorteo,
                 Estado: sorteo.Estado.ToString(),
                 FechaCreacion: sorteo.FechaCreacion
-            );
-
-            // 5. Retornar resultado exitoso
-            return Result<SorteoListadoResponse>.Success(response);
+            ));
         }
         #endregion
         #region ACTUALIZAR EL BORRADOR 
@@ -131,7 +123,7 @@ namespace Charatec.Sorteo.Business.Services
                 ActualizarSorteoBorradorRequest request,
                 CancellationToken cancellationToken = default)
         {
-            // 1. Validar identificadores
+            
             if (sorteoId == Guid.Empty ||
                 administradorId == Guid.Empty)
             {
@@ -143,7 +135,7 @@ namespace Charatec.Sorteo.Business.Services
                 );
             }
 
-            // 2. Consultar entidad con seguimiento de EF Core
+            
             var sorteo = await _uow._sorteoRepository.ObtenerParaActualizarAsync(
                 sorteoId,
                 cancellationToken
@@ -159,7 +151,6 @@ namespace Charatec.Sorteo.Business.Services
                 );
             }
 
-            // 3. Comprobar propietario
             if (sorteo.AdministradorUsuarioId != administradorId)
             {
                 return Result<SorteoListadoResponse>.Failure(
@@ -170,7 +161,6 @@ namespace Charatec.Sorteo.Business.Services
                 );
             }
 
-            // 4. Solo pueden modificarse borradores
             if (sorteo.Estado != EstadoSorteo.Borrador)
             {
                 return Result<SorteoListadoResponse>.Failure(
@@ -181,14 +171,13 @@ namespace Charatec.Sorteo.Business.Services
                 );
             }
 
-            // 5. Actualizar los campos permitidos
+            
             sorteo.Titulo = request.Titulo.Trim();
             sorteo.Descripcion = request.Descripcion.Trim();
 
             sorteo.AporteMinimo = request.AporteMinimo;
             sorteo.MetaRecaudacion = request.MetaRecaudacion;
 
-            // PostgreSQL necesita DateTimeOffset en UTC
             sorteo.FechaInicio =
                 request.FechaInicio!.Value.ToUniversalTime();
 
@@ -224,7 +213,7 @@ namespace Charatec.Sorteo.Business.Services
 
             return Result<SorteoListadoResponse>.Success(response);
         }
-        #endregion
+        #endregion 
         #region PUBLICAR CAMBIAR ESTADO DEL SORTEO 
 
         public async Task<Result<SorteoPublicadoResponse>> PublicarSorteoAsync(
@@ -243,13 +232,11 @@ namespace Charatec.Sorteo.Business.Services
                 );
             }
 
-            // 2. Obtener sorteo con seguimiento de EF Core
             var sorteo = await _uow._sorteoRepository.ObtenerParaActualizarAsync(
                 sorteoId,
                 cancellationToken
             );
 
-            // 3. Comprobar existencia
             if (sorteo is null)
             {
                 return Result<SorteoPublicadoResponse>.Failure(
@@ -260,7 +247,6 @@ namespace Charatec.Sorteo.Business.Services
                 );
             }
 
-            // 4. Verificar que pertenece al administrador
             if (sorteo.AdministradorUsuarioId != administradorId)
             {
                 return Result<SorteoPublicadoResponse>.Failure(
@@ -271,7 +257,6 @@ namespace Charatec.Sorteo.Business.Services
                 );
             }
 
-            // 5. Solo se permite publicar borradores
             if (sorteo.Estado != EstadoSorteo.Borrador)
             {
                 return Result<SorteoPublicadoResponse>.Failure(
@@ -282,7 +267,6 @@ namespace Charatec.Sorteo.Business.Services
                 );
             }
 
-            // 6. Validar información obligatoria
             if (string.IsNullOrWhiteSpace(sorteo.Titulo) ||
                 string.IsNullOrWhiteSpace(sorteo.Descripcion))
             {
@@ -304,7 +288,6 @@ namespace Charatec.Sorteo.Business.Services
                 );
             }
 
-            // 7. Validar fechas
             var ahora = DateTimeOffset.UtcNow;
 
             if (sorteo.FechaInicio <= ahora)
@@ -338,14 +321,11 @@ namespace Charatec.Sorteo.Business.Services
                 );
             }
 
-            // 8. Confirmar publicación
             sorteo.Estado = EstadoSorteo.Publicado;
             sorteo.FechaActualizacion = ahora;
 
-            // 9. Guardar cambios en PostgreSQL
             await _uow.SaveChangesAsync(cancellationToken);
 
-            // 10. Devolver respuesta
             var response = new SorteoPublicadoResponse(
                 sorteo.Id,
                 sorteo.Titulo,
@@ -362,14 +342,27 @@ namespace Charatec.Sorteo.Business.Services
             Guid administradorId,
             CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (request is null)
+            {
+                return Result<BorradorSorteoRegistradoResponse>
+                    .Failure(Error.Validation(
+                        "Los datos del sorteo son obligatorios."
+                    ));
+            }
+
             if (administradorId == Guid.Empty)
             {
-                return Result<BorradorSorteoRegistradoResponse>.Failure(Error.Validation(""));
+                return Result<BorradorSorteoRegistradoResponse>
+                    .Failure(Error.Validation(
+                        "El identificador del administrador no es válido."
+                    ));
             }
-            ArgumentNullException.ThrowIfNull(request);
 
             var resultadosValidacion = new List<ValidationResult>();
             var contextoValidacion = new ValidationContext(request);
+
 
             bool esValido = Validator.TryValidateObject(
                 request,
@@ -381,12 +374,16 @@ namespace Charatec.Sorteo.Business.Services
             {
                 var errores = string.Join(
                     "; ",
-                    resultadosValidacion.Select(x => x.ErrorMessage));
+                    resultadosValidacion
+                        .Select(x => x.ErrorMessage)
+                        .Where(x => !string.IsNullOrWhiteSpace(x))
+                );
 
-                throw new ValidationException(errores);
+                return Result<BorradorSorteoRegistradoResponse>
+                    .Failure(Error.Validation(errores));
             }
 
-            // 3. Normalizar los campos de texto
+
             var titulo = request.Titulo.Trim();
             var descripcion = request.Descripcion.Trim();
 
@@ -405,42 +402,31 @@ namespace Charatec.Sorteo.Business.Services
                 return Result<BorradorSorteoRegistradoResponse>.Failure(Error.Validation("Debe tener entre 10 a 3000 caracateres"));
             }
 
-            // 4. Crear entidad Sorteo
             var sorteo = new TblSorteo
             {
                 Id = Guid.NewGuid(),
-
                 AdministradorUsuarioId = administradorId,
-
                 Titulo = titulo,
                 Descripcion = descripcion,
                 ImagenPortadaUrl = imagenPortadaUrl,
-
                 AporteMinimo = request.AporteMinimo,
                 MetaRecaudacion = request.MetaRecaudacion,
-
-                //TODO: parseo de las fechas
                 FechaInicio = request.FechaInicio!.Value.ToUniversalTime(),
                 FechaCierre = request.FechaCierre!.Value.ToUniversalTime(),
                 FechaSorteo = request.FechaSorteo?.ToUniversalTime(),
-
-
                 Estado = EstadoSorteo.Borrador,
-
                 FechaCreacion = DateTimeOffset.UtcNow,
                 FechaActualizacion = null
             };
 
-            // 5. Agregar el sorteo al repositorio
             await _uow._sorteoRepository.AddAsync(
                 sorteo,
                 cancellationToken);
 
-            // 6. Confirmar la operación en PostgreSQL
             await _uow.SaveChangesAsync(cancellationToken);
 
-            // 7. Crear DTO de respuesta
-            var response = new BorradorSorteoRegistradoResponse(
+            return Result<BorradorSorteoRegistradoResponse>.Success(
+                new BorradorSorteoRegistradoResponse(
                 sorteo.Id,
                 sorteo.AdministradorUsuarioId,
                 sorteo.Titulo,
@@ -453,11 +439,7 @@ namespace Charatec.Sorteo.Business.Services
                 sorteo.FechaSorteo,
                 sorteo.Estado.ToString(),
                 sorteo.FechaCreacion
-            );
-
-            // 8. Retornar resultado de negocio
-            return Result<BorradorSorteoRegistradoResponse>.Success(
-                response);
+            ));
         }
 #endregion
     }

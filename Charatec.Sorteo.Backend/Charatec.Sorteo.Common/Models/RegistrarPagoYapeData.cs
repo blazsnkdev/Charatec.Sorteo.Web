@@ -9,12 +9,14 @@
     string Email,
     string CodigoOperacionYape
 );
-
     public sealed record RegistroPagoYapeData(
         Guid ParticipacionId,
         Guid OrdenPagoId,
         Guid AporteId,
         Guid SorteoId,
-        decimal Monto
+        decimal Monto,
+        bool Exitoso = true,
+        string? MensajeError = null
     );
+
 }

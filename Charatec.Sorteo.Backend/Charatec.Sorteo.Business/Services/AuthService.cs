@@ -42,21 +42,16 @@ namespace Charatec.Sorteo.Business.Services
         }
         #endregion
         #region REGISTRAR CLIENTE INICIO
-        public async Task<Result<ClienteRegistradoResponse>>
-        RegistrarClienteAsync(
-            ClienteRegistrarRequest request,
-            CancellationToken cancellationToken = default)
+        public async Task<Result<ClienteRegistradoResponse>> RegistrarClienteAsync(ClienteRegistrarRequest request, CancellationToken cancellationToken = default)
         {
             var nombres = request.Nombres?.Trim() ?? string.Empty;
             var apellidos = request.Apellidos?.Trim() ?? string.Empty;
-            var email = request.Email?.Trim().ToLowerInvariant()
-                ?? string.Empty;
+            var email = request.Email?.Trim().ToLowerInvariant() ?? string.Empty;
             var telefono = request.Telefono?.Trim() ?? string.Empty;
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            var usuarioExistente =
-                await _userManager.FindByEmailAsync(email);
+            var usuarioExistente = await _userManager.FindByEmailAsync(email);
 
             if (usuarioExistente is not null)
             {
@@ -81,9 +76,6 @@ namespace Charatec.Sorteo.Business.Services
                     Activo = true
                 };
 
-                // Identity valida la contraseña y guarda
-                // solamente su hash en AspNetUsers.
-
                 var identityResult =
                     await _userManager.CreateAsync(
                         usuario,
@@ -93,7 +85,6 @@ namespace Charatec.Sorteo.Business.Services
                 {
                     await _unitOfWork.RollBackAsync();
 
-                    // Correo o nombre de usuario duplicado
                     if (identityResult.Errors.Any(e =>
                         e.Code is "DuplicateEmail" or
                                   "DuplicateUserName"))
@@ -104,7 +95,6 @@ namespace Charatec.Sorteo.Business.Services
                                 "El correo electrónico ya está registrado."));
                     }
 
-                    // Contraseña inválida
                     if (identityResult.Errors.Any(e =>
                         e.Code.StartsWith(
                             "Password",
@@ -122,25 +112,25 @@ namespace Charatec.Sorteo.Business.Services
                             "No se pudo registrar el usuario."));
                 }
 
-                // =====================================
-                // 6. ASIGNAR ROL CLIENTE
-                // =====================================
 
-                var resultadoRol =
-                    await _userManager.AddToRoleAsync(
-                        usuario,
-                        Rol.Cliente.ToString());//TODO: aqui lo seteo como string
+
+                var resultadoRol = await _userManager.AddToRoleAsync(
+                    usuario,
+                    Rol.Cliente.ToString()
+                );
 
                 if (!resultadoRol.Succeeded)
                 {
-                    throw new InvalidOperationException(
-                        "No se pudo asignar el rol CLIENTE. " +
-                        "Comprueba que exista en AspNetRoles.");
+                    await _unitOfWork.RollBackAsync();
+
+                    return Result<ClienteRegistradoResponse>.Failure(
+                        new Error(
+                            "REGISTRATION_FAILED",
+                            "No se pudo completar el registro del cliente."
+                        )
+                    );
                 }
 
-                // =====================================
-                // 7. CREAR PERFIL CLIENTE
-                // =====================================
 
                 var cliente = new Cliente
                 {
@@ -214,48 +204,59 @@ namespace Charatec.Sorteo.Business.Services
                 "UX_AspNetUsers_NormalizedEmail";
         }
         #region LOGIN INICIO SESION
-        public async Task<Result<ClienteLoginResponse>> LoginAsync(
-            ClienteLoginRequest request,
-            CancellationToken cancellationToken = default)
+        public async Task<Result<ClienteLoginResponse>> LoginAsync(ClienteLoginRequest request, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var email = request.Email?.Trim().ToLowerInvariant()
-                ?? string.Empty;
+            var email = request.Email?.Trim() ?? string.Empty;
 
             var password = request.Password ?? string.Empty;
 
-            if (string.IsNullOrWhiteSpace(email) ||
-                string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(email))
             {
                 return Result<ClienteLoginResponse>.Failure(
                     new Error(
                         "VALIDATION_ERROR",
-                        "El correo y la contraseña son obligatorios."));
+                        "El correo es obligatoria."));
             }
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                return Result<ClienteLoginResponse>.Failure(
+                    new Error(
+                        "VALIDATION_ERROR",
+                        "La contraseña es obligatoria."));
+            }
+
 
             var usuario = await _userManager.FindByEmailAsync(email);
 
-            if (usuario is null)
+            if (usuario is null || !usuario.Activo)
             {
                 return Result<ClienteLoginResponse>.Failure(
                     new Error(
                         "INVALID_CREDENTIALS",
-                        "Correo electrónico o contraseña incorrectos."));
+                        "Correo electrónico o contraseña incorrectos."
+                    )
+                );
             }
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             var resultadoLogin =
                 await _signInManager.CheckPasswordSignInAsync(
                     usuario,
                     password,
-                    lockoutOnFailure: true);
+                    lockoutOnFailure: true
+                );
 
             if (resultadoLogin.IsLockedOut)
             {
                 return Result<ClienteLoginResponse>.Failure(
                     new Error(
                         "ACCOUNT_LOCKED",
-                        "No se pudo iniciar sesión. Intenta más tarde."));
+                        "No se pudo iniciar sesión. Intenta más tarde."
+                    )
+                );
             }
 
             if (!resultadoLogin.Succeeded)
@@ -263,18 +264,12 @@ namespace Charatec.Sorteo.Business.Services
                 return Result<ClienteLoginResponse>.Failure(
                     new Error(
                         "INVALID_CREDENTIALS",
-                        "Correo electrónico o contraseña incorrectos."));
+                        "Correo electrónico o contraseña incorrectos."
+                    )
+                );
             }
 
             cancellationToken.ThrowIfCancellationRequested();
-
-            if (!usuario.Activo)
-            {
-                return Result<ClienteLoginResponse>.Failure(
-                    new Error(
-                        "INVALID_CREDENTIALS",
-                        "Correo electrónico o contraseña incorrectos."));
-            }
 
             var roles = await _userManager.GetRolesAsync(usuario);
 
@@ -300,6 +295,29 @@ namespace Charatec.Sorteo.Business.Services
                         "INVALID_CREDENTIALS",
                         "No se pudo iniciar sesión."));
             }
+
+            var esCliente = roles.Contains(Rol.Cliente.ToString());
+
+            if (esCliente && cliente is null)
+            {
+                return Result<ClienteLoginResponse>.Failure(
+                    new Error(
+                        "INVALID_CREDENTIALS",
+                        "No se pudo iniciar sesión."
+                    )
+                );
+            }
+
+            if (esCliente && cliente is not null && !cliente.Activo)
+            {
+                return Result<ClienteLoginResponse>.Failure(
+                    new Error(
+                        "INVALID_CREDENTIALS",
+                        "Correo electrónico o contraseña incorrectos."
+                    )
+                );
+            }
+
 
             var jwt = _jwtTokenService.Generar(
                 usuario.Id,

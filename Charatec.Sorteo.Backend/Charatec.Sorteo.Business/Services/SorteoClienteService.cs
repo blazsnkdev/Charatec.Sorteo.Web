@@ -1,5 +1,4 @@
-﻿
-using Charatec.Sorteo.Business.DTOs.Requests.Sorteos;
+﻿using Charatec.Sorteo.Business.DTOs.Requests.Sorteos;
 using Charatec.Sorteo.Business.DTOs.Responses.Sorteos;
 using Charatec.Sorteo.Business.Interfaces;
 using Charatec.Sorteo.Common.Pagination;
@@ -22,15 +21,8 @@ public sealed class SorteoClienteService : ISorteoClienteService
     }
 
 
-    public async Task<Result<ResultadoPaginado<SorteoDisponibleResponse>>>
-        ListarPublicadosAsync(
-            ListarSorteosRequest request,
-            CancellationToken cancellationToken = default)
+    public async Task<Result<ResultadoPaginado<SorteoDisponibleResponse>>>ListarPublicadosAsync(ListarSorteosRequest request, CancellationToken cancellationToken = default)
     {
-        // ======================================
-        // 1. VALIDAR PAGINACIÓN
-        // ======================================
-
         int pagina = Math.Max(1, request.Pagina);
 
         int tamanoPagina = Math.Clamp(
@@ -39,10 +31,6 @@ public sealed class SorteoClienteService : ISorteoClienteService
             50
         );
 
-        // ======================================
-        // 2. CONSULTAR SORTEOS PUBLICADOS
-        // ======================================
-
         IQueryable<TblSorteo> consulta = _context
             .Set<TblSorteo>()
             .AsNoTracking()
@@ -50,20 +38,12 @@ public sealed class SorteoClienteService : ISorteoClienteService
                 s.Estado == EstadoSorteo.Publicado
             );
 
-        // ======================================
-        // 3. CONTAR REGISTROS
-        // ======================================
-
         int totalRegistros = await consulta
             .CountAsync(cancellationToken);
 
         int totalPaginas = (int)Math.Ceiling(
             totalRegistros / (double)tamanoPagina
         );
-
-        // ======================================
-        // 4. OBTENER REGISTROS PAGINADOS
-        // ======================================
 
         var registros = await consulta
             .OrderByDescending(s => s.FechaCreacion)
@@ -94,21 +74,12 @@ public sealed class SorteoClienteService : ISorteoClienteService
             })
             .ToListAsync(cancellationToken);
 
-        // ======================================
-        // 5. CONSTRUIR RESULTADO PAGINADO
-        // ======================================
-
-
         var resultado = new ResultadoPaginado<SorteoDisponibleResponse>(
             Registros: registros,
             Pagina: pagina,
             TamanoPagina: tamanoPagina,
             TotalRegistros: totalRegistros
         );
-
-        // ======================================
-        // 6. RETORNAR RESULT<T>
-        // ======================================
 
         return Result<ResultadoPaginado<SorteoDisponibleResponse>>
             .Success(resultado);

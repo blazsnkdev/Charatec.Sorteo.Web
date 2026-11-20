@@ -1,5 +1,4 @@
-﻿
-using Charatec.Sorteo.Business.DTOs.Requests.Participaciones;
+﻿using Charatec.Sorteo.Business.DTOs.Requests.Participaciones;
 using Charatec.Sorteo.Business.DTOs.Responses.Participaciones;
 using Charatec.Sorteo.Business.Interfaces;
 using Charatec.Sorteo.Business.Options;
@@ -7,6 +6,7 @@ using Charatec.Sorteo.Common.Models;
 using Charatec.Sorteo.Common.Results;
 using Charatec.Sorteo.Data.Interfaces;
 using Microsoft.Extensions.Options;
+using System.Text.RegularExpressions;
 
 namespace Charatec.Sorteo.Business.Services
 {
@@ -14,7 +14,6 @@ namespace Charatec.Sorteo.Business.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ParticipacionOptions _options;
-
         public ParticipacionService(
             IUnitOfWork unitOfWork,
             IOptions<ParticipacionOptions> options)
@@ -22,17 +21,10 @@ namespace Charatec.Sorteo.Business.Services
             _unitOfWork = unitOfWork;
             _options = options.Value;
         }
-        #region CONSULTAR SORTEO PARA PARTICIPAR
-        public async Task<Result<PrepararParticipacionResponse>> ObtenerAsync(
-            Guid usuarioId,
-            string? email,
-            Guid sorteoId,
-            CancellationToken cancellationToken = default)
-        {
-            // ==========================================
-            // 1. CONSULTAR EL SORTEO PUBLICADO
-            // ==========================================
 
+        #region CONSULTAR SORTEO PARA PARTICIPAR
+        public async Task<Result<PrepararParticipacionResponse>> ObtenerAsync(Guid usuarioId, string? email, Guid sorteoId, CancellationToken cancellationToken = default)
+        {
             var sorteo = await _unitOfWork._sorteoRepository
                 .ObtenerPublicadoPorIdAsync(
                     sorteoId,
@@ -41,13 +33,13 @@ namespace Charatec.Sorteo.Business.Services
 
             if (sorteo is null)
             {
-                return Result<PrepararParticipacionResponse>
-                    .Failure(Error.NotFound("El sorteo no existe"));
+                return Result<PrepararParticipacionResponse>.Failure(
+                    Error.NotFound(
+                        "El sorteo no existe o no se encuentra publicado."
+                    )
+                );
             }
 
-            // ==========================================
-            // 2. CONFIGURACIÓN DEL APORTE
-            // ==========================================
 
             decimal aporteMinimo = sorteo.AporteMinimo;
             decimal aporteMaximo = _options.AporteMaximo;
@@ -58,10 +50,6 @@ namespace Charatec.Sorteo.Business.Services
                 aporteMaximo >= aporteMinimo &&
                 pasoAporte > 0;
 
-            // ==========================================
-            // 3. VALIDAR FECHAS DEL SORTEO
-            // ==========================================
-
             var fechaActual = DateTimeOffset.UtcNow;
 
             bool sorteoIniciado =
@@ -70,15 +58,14 @@ namespace Charatec.Sorteo.Business.Services
             bool sorteoNoCerrado =
                 fechaActual < sorteo.FechaCierre;
 
-            bool dentroDelPeriodo =
-                sorteoIniciado && sorteoNoCerrado;
+            bool fechasValidas =
+                sorteo.FechaInicio < sorteo.FechaCierre;
 
             bool puedeParticipar =
-                configuracionValida && dentroDelPeriodo;
-
-            // ==========================================
-            // 4. MENSAJE DE DISPONIBILIDAD
-            // ==========================================
+                configuracionValida &&
+                fechasValidas &&
+                sorteoIniciado &&
+                sorteoNoCerrado;
 
             string mensajeDisponibilidad;
 
@@ -87,10 +74,15 @@ namespace Charatec.Sorteo.Business.Services
                 mensajeDisponibilidad =
                     "La configuración del aporte no es válida.";
             }
+            else if (!fechasValidas)
+            {
+                mensajeDisponibilidad =
+                    "Las fechas del sorteo no son válidas.";
+            }
             else if (!sorteoIniciado)
             {
                 mensajeDisponibilidad =
-                    "El sorteo todavía no ha comenzado.";
+                    "El periodo de participación todavía no ha comenzado.";
             }
             else if (!sorteoNoCerrado)
             {
@@ -103,9 +95,6 @@ namespace Charatec.Sorteo.Business.Services
                     "El sorteo está disponible para participar.";
             }
 
-            // ==========================================
-            // 5. CONSTRUIR RESPUESTA
-            // ==========================================
 
             var response = new PrepararParticipacionResponse
             {
@@ -135,42 +124,67 @@ namespace Charatec.Sorteo.Business.Services
                 Moneda = "PEN"
             };
 
-            // ==========================================
-            // 6. RETORNAR RESULTADO
-            // ==========================================
-
             return Result<PrepararParticipacionResponse>
                 .Success(response);
         }
         #endregion
 
         #region REGISTRAR PAGO DE YAPE PENDIENTE A VALIDACINO DEL ADMIN
-        public async Task<Result<RegistrarParticipacionYapeResponse>>
-            RegistrarAsync(
-                Guid usuarioId,
-                Guid sorteoId,
-                RegistrarParticipacionYapeRequest request,
-                CancellationToken cancellationToken = default)
+
+        public async Task<Result<RegistrarParticipacionYapeResponse>>RegistrarAsync(Guid usuarioId, Guid sorteoId, RegistrarParticipacionYapeRequest request, CancellationToken cancellationToken = default)
         {
-            
-            if (usuarioId == Guid.Empty ||
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (request is null ||
+                usuarioId == Guid.Empty ||
                 sorteoId == Guid.Empty ||
                 request.SolicitudId == Guid.Empty)
             {
                 return Result<RegistrarParticipacionYapeResponse>
-                    .Failure(Error.Validation("La solicitud contiene identificadores inválidos."));
+                    .Failure(Error.Validation(
+                        "La solicitud contiene identificadores inválidos."
+                    ));
             }
 
             if (!request.AceptaTerminos)
             {
                 return Result<RegistrarParticipacionYapeResponse>
-                    .Failure(Error.Validation("Debes aceptar los términos de participación."));
+                    .Failure(Error.Validation(
+                        "Debes aceptar los términos de participación."
+                    ));
             }
 
-            if (string.IsNullOrWhiteSpace(request.CodigoOperacionYape))
+            var codigoYape =
+                request.CodigoOperacionYape?.Trim() ?? string.Empty;
+
+            if (!Regex.IsMatch(codigoYape, @"^[0-9]{8}$"))
             {
                 return Result<RegistrarParticipacionYapeResponse>
-                    .Failure(Error.Validation("Ingresa el código de operación Yape."));
+                    .Failure(Error.Validation(
+                        "El código de operación Yape debe contener exactamente 8 dígitos numéricos."
+                    ));
+            }
+
+            var whatsapp =
+                request.NumeroWhatsapp?.Trim() ?? string.Empty;
+
+            var email =
+                request.Email?.Trim() ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(whatsapp))
+            {
+                return Result<RegistrarParticipacionYapeResponse>
+                    .Failure(Error.Validation(
+                        "Ingresa tu número de WhatsApp."
+                    ));
+            }
+
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return Result<RegistrarParticipacionYapeResponse>
+                    .Failure(Error.Validation(
+                        "Ingresa tu correo electrónico."
+                    ));
             }
 
             var sorteo = await _unitOfWork._sorteoRepository
@@ -182,43 +196,50 @@ namespace Charatec.Sorteo.Business.Services
             if (sorteo is null)
             {
                 return Result<RegistrarParticipacionYapeResponse>
-                    .Failure(Error.NotFound("El sorteo no existe o no está publicado."));
+                    .Failure(Error.NotFound(
+                        "El sorteo no existe o no está publicado."
+                    ));
             }
 
             var ahora = DateTimeOffset.UtcNow;
+
+            if (sorteo.FechaInicio >= sorteo.FechaCierre)
+            {
+                return Result<RegistrarParticipacionYapeResponse>
+                    .Failure(Error.Validation(
+                        "Las fechas del sorteo no son válidas."
+                    ));
+            }
 
             if (ahora < sorteo.FechaInicio ||
                 ahora >= sorteo.FechaCierre)
             {
                 return Result<RegistrarParticipacionYapeResponse>
-                    .Failure(Error.Validation("El sorteo no está dentro del periodo habilitado."));
+                    .Failure(Error.Validation(
+                        "El sorteo no está dentro del periodo habilitado."
+                    ));
             }
-
-            // ==========================================
-            // 3. VALIDAR MONTO
-            // ==========================================
 
             if (request.Monto < sorteo.AporteMinimo ||
                 request.Monto > _options.AporteMaximo ||
                 decimal.Round(request.Monto, 2) != request.Monto)
             {
                 return Result<RegistrarParticipacionYapeResponse>
-                    .Failure(Error.Validation("El monto seleccionado no es válido."));
+                    .Failure(Error.Validation(
+                        "El monto seleccionado no es válido."
+                    ));
             }
-
-            // ==========================================
-            // 4. REGISTRAR MEDIANTE IUNITOFWORK
-            // ==========================================
 
             var solicitud = new RegistrarPagoYapeData(
                 UsuarioId: usuarioId,
                 SorteoId: sorteoId,
                 SolicitudId: request.SolicitudId,
                 Monto: request.Monto,
-                NumeroWhatsapp: request.NumeroWhatsapp.Trim(),
-                Email: request.Email.Trim(),
-                CodigoOperacionYape: request.CodigoOperacionYape.Trim()
+                NumeroWhatsapp: whatsapp,
+                Email: email,
+                CodigoOperacionYape: codigoYape
             );
+
 
             var registro = await _unitOfWork._participacionesYape
                 .RegistrarPendienteAsync(
@@ -226,9 +247,14 @@ namespace Charatec.Sorteo.Business.Services
                     cancellationToken
                 );
 
-            // ==========================================
-            // 5. CONSTRUIR RESPUESTA
-            // ==========================================
+            if (!registro.Exitoso)
+            {
+                return Result<RegistrarParticipacionYapeResponse>
+                    .Failure(Error.Validation(
+                        registro.MensajeError ??
+                        "No se pudo registrar el pago Yape."
+                    ));
+            }
 
             var response = new RegistrarParticipacionYapeResponse
             {
@@ -236,16 +262,21 @@ namespace Charatec.Sorteo.Business.Services
                 SorteoId = registro.SorteoId,
                 OrdenPagoId = registro.OrdenPagoId,
                 AporteId = registro.AporteId,
+
                 Monto = registro.Monto,
                 Moneda = "PEN",
+
                 EstadoAporte = "Pendiente",
                 EstadoVerificacion = "Pendiente",
-                Mensaje = "Tu pago por Yape está pendiente de verificación."
+
+                Mensaje =
+                    "Tu pago por Yape está pendiente de verificación."
             };
 
             return Result<RegistrarParticipacionYapeResponse>
                 .Success(response);
         }
+
         #endregion
     }
 }

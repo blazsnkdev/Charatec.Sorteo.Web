@@ -31,10 +31,14 @@ namespace Charatec.Sorteo.Business.DTOs.Requests.Participaciones
         public string Email { get; set; }
             = string.Empty;
 
-        [Required]
-        [MaxLength(100)]
-        public string CodigoOperacionYape { get; set; }
-            = string.Empty;
+
+        [Required(ErrorMessage = "El código de operación Yape es obligatorio.")]
+        [StringLength(8, MinimumLength = 8,
+            ErrorMessage = "El código de operación Yape debe tener exactamente 8 dígitos.")]
+        [RegularExpression(@"^[0-9]{8}$",
+            ErrorMessage = "El código de operación Yape debe contener únicamente 8 números.")]
+        public string CodigoOperacionYape { get; set; } = string.Empty;
+
 
         public bool AceptaTerminos { get; set; }
 
