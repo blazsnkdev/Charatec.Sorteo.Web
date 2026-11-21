@@ -1,4 +1,5 @@
-﻿using Charatec.Sorteo.Api.Responses;
+﻿using Charatec.Sorteo.Api.Extensions;
+using Charatec.Sorteo.Api.Responses;
 using Charatec.Sorteo.Business.DTOs.Requests.Sorteos;
 using Charatec.Sorteo.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -125,5 +126,41 @@ namespace Charatec.Sorteo.Api.Controllers
             );
         }
 
+        [HttpPatch("{id:guid}/portada")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> ActualizarPortada(
+            Guid id,
+            [FromForm] IFormFile archivo,
+            CancellationToken cancellationToken)
+        {
+            if (!User.TryObtenerUsuarioId(out var administradorId))
+            {
+                return ApiResults.Unauthorized(
+                    "No se pudo identificar al administrador."
+                );
+            }
+
+            if (archivo is null || archivo.Length == 0)
+            {
+                return ApiResults.BadRequest(
+                    "Debes seleccionar una imagen."
+                );
+            }
+
+            await using var stream = archivo.OpenReadStream();
+
+            var result = await sorteoService.ActualizarPortadaAsync(
+                id,
+                administradorId,
+                stream,
+                archivo.Length,
+                cancellationToken
+            );
+
+            return ApiResults.FromResult(
+                result,
+                "Imagen de portada actualizada correctamente."
+            );
+        }
     }
 }

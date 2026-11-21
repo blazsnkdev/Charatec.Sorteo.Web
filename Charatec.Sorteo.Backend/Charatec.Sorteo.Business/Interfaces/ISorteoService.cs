@@ -36,7 +36,11 @@ namespace Charatec.Sorteo.Business.Interfaces
             ActualizarSorteoBorradorRequest request,
             CancellationToken cancellationToken = default
         );
-
-
+        Task<Result<PortadaSorteoResponse>> ActualizarPortadaAsync(
+            Guid sorteoId,
+            Guid AdministradorId,
+            Stream imagen,
+            long tamanoBytes,
+            CancellationToken cancellationToken = default);
     }
 }

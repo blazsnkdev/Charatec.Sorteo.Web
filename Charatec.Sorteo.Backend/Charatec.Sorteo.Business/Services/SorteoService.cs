@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Charatec.Sorteo.Business.DTOs.Requests.Sorteos;
+﻿using Charatec.Sorteo.Business.DTOs.Requests.Sorteos;
 using Charatec.Sorteo.Business.DTOs.Responses.Sorteos;
 using Charatec.Sorteo.Business.Interfaces;
 using Charatec.Sorteo.Common.Pagination;
@@ -8,15 +7,37 @@ using Charatec.Sorteo.Data.Extensions;
 using Charatec.Sorteo.Data.Interfaces;
 using Charatec.Sorteo.Entities.Enums;
 using Charatec.Sorteo.Entities.Models;
+using Microsoft.Extensions.Configuration;
+using System.ComponentModel.DataAnnotations;
 
 namespace Charatec.Sorteo.Business.Services
 {
     public class SorteoService : ISorteoService
     {
+        private readonly IConfiguration _configuration;
+        private readonly long _tamanoMaximo;
         private readonly IUnitOfWork _uow;
-        public SorteoService(IUnitOfWork uow)
+        private readonly IImagenStorageService _imagenStorageService;
+        public SorteoService(
+            IUnitOfWork uow,
+            IImagenStorageService imagenStorageService,
+            IConfiguration configuration)
         {
             _uow = uow;
+            _imagenStorageService = imagenStorageService;
+            _configuration = configuration;
+            var tamanoMaximoMB =
+        _configuration.GetValue<int>(
+            "Imagenes:TamanoMaximoMB", 2);
+
+            if (tamanoMaximoMB <= 0)
+            {
+                throw new InvalidOperationException(
+                    "El tamaño máximo de imágenes debe ser mayor a cero.");
+            }
+
+            _tamanoMaximo = checked(
+                (long)tamanoMaximoMB * 1024 * 1024);
         }
         #region LISTAR POR ESTADO PAGINADO
         public async Task<Result<ResultadoPaginado<SorteoListadoResponse>>>ListarSorteosAsync(ListarSorteosRequest request, CancellationToken cancellationToken = default)
@@ -441,6 +462,176 @@ namespace Charatec.Sorteo.Business.Services
                 sorteo.FechaCreacion
             ));
         }
-#endregion
+
+        #endregion
+        public async Task<Result<PortadaSorteoResponse>> ActualizarPortadaAsync(
+            Guid sorteoId,
+            Guid administradorId,
+            Stream imagen,
+            long tamanoBytes,
+            CancellationToken cancellationToken = default)
+        {
+            // 1. Validar identificador.
+            if (sorteoId == Guid.Empty)
+            {
+                return Result<PortadaSorteoResponse>.Failure(
+                    new Error("Sorteo.IdInvalido", "El ID del sorteo no es válido."));
+            }
+
+
+
+            // 2. Validar tamaño.
+            if (tamanoBytes <= 0 || tamanoBytes > _tamanoMaximo)
+            {
+                return Result<PortadaSorteoResponse>.Failure(
+                    new Error(
+                        "Portada.TamanoInvalido",
+                        "La imagen debe tener un tamaño máximo de 2 MB."));
+            }
+
+            if (imagen is null || !imagen.CanRead)
+            {
+                return Result<PortadaSorteoResponse>.Failure(
+                    new Error(
+                        "Portada.ArchivoInvalido",
+                        "Debes proporcionar una imagen válida."));
+            }
+
+            // 3. Buscar sorteo usando el repositorio.
+            // Ajustar al nombre real de tu repositorio y método.
+            var sorteo = await _uow._sorteoRepository
+                .ObtenerPorIdAsync(sorteoId, cancellationToken);
+
+            if (sorteo is null)
+            {
+                return Result<PortadaSorteoResponse>.Failure(
+                    new Error(
+                        "Sorteo.NoEncontrado",
+                        "No se encontró el sorteo seleccionado."));
+            }
+
+            if (sorteo.AdministradorUsuarioId != administradorId)
+            {
+                return Result<PortadaSorteoResponse>.Failure(
+                    new Error(
+                        "Sorteo.SinPermiso",
+                        "No tienes permiso para modificar este sorteo."
+                    )
+                );
+            }
+            // 4. Verificar la firma del archivo.
+            // Leer el archivo para identificar su formato real.
+            await using var memoria = new MemoryStream();
+
+            await imagen.CopyToAsync(memoria, cancellationToken);
+
+            if (memoria.Length == 0 || memoria.Length > _tamanoMaximo)
+            {
+                return Result<PortadaSorteoResponse>.Failure(
+                    new Error(
+                        "Portada.TamanoInvalido",
+                        "La imagen debe tener un tamaño máximo de 2 MB."));
+            }
+
+            var extension = DetectarExtension(memoria.ToArray());
+
+            if (extension is null)
+            {
+                return Result<PortadaSorteoResponse>.Failure(
+                    new Error(
+                        "Portada.FormatoInvalido",
+                        "Solamente se permiten imágenes JPG, PNG o WEBP."));
+            }
+
+            memoria.Position = 0;
+
+            // 5. Guardar la imagen en almacenamiento local.
+            var rutaAnterior = sorteo.ImagenPortadaUrl;
+
+            var rutaNueva = await _imagenStorageService.GuardarPortadaAsync(
+                sorteoId,
+                memoria,
+                extension,
+                cancellationToken);
+
+            try
+            {
+                // 6. Actualizar solamente los campos necesarios.
+                sorteo.ImagenPortadaUrl = rutaNueva;
+                sorteo.FechaActualizacion = DateTimeOffset.UtcNow;
+
+                // 7. Persistir mediante Unit of Work.
+                await _uow.SaveChangesAsync(cancellationToken);
+            }
+            catch
+            {
+                // Si PostgreSQL falla, borrar el archivo nuevo.
+                await _imagenStorageService.EliminarPortadaAsync(
+                    rutaNueva,
+                    CancellationToken.None);
+
+                throw;
+            }
+
+            // 8. Borrar portada anterior una vez guardada la nueva.
+            // Solo borrar archivos del almacenamiento local.
+            if (!string.IsNullOrWhiteSpace(rutaAnterior) &&
+                rutaAnterior.StartsWith(
+                    "/uploads/sorteos/",
+                    StringComparison.Ordinal))
+            {
+                try
+                {
+                    await _imagenStorageService.EliminarPortadaAsync(
+                        rutaAnterior,
+                        cancellationToken);
+                }
+                catch
+                {
+                    // El cambio en BD ya se guardó.
+                    // Aquí conviene registrar un warning con ILogger.
+                }
+            }
+
+            // 9. Devolver resultado.
+            return Result<PortadaSorteoResponse>.Success(
+                new PortadaSorteoResponse(
+                    sorteoId,
+                    rutaNueva));
+        }
+
+        private static string? DetectarExtension(byte[] bytes)
+        {
+            if (bytes.Length >= 3 &&
+                bytes[0] == 0xFF &&
+                bytes[1] == 0xD8 &&
+                bytes[2] == 0xFF)
+            {
+                return ".jpg";
+            }
+
+            ReadOnlySpan<byte> firmaPng =
+                stackalloc byte[] { 137, 80, 78, 71, 13, 10, 26, 10 };
+
+            if (bytes.AsSpan().StartsWith(firmaPng))
+            {
+                return ".png";
+            }
+
+            if (bytes.Length >= 12 &&
+                bytes[0] == (byte)'R' &&
+                bytes[1] == (byte)'I' &&
+                bytes[2] == (byte)'F' &&
+                bytes[3] == (byte)'F' &&
+                bytes[8] == (byte)'W' &&
+                bytes[9] == (byte)'E' &&
+                bytes[10] == (byte)'B' &&
+                bytes[11] == (byte)'P')
+            {
+                return ".webp";
+            }
+
+            return null;
+        }
     }
 }

@@ -28,7 +28,6 @@ public static class ApiResults
         return new NoContentResult();//TODO: falta implementar
     }
 
-
     public static IActionResult BadRequest(
         string message = "Solicitud incorrecta.",
         Dictionary<string, string[]>? errors = null)
@@ -89,10 +88,6 @@ public static class ApiResults
             message);
     }
 
-    // ========================================
-    // ERRORES DEL SERVIDOR
-    // ========================================
-
     public static IActionResult InternalServerError(
         string message = "Ocurrió un error interno.")
     {
@@ -100,10 +95,6 @@ public static class ApiResults
             StatusCodes.Status500InternalServerError,
             message);
     }
-
-    // ========================================
-    // CONSTRUCTORES INTERNOS
-    // ========================================
 
     private static IActionResult Error(
         int statusCode,
@@ -156,7 +147,6 @@ public static class ApiResults
 
         return error.Code switch
         {
-            // REGISTRO
             "EMAIL_ALREADY_EXISTS" =>
                 Conflict(error.Message),
 
@@ -164,7 +154,6 @@ public static class ApiResults
             "VALIDATION_ERROR" =>
                 BadRequest(error.Message),
 
-            // LOGIN
             "INVALID_CREDENTIALS" or
             "UNAUTHORIZED" =>
                 Unauthorized(error.Message),
@@ -178,7 +167,6 @@ public static class ApiResults
             "FORBIDDEN" =>
                 Forbidden(error.Message),
 
-            // OTROS
             "NOT_FOUND" =>
                 NotFound(error.Message),
 
