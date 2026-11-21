@@ -1,8 +1,8 @@
-
 export interface ClienteRuleta {
   clienteId: string;
   nombreCliente: string;
   totalAportado: number;
+  fechaUltimaAprobacion: string | null;
 }
 
 export interface RuletaDatos {

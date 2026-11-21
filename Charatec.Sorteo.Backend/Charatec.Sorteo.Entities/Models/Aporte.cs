@@ -11,10 +11,7 @@ public class Aporte
     public decimal Monto { get; set; }
     public EstadoAporte Estado { get; set; } = EstadoAporte.Pendiente;
     public DateTimeOffset FechaCreacion { get; set; } = DateTimeOffset.UtcNow;
-
     public DateTimeOffset? FechaConfirmacion { get; set; }
-
     public Participacion Participacion { get; set; } = null!;
-
     public OrdenPago OrdenPago { get; set; } = null!;
 }

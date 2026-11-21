@@ -226,6 +226,24 @@ export class Ruleta implements AfterViewInit, OnDestroy {
     }));
   }
 
+readonly participantesOrdenados = computed(() => {
+
+  return [...this.participantes()].sort((a, b) => {
+
+    const fechaA = a.fechaUltimaAprobacion
+      ? new Date(a.fechaUltimaAprobacion).getTime()
+      : 0;
+
+    const fechaB = b.fechaUltimaAprobacion
+      ? new Date(b.fechaUltimaAprobacion).getTime()
+      : 0;
+
+    return fechaB - fechaA ||
+      a.nombreCliente.localeCompare(b.nombreCliente);
+  });
+
+});
+
   // ==========================================
   // CREAR LA RULETA VISUAL
   // ==========================================

@@ -3,6 +3,8 @@
     public sealed record ClienteRuletaResponse(
         Guid ClienteId,
         string NombreCliente,
-        decimal TotalAportado
+        decimal TotalAportado,
+        DateTimeOffset? FechaUltimaAprobacion
     );
+
 }

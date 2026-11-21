@@ -9,7 +9,6 @@ namespace Charatec.Sorteo.Data.Repositories
     public class AporteRepository : IAporteRepository
     {
         private readonly SorteoDbContext _dbContext;
-
         public AporteRepository(SorteoDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -67,8 +66,6 @@ namespace Charatec.Sorteo.Data.Repositories
 
             return consulta;
         }
-
-
         public async Task<RevisionAporteResultado> VerificarAsync(
             Guid aporteId,
             Guid administradorUsuarioId,
@@ -198,7 +195,6 @@ namespace Charatec.Sorteo.Data.Repositories
                         cancellationToken
                     );
             }
-
             if (filasActualizadas == 0)
             {
                 return Resultado(
@@ -213,9 +209,8 @@ namespace Charatec.Sorteo.Data.Repositories
                 : EstadoOrdenPago.Fallida;
 
             orden.FechaActualizacion = ahora;
-
             evidencia.Verificado = aprobar;
-            evidencia.FechaVerificacion = ahora;
+            evidencia.FechaVerificacion = ahora;//TODO: aqui lo esta seteando la fecha de verificacion
             evidencia.AdministradorRevisorId =
                 administradorUsuarioId;
             evidencia.Observacion = observacion;
@@ -255,7 +250,5 @@ namespace Charatec.Sorteo.Data.Repositories
                 ahora
             );
         }
-
-
     }
 }

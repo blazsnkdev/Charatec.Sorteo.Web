@@ -192,8 +192,7 @@ namespace Charatec.Sorteo.Business.Services
 
             var decision = request.Decision?.Trim();
 
-            if (decision != "Aprobar" &&
-                decision != "Rechazar")
+            if (decision != "Aprobar" && decision != "Rechazar")
             {
                 return Result<VerificarAporteResponse>.Failure(
                     new Error(
@@ -278,15 +277,14 @@ namespace Charatec.Sorteo.Business.Services
                 )
             );
         }
-
-
-
+        #region METODO PARA OBTENER DATOS PARA RULETA
         public async Task<Result<RuletaDatosResponse>> ObtenerDatosRuletaAsync(
             Guid sorteoId,
             CancellationToken cancellationToken = default)
         {
             var sorteo = await _uow._sorteoRepository
                 .Consultar()
+                .AsNoTracking()
                 .Where(s => s.Id == sorteoId)
                 .Select(s => new
                 {
@@ -318,39 +316,51 @@ namespace Charatec.Sorteo.Business.Services
                 );
             }
 
+            
             var datosClientes = await _uow._aporteRepository
-                                .Consultar()
-                                .Where(a =>
-                                    a.Participacion.SorteoId == sorteoId &&
-                                    a.Estado == EstadoAporte.Confirmado &&
-                                    a.Monto > 0
-                                )
-                                .GroupBy(a => new
-                                {
-                                    a.Participacion.ClienteId,
-                                    a.Participacion.Cliente.Nombres,
-                                    a.Participacion.Cliente.Apellidos
-                                })
-                                .Select(g => new
-                                {
-                                    ClienteId = g.Key.ClienteId,
-                                    Nombres = g.Key.Nombres,
-                                    Apellidos = g.Key.Apellidos,
-                                    TotalAportado = g.Sum(a => a.Monto)
-                                })
-                                .ToListAsync(cancellationToken);
+                .Consultar()
+                .AsNoTracking()
+                .Where(a =>
+                    a.Participacion.SorteoId == sorteoId &&
+                    a.Estado == EstadoAporte.Confirmado &&
+                    a.Monto > 0
+                )
+                .GroupBy(a => new
+                {
+                    a.Participacion.ClienteId,
+                    a.Participacion.Cliente.Nombres,
+                    a.Participacion.Cliente.Apellidos
+                })
+                .Select(g => new
+                {
+                    ClienteId = g.Key.ClienteId,
+                    Nombres = g.Key.Nombres,
+                    Apellidos = g.Key.Apellidos,
 
+                    // Suma de aportes confirmados.
+                    TotalAportado = g.Sum(a => a.Monto),
+
+                    // Última fecha en que se aprobó un aporte.
+                    FechaUltimaAprobacion = g.Max(
+                        a => a.FechaConfirmacion
+                    )
+                })
+                .ToListAsync(cancellationToken);
+
+            // Ordenar por última aprobación (más reciente primero).
             var clientes = datosClientes
                 .Select(c => new ClienteRuletaResponse(
                     ClienteId: c.ClienteId,
                     NombreCliente:
                         $"{c.Nombres} {c.Apellidos}".Trim(),
-                    TotalAportado: c.TotalAportado
+                    TotalAportado: c.TotalAportado,
+                    FechaUltimaAprobacion: c.FechaUltimaAprobacion
                 ))
-                .OrderBy(c => c.NombreCliente)
+                .OrderByDescending(c => c.FechaUltimaAprobacion)
                 .ThenBy(c => c.ClienteId)
                 .ToList();
 
+            // Total de todos los aportes confirmados.
             decimal totalConfirmado = clientes.Sum(
                 c => c.TotalAportado
             );
@@ -380,5 +390,6 @@ namespace Charatec.Sorteo.Business.Services
                 respuesta
             );
         }
+        #endregion 
     }
 }
