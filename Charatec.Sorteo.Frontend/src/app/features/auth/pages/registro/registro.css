@@ -295,3 +295,16 @@ button[type="submit"]:disabled {
     height: 46px;
   }
 }
+
+.registro-bottom a {
+  color: #003bff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.registro-bottom a:hover {
+  color: #002dcc;
+  text-decoration: underline;
+  
+}

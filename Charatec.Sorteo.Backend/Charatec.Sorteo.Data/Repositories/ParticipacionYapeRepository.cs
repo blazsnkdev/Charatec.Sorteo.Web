@@ -4,15 +4,10 @@ using Charatec.Sorteo.Data.Context;
 using Charatec.Sorteo.Entities.Enums;
 using Charatec.Sorteo.Entities.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Charatec.Sorteo.Data.Repositories
 {
-    public sealed class ParticipacionYapeRepository(
-    SorteoDbContext context
-) : IParticipacionYapeRepository
+    public sealed class ParticipacionYapeRepository(SorteoDbContext context) : IParticipacionYapeRepository
     {
         public async Task<RegistroPagoYapeData> RegistrarPendienteAsync(
             RegistrarPagoYapeData solicitud,

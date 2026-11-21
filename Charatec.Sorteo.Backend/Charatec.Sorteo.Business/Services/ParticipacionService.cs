@@ -240,12 +240,27 @@ namespace Charatec.Sorteo.Business.Services
                 CodigoOperacionYape: codigoYape
             );
 
+            RegistroPagoYapeData registro;
 
-            var registro = await _unitOfWork._participacionesYape
-                .RegistrarPendienteAsync(
-                    solicitud,
-                    cancellationToken
-                );
+            try
+            {
+                registro = await _unitOfWork._participacionesYape
+                    .RegistrarPendienteAsync(
+                        solicitud,
+                        cancellationToken
+                    );
+            }
+            catch (InvalidOperationException ex)
+                when (ex.Message == "Este código de operación ya fue registrado.")
+            {
+                return Result<RegistrarParticipacionYapeResponse>
+                    .Failure(
+                        Error.Validation(
+                            "Este código de operación Yape ya fue registrado."
+                        )
+                    );
+            }
+
 
             if (!registro.Exitoso)
             {
