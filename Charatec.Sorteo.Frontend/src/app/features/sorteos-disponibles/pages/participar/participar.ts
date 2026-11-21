@@ -106,29 +106,20 @@ export class Participar implements OnInit, OnDestroy {
 
   // COMPROBANTE TEMPORAL
 
-  readonly comprobanteTemporal = signal<File | null>(null);
+  
   readonly envioWhatsappIniciado = signal(false);
-  readonly confirmoEnvioWhatsapp = signal(false);
+  
 
   private huellaDatosCompartidos: string | null = null;
 
+
   private obtenerHuellaComprobante(): string {
-
-    const archivo = this.comprobanteTemporal();
-
     return JSON.stringify({
       sorteoId: this.sorteoId(),
       monto: this.montoSeleccionado(),
       email: this.emailContacto.trim(),
       whatsapp: this.numeroWhatsapp.trim(),
-      codigo: this.codigoOperacionYape.trim(),
-      archivo: archivo
-        ? {
-            nombre: archivo.name,
-            tamano: archivo.size,
-            fecha: archivo.lastModified
-          }
-        : null
+      codigo: this.codigoOperacionYape.trim()
     });
   }
 
@@ -137,27 +128,26 @@ export class Participar implements OnInit, OnDestroy {
       this.envioWhatsappIniciado() &&
       this.huellaDatosCompartidos !== null &&
       this.huellaDatosCompartidos ===
-        this.obtenerHuellaComprobante()
+      this.obtenerHuellaComprobante()
     );
   }
 
   puedeRegistrarConComprobante(): boolean {
     return (
       this.datosCompartidosVigentes() &&
-      this.confirmoEnvioWhatsapp() &&
       !this.enviandoParticipacion() &&
       !this.registroExitoso()
     );
   }
+
 
   seleccionarComprobante(event: Event): void {
 
     const input = event.target as HTMLInputElement;
     const archivo = input.files?.[0] ?? null;
 
-    this.comprobanteTemporal.set(null);
     this.envioWhatsappIniciado.set(false);
-    this.confirmoEnvioWhatsapp.set(false);
+    
     this.huellaDatosCompartidos = null;
     this.errorRegistro.set(null);
 
@@ -187,13 +177,7 @@ export class Participar implements OnInit, OnDestroy {
       return;
     }
 
-    this.comprobanteTemporal.set(archivo);
-  }
-
-  confirmarEnvioComprobante(confirmado: boolean): void {
-    this.confirmoEnvioWhatsapp.set(
-      confirmado && this.datosCompartidosVigentes()
-    );
+    
   }
 
   // INICIO
@@ -332,9 +316,8 @@ export class Participar implements OnInit, OnDestroy {
     this.codigoOperacionYape = '';
     this.aceptaTerminos = false;
 
-    this.comprobanteTemporal.set(null);
+    
     this.envioWhatsappIniciado.set(false);
-    this.confirmoEnvioWhatsapp.set(false);
     this.huellaDatosCompartidos = null;
 
     this.solicitudId = null;
@@ -415,7 +398,7 @@ export class Participar implements OnInit, OnDestroy {
 
     if (!this.puedeRegistrarConComprobante()) {
       this.errorRegistro.set(
-        'Debes abrir WhatsApp y compartir tu comprobante antes de registrar la participación.'
+        'Primero debes compartir los datos de tu operación Yape por WhatsApp.'
       );
       return;
     }
@@ -548,11 +531,8 @@ export class Participar implements OnInit, OnDestroy {
   compartirPorWhatsapp(): void {
 
     const datos = this.configuracion();
-    const archivo = this.comprobanteTemporal();
 
-    if (!datos) {
-      return;
-    }
+    if (!datos) return;
 
     const error = this.validarFormulario();
 
@@ -561,19 +541,11 @@ export class Participar implements OnInit, OnDestroy {
       return;
     }
 
-    if (!archivo) {
-      this.errorRegistro.set(
-        'Selecciona la captura de tu comprobante Yape.'
-      );
-      return;
-    }
-
-    const numero = this.numeroWhatsappEmpresa
-      .replace(/\D/g, '');
+    const numero = this.numeroWhatsappEmpresa.replace(/\D/g, '');
 
     if (!/^51\d{9}$/.test(numero)) {
       this.errorRegistro.set(
-        'Falta configurar el WhatsApp oficial de Charatec.'
+        'El número de WhatsApp de Charatec no está configurado.'
       );
       return;
     }
@@ -586,11 +558,10 @@ export class Participar implements OnInit, OnDestroy {
       `Sorteo: ${datos.titulo}`,
       `Monto: S/ ${this.montoSeleccionado().toFixed(2)}`,
       `Correo: ${this.emailContacto.trim()}`,
-      `WhatsApp: ${this.numeroWhatsapp.trim()}`,
+      `Mi WhatsApp: ${this.numeroWhatsapp.trim()}`,
       `Código de operación Yape: ${this.codigoOperacionYape.trim()}`,
       '',
-      'Adjunto mi comprobante de pago.',
-      'Mi participación quedará pendiente de verificación.'
+      'Mi participación quedará pendiente de aprobación.'
     ].join('\n');
 
     const url =
@@ -600,24 +571,20 @@ export class Participar implements OnInit, OnDestroy {
 
     if (!ventana) {
       this.errorRegistro.set(
-        'No se pudo abrir WhatsApp. Habilita las ventanas emergentes.'
+        'No se pudo abrir WhatsApp. Permite las ventanas emergentes.'
       );
       return;
     }
 
     ventana.opener = null;
 
-    // Se abrió WhatsApp.
-    // No se puede verificar el envío de la imagen.
-
     this.huellaDatosCompartidos =
       this.obtenerHuellaComprobante();
 
     this.envioWhatsappIniciado.set(true);
-    this.confirmoEnvioWhatsapp.set(true);
-
     this.errorRegistro.set(null);
   }
+
 
   // VOLVER
 

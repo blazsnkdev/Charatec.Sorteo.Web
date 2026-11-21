@@ -737,3 +737,94 @@
   font-weight: 600;
   line-height: 1.5;
 }
+
+
+/* RESULTADO DE PARTICIPACIÓN - SIN FONDO VERDE */
+
+.yape-resultado-simple {
+  padding: 20px 8px;
+  text-align: center;
+  background: transparent;
+}
+
+.yape-resultado-simple h3 {
+  margin: 0 0 12px;
+  color: #111827;
+  font-size: 21px;
+  font-weight: 750;
+}
+
+.yape-resultado-simple p {
+  margin: 12px 0;
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.yape-resultado-detalle {
+  margin: 22px 0 14px;
+  padding: 18px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.yape-resultado-detalle span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.yape-resultado-detalle strong {
+  display: block;
+  font-size: 25px;
+  font-weight: 800;
+  color: #003bff;
+  letter-spacing: 1px;
+}
+
+.yape-resultado-estado {
+  display: inline-block;
+  margin: 0 0 14px;
+  padding: 8px 15px;
+  border-radius: 20px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.yape-numero-empresa {
+  display: inline-block;
+  margin: 8px 0;
+  padding: 11px 18px;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  color: #003bff;
+  background: #ffffff;
+  font-size: 18px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.yape-numero-empresa:hover {
+  background: #eff6ff;
+}
+
+.yape-resultado-aviso {
+  margin-top: 20px !important;
+}
+
+/* CENTRAR BOTÓN CERRAR DEL MODAL */
+
+.yape-modal-footer:has(> .btn-modal-cancelar:only-child) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.yape-modal-footer > .btn-modal-cancelar:only-child {
+  min-width: 140px;
+  text-align: center;
+}
