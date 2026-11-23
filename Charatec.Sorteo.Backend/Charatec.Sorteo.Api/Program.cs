@@ -260,7 +260,7 @@ builder.Services.AddAuthorization();
 
 
 var app = builder.Build();
-
+app.UseStaticFiles();
 
 using (var scope = app.Services.CreateScope())
 {

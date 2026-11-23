@@ -574,6 +574,47 @@
 
     <!--* ====================================== *-->
 
+<!-- CONFIRMACIÓN PARA PUBLICAR -->
+@if (confirmarPublicacion() && detalleEditable) {
+  <div class="confirmacion-publicar">
+
+    <div class="confirmacion-publicar-contenido">
+      <strong>¿Deseas publicar este sorteo?</strong>
+
+      <p>
+        Una vez publicado, ya no podrás editar
+        sus datos como borrador.
+      </p>
+    </div>
+
+    <div class="confirmacion-publicar-botones">
+
+      <button
+        type="button"
+        class="btn-confirmacion-cancelar"
+        [disabled]="procesandoDetalle()"
+        (click)="cancelarPublicacion()"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="btn-confirmacion-aceptar"
+        [disabled]="procesandoDetalle()"
+        (click)="publicarSorteoDetalle()"
+      >
+        @if (procesandoDetalle()) {
+          Publicando...
+        } @else {
+          Confirmar publicación
+        }
+      </button>
+
+    </div>
+  </div>
+}
+
     <footer class="modal-footer modal-footer-editar">
 
       <!--* CERRAR MODAL *-->
@@ -621,7 +662,7 @@
       </button>
 
       <button type="button" class="btn-publicar-sorteo" [disabled]="procesandoDetalle() || cargandoDetalle()"
-        (click)="publicarSorteoDetalle()">
+        (click)="solicitarPublicacion()">
 
         Publicar
 
@@ -813,6 +854,10 @@
     </form>
 
     <!--* BOTONES *-->
+
+<!-- ====================================== -->
+<!-- CONFIRMACIÓN PARA PUBLICAR SORTEO      -->
+<!-- ====================================== -->
 
     <footer class="modal-footer modal-footer-editar">
 

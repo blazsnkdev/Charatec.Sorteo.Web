@@ -1516,3 +1516,67 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* ==========================================
+   CONFIRMACIÓN DE PUBLICACIÓN
+========================================== */
+
+.confirmacion-publicar {
+  margin: 12px 20px 16px;
+  padding: 16px;
+  border: 1px solid #f2d4a5;
+  border-radius: 10px;
+  background: #fffbf3;
+}
+
+.confirmacion-publicar-contenido strong {
+  display: block;
+  color: #92400e;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.confirmacion-publicar-contenido p {
+  margin: 6px 0 14px;
+  color: #78552c;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.confirmacion-publicar-botones {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn-confirmacion-cancelar,
+.btn-confirmacion-aceptar {
+  padding: 9px 14px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-confirmacion-cancelar {
+  background: #fff;
+  color: #344054;
+  border: 1px solid #d0d5dd;
+}
+
+.btn-confirmacion-aceptar {
+  background: #d50000;
+  color: #fff;
+  border: 1px solid #d50000;
+}
+
+.btn-confirmacion-aceptar:hover:not(:disabled) {
+  background: #ae0000;
+}
+
+.btn-confirmacion-cancelar:disabled,
+.btn-confirmacion-aceptar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

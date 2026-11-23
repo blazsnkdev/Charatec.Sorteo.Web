@@ -55,7 +55,7 @@ export class Publicaciones implements OnInit, OnDestroy {
   //* ==========================================*
 
   readonly cargando = signal(false);
-
+readonly confirmarPublicacion = signal(false);
   readonly error = signal<string | null>(null);
 
   private readonly router = inject(Router);
@@ -716,7 +716,7 @@ readonly modalPortadaAbierto = signal(false);
   //* ==========================================*
 
   abrirDetalle(id: string): void {
-
+    this.confirmarPublicacion.set(false);
     this.peticionDetalle?.unsubscribe();
 
     this.modalAbierto.set(true);
@@ -1136,7 +1136,7 @@ readonly modalPortadaAbierto = signal(false);
   async guardarCambiosDetalle(): Promise<void> {
 
     if (
-
+      
       this.procesandoDetalle() ||
 
       !this.detalleEditable ||
@@ -1207,19 +1207,7 @@ readonly modalPortadaAbierto = signal(false);
 
     }
 
-    const confirmar = window.confirm(
-
-      '¿Estás seguro de publicar este sorteo?\n\n' +
-
-      'Una vez publicado, ya no podrás editarlo como borrador.'
-
-    );
-
-    if (!confirmar) {
-
-      return;
-
-    }
+this.confirmarPublicacion.set(false);
 
     this.procesandoDetalle.set(true);
 
@@ -1337,6 +1325,25 @@ readonly modalPortadaAbierto = signal(false);
 
   //* ==========================================*
 
+solicitarPublicacion(): void {
+  if (
+    !this.detalleSorteo() ||
+    !this.detalleEditable ||
+    this.procesandoDetalle() ||
+    this.cargandoDetalle()
+  ) {
+    return;
+  }
+
+  this.errorDetalle.set(null);
+  this.mensajeDetalle.set(null);
+  this.confirmarPublicacion.set(true);
+}
+
+cancelarPublicacion(): void {
+  this.confirmarPublicacion.set(false);
+}
+
   cerrarDetalle(): void {
 
     //* No cerrar mientras se ejecuta PUT/PATCH.*
@@ -1372,7 +1379,7 @@ readonly modalPortadaAbierto = signal(false);
     }
 
     this.peticionDetalle?.unsubscribe();
-
+this.confirmarPublicacion.set(false);
     this.modalAbierto.set(false);
 
     this.detalleSorteo.set(null);

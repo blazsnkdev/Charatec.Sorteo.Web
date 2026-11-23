@@ -133,19 +133,19 @@ export class PublicacionesService {
     );
   }
 
-  obtenerUrlImagen(ruta: string | null | undefined): string {
-    if (!ruta) return '';
 
-    if (/^https?:\/\//i.test(ruta)) {
-      return ruta;
-    }
+obtenerUrlImagen(ruta: string | null | undefined): string {
+  if (!ruta) return '';
 
-    // La URL base de tu API debe ser absoluta,
-    // por ejemplo http://localhost:5000/api/v1/sorteo
-    const origenApi = new URL(this.apiUrl).origin;
-
-    return new URL(ruta, origenApi).href;
+  // Si ya es una URL absoluta, devolverla.
+  if (/^https?:\/\//i.test(ruta)) {
+    return ruta;
   }
+
+  // Utilizar el origen actual de Angular.
+  return new URL(ruta, window.location.origin).href;
+}
+
 
   subirPortada(
     sorteoId: string,
