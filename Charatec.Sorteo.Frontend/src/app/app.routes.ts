@@ -11,7 +11,6 @@ export const routes: Routes = [
       import('./features/auth/pages/registro/registro')
         .then(m => m.Registro)
   },
-
   {
     path: 'publicaciones',
     title: 'Publicaciones | Charatec Sorteos',
@@ -45,9 +44,6 @@ export const routes: Routes = [
       ).then(m => m.Ruleta),
     canActivate: [adminGuard]
   },
-
-
-
   {
     path: 'publicaciones/:sorteoId/aportes',
     loadComponent: () =>
@@ -65,8 +61,6 @@ export const routes: Routes = [
       ).then(m => m.SorteosDisponibles),
     canActivate: [clienteGuard]
   },
-
-
   {
     path: 'home',
     title: 'Home | Corporación Charatec',
@@ -75,7 +69,6 @@ export const routes: Routes = [
       import('./features/home/pages/home/home')
         .then(m => m.Home)
   },
-
   {
     path: 'sorteos/:sorteoId/participar',
     loadComponent: () =>
@@ -95,12 +88,34 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
 
+  {
+    path: '403',
+    title: 'Acceso denegado | Charatec Sorteos',
+    loadComponent: () =>
+      import('./features/errores/pages/error-403/error-403')
+        .then(m => m.Error403)
+  },
+  {
+    path: '404',
+    title: 'Página no encontrada | Charatec Sorteos',
+    loadComponent: () =>
+      import('./features/errores/pages/error-404/error-404')
+        .then(m => m.Error404)
+  },
+  {
+    path: '500',
+    title: 'Error del servidor | Charatec Sorteos',
+    loadComponent: () =>
+      import('./features/errores/pages/error-500/error-500')
+        .then(m => m.Error500)
+  },
+
   // =====================================
   // RUTAS NO ENCONTRADAS
   // =====================================
   {
     path: '**',
-    redirectTo: 'login'
+    redirectTo: '404'
   }
 
 ];

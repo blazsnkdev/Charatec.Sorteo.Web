@@ -16,7 +16,7 @@ export const adminGuard: CanActivateFn = () => {
 
   // Verificar rol Administrador
   if (!sesionService.tieneRol('Administrador')) {
-    return router.createUrlTree(['/']);
+    return router.createUrlTree(['/403']);
   }
 
   // Autorizar acceso
