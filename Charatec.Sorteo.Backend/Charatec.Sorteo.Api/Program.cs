@@ -295,7 +295,6 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-
 app.UseExceptionHandler(errorApp =>
 {
     errorApp.Run(async context =>

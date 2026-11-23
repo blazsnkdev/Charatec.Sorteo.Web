@@ -258,16 +258,35 @@ readonly participantesOrdenados = computed(() => {
       return;
     }
 
-    const colores = [
-      '#7c3aed',
-      '#2563eb',
-      '#0891b2',
-      '#059669',
-      '#ea580c',
-      '#db2777',
-      '#4f46e5',
-      '#0f766e'
-    ];
+
+const colores = [
+  '#7C3AED', // 1. Violeta
+  '#2563EB', // 2. Azul
+  '#0891B2', // 3. Cian
+  '#059669', // 4. Verde esmeralda
+  '#EA580C', // 5. Naranja
+  '#DB2777', // 6. Rosa
+  '#4F46E5', // 7. Índigo
+  '#0F766E', // 8. Verde petróleo
+  '#DC2626', // 9. Rojo
+  '#9333EA', // 10. Púrpura
+  '#0284C7', // 11. Azul cielo
+  '#15803D', // 12. Verde
+  '#CA8A04', // 13. Dorado
+  '#BE185D', // 14. Fucsia oscuro
+  '#1D4ED8', // 15. Azul intenso
+  '#C2410C', // 16. Terracota
+  '#7E22CE', // 17. Morado
+  '#0E7490', // 18. Turquesa oscuro
+  '#B91C1C', // 19. Carmesí
+  '#4338CA', // 20. Índigo profundo
+  '#047857', // 21. Verde jade
+  '#A21CAF', // 22. Magenta
+  '#0369A1', // 23. Azul océano
+  '#A16207', // 24. Ámbar oscuro
+  '#9F1239'  // 25. Rojo vino
+];
+
 
     const items = participantes.map((cliente, index) => ({
 
@@ -460,9 +479,9 @@ readonly participantesOrdenados = computed(() => {
       // se detiene en el índice calculado.
       this.wheel.spinToItem(
         indice,
-        6500, // Duración en milisegundos
+        12000, // Duración en milisegundos
         true, // Centro del segmento
-        6,    // Vueltas completas
+        15,    // Vueltas completas
         1     // Sentido horario
       );
 
