@@ -83,20 +83,38 @@ export class PublicacionesService {
   }
 
 
-actualizarPortada(sorteoId: string, archivo: File) {
-  const formData = new FormData();
-  formData.append('archivo', archivo);
 
-  return this.http.patch<
-    ApiResponse<{
-      sorteoId: string;
-      imagenPortadaUrl: string;
-    }>
-  >(
-    `${this.apiUrl}/${sorteoId}/portada`,
-    formData
-  );
-}
+
+  actualizarPortada(
+    sorteoId: string,
+    archivo: File
+  ): Observable<ApiResponse<{
+    sorteoId: string;
+    imagenPortadaUrl: string;
+  }>> {
+
+    const token = this.sesionService.obtenerToken();
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token ?? ''}`
+    });
+
+    const formData = new FormData();
+    formData.append('archivo', archivo);
+
+    return this.http.patch<
+      ApiResponse<{
+        sorteoId: string;
+        imagenPortadaUrl: string;
+      }>
+    >(
+      `${this.apiUrl}/${sorteoId}/portada`,
+      formData,
+      { headers }
+    );
+  }
+
+
 
   crear(
     request: CrearSorteoRequest
@@ -115,19 +133,19 @@ actualizarPortada(sorteoId: string, archivo: File) {
     );
   }
 
-obtenerUrlImagen(ruta: string | null | undefined): string {
-  if (!ruta) return '';
+  obtenerUrlImagen(ruta: string | null | undefined): string {
+    if (!ruta) return '';
 
-  if (/^https?:\/\//i.test(ruta)) {
-    return ruta;
+    if (/^https?:\/\//i.test(ruta)) {
+      return ruta;
+    }
+
+    // La URL base de tu API debe ser absoluta,
+    // por ejemplo http://localhost:5000/api/v1/sorteo
+    const origenApi = new URL(this.apiUrl).origin;
+
+    return new URL(ruta, origenApi).href;
   }
-
-  // La URL base de tu API debe ser absoluta,
-  // por ejemplo http://localhost:5000/api/v1/sorteo
-  const origenApi = new URL(this.apiUrl).origin;
-
-  return new URL(ruta, origenApi).href;
-}
 
   subirPortada(
     sorteoId: string,

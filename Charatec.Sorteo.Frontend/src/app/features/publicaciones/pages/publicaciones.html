@@ -848,78 +848,128 @@
 <!-- ===================================== -->
 <!-- MINI MODAL: IMAGEN DE PORTADA          -->
 <!-- ===================================== -->
-
 @if (modalPortadaAbierto()) {
-<div class="portada-overlay" (click)="cerrarModalPortada()">
-  <section class="portada-modal" role="dialog" aria-modal="true" aria-labelledby="portada-modal-titulo"
-    (click)="$event.stopPropagation()">
-    <header class="portada-modal-header">
-      <div>
-        <h2 id="portada-modal-titulo">
-          Imagen del sorteo
-        </h2>
+  <div
+    class="portada-overlay"
+    (click)="cerrarModalPortada()"
+  >
+    <section
+      class="portada-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="portada-modal-titulo"
+      (click)="$event.stopPropagation()"
+    >
 
-        <p>{{ sorteoPortada()?.titulo }}</p>
-      </div>
+      <!-- CABECERA -->
+      <header class="portada-modal-header">
+        <div>
+          <h2 id="portada-modal-titulo">
+            Imagen del sorteo
+          </h2>
 
-      <button type="button" class="portada-modal-cerrar" aria-label="Cerrar" [disabled]="guardandoPortada()"
-        (click)="cerrarModalPortada()">
-        ×
-      </button>
-    </header>
-
-    <div class="portada-modal-body">
-      <div class="portada-preview">
-        @if (vistaPreviaPortada(); as previa) {
-        <img [src]="previa" alt="Vista previa de la nueva portada" />
-        } @else if (sorteoPortada()?.imagenPortadaUrl; as actual) {
-        <img [src]="publicacionesService.obtenerUrlImagen(actual)" alt="Portada actual" />
-        } @else {
-        <div class="portada-preview-vacia">
-          <span>＋</span>
-          <p>Sin imagen</p>
+          <p>{{ sorteoPortada()?.titulo }}</p>
         </div>
+
+        <button
+          type="button"
+          class="portada-modal-cerrar"
+          aria-label="Cerrar"
+          [disabled]="guardandoPortada()"
+          (click)="cerrarModalPortada()"
+        >
+          ×
+        </button>
+      </header>
+
+      <!-- CONTENIDO -->
+      <div class="portada-modal-body">
+
+        <!-- VISTA PREVIA -->
+        <div class="portada-preview">
+
+          @if (vistaPreviaPortada(); as previa) {
+            <img
+              [src]="previa"
+              alt="Vista previa de la nueva portada"
+            />
+          } @else if (sorteoPortada()?.imagenPortadaUrl; as actual) {
+            <img
+              [src]="publicacionesService.obtenerUrlImagen(actual)"
+              alt="Portada actual"
+            />
+          } @else {
+            <div class="portada-preview-vacia">
+              <span>＋</span>
+              <p>Sin imagen</p>
+            </div>
+          }
+
+        </div>
+
+        <!-- SELECCIONAR ARCHIVO -->
+        <label
+          for="archivo-portada"
+          class="portada-seleccionar"
+        >
+          Seleccionar imagen
+        </label>
+
+        <input
+          id="archivo-portada"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          [disabled]="guardandoPortada()"
+          (change)="seleccionarImagenPortada($event)"
+        />
+
+        <p class="portada-ayuda">
+          JPG, PNG o WEBP · Máximo 2 MB
+        </p>
+
+        <!-- NOMBRE DEL ARCHIVO -->
+        @if (archivoPortada(); as archivo) {
+          <p class="portada-nombre-archivo">
+            {{ archivo.name }}
+          </p>
         }
+
+        <!-- ERROR -->
+        @if (errorPortada()) {
+          <div class="portada-error">
+            {{ errorPortada() }}
+          </div>
+        }
+
       </div>
 
-      <label class="portada-seleccionar" for="archivo-portada">
-        Seleccionar imagen
-      </label>
+      <!-- BOTONES -->
+      <footer class="portada-modal-footer">
 
-      <input id="archivo-portada" type="file" accept="image/jpeg,image/png,image/webp" [disabled]="guardandoPortada()"
-        (change)="seleccionarImagenPortada($event)" />
+        <button
+          type="button"
+          class="portada-btn-cancelar"
+          [disabled]="guardandoPortada()"
+          (click)="cerrarModalPortada()"
+        >
+          Cancelar
+        </button>
 
-      <p class="portada-ayuda">
-        JPG, PNG o WEBP · Máximo 2 MB
-      </p>
+        <button
+          type="button"
+          class="portada-btn-guardar"
+          [disabled]="!archivoPortada() || guardandoPortada()"
+          (click)="guardarImagenPortada()"
+        >
+          @if (guardandoPortada()) {
+            Guardando...
+          } @else {
+            Guardar imagen
+          }
+        </button>
 
-      @if (archivoPortada(); as archivo) {
-      <p class="portada-nombre-archivo">
-        {{ archivo.name }}
-      </p>
-      }
+      </footer>
 
-      @if (errorPortada()) {
-      <div class="portada-error">
-        {{ errorPortada() }}
-      </div>
-      }
-    </div>
-
-    <footer class="portada-modal-footer">
-      <button type="button" class="portada-btn-cancelar" [disabled]="guardandoPortada()" (click)="cerrarModalPortada()">
-        Cancelar
-      </button>
-
-      <button type="button" class="portada-btn-guardar" [disabled]="!archivoPortada() || guardandoPortada()"
-        (click)="guardarImagenPortada()">
-        @if (guardandoPortada()) {
-        Guardando...
-        } @else {
-        Guardar imagen
-        }
-      </button>
-    </footer>
-  </section>
-</div>
+    </section>
+  </div>
 }

@@ -1,5 +1,4 @@
-﻿using Charatec.Sorteo.Business.DTOs.Requests.Auth;
-using Charatec.Sorteo.Business.DTOs.Requests.Sorteos;
+﻿using Charatec.Sorteo.Business.DTOs.Requests.Sorteos;
 using Charatec.Sorteo.Business.DTOs.Responses.Sorteos;
 using Charatec.Sorteo.Common.Pagination;
 using Charatec.Sorteo.Common.Results;

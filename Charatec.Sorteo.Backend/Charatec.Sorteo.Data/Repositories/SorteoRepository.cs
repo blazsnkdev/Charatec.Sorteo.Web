@@ -3,10 +3,6 @@ using Charatec.Sorteo.Data.Interfaces;
 using Charatec.Sorteo.Entities.Enums;
 using Charatec.Sorteo.Entities.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Charatec.Sorteo.Data.Repositories
 {
     public class SorteoRepository : Repository<TblSorteo>, ISorteoRepository
@@ -53,5 +49,19 @@ namespace Charatec.Sorteo.Data.Repositories
                 cancellationToken
             );
         }
+
+
+        public async Task<TblSorteo?> ObtenerPorIdParaActualizarAsync(
+            Guid id,
+            CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Set<TblSorteo>()
+                .AsTracking()
+                .FirstOrDefaultAsync(
+                    x => x.Id == id,
+                    cancellationToken
+                );
+        }
+
     }
 }

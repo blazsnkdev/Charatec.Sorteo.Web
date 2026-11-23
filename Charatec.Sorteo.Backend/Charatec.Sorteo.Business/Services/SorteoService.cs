@@ -500,8 +500,7 @@ namespace Charatec.Sorteo.Business.Services
 
             // 3. Buscar sorteo usando el repositorio.
             // Ajustar al nombre real de tu repositorio y método.
-            var sorteo = await _uow._sorteoRepository
-                .ObtenerPorIdAsync(sorteoId, cancellationToken);
+            var sorteo = await _uow._sorteoRepository.ObtenerPorIdAsync(sorteoId, cancellationToken);
 
             if (sorteo is null)
             {

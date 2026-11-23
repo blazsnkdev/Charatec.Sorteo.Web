@@ -12,8 +12,6 @@ using Charatec.Sorteo.Entities.Enums;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -92,10 +90,17 @@ builder.Services.AddScoped<ISorteoService, SorteoService>();
 builder.Services.AddScoped<IParticipacionService, ParticipacionService>();
 builder.Services.AddScoped<IAporteService, AporteService>();
 
-builder.Services.AddScoped<
-    IImagenStorageService,
-    LocalImagenStorageService>();
+var directorioPortadas = Path.Combine(
+    builder.Environment.ContentRootPath,
+    "wwwroot",
+    "uploads",
+    "sorteos"
+);
 
+builder.Services.AddScoped<IImagenStorageService>(
+    _ => new LocalImagenStorageService(directorioPortadas)
+);
+Directory.CreateDirectory(directorioPortadas);
 
 builder.Services
     .AddIdentityCore<ApplicationUser>(options =>

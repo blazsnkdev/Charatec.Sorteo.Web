@@ -44,11 +44,8 @@ import { ResultadoPaginado } from '../../../core/models/resultado-paginado.model
 export class Publicaciones implements OnInit, OnDestroy {
 
   readonly publicacionesService = inject(PublicacionesService);
-
   private peticion?: Subscription;
-
   private peticionDetalle?: Subscription;
-
   private peticionCrear?: Subscription;
 
   //* ==========================================*
@@ -163,6 +160,7 @@ export class Publicaciones implements OnInit, OnDestroy {
     };
 
   }
+  
 abrirModalPortada(sorteo: SorteoListado): void {
     this.limpiarVistaPreviaPortada();
 

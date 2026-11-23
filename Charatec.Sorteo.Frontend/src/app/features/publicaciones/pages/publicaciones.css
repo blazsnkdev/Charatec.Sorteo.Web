@@ -1311,3 +1311,208 @@
   cursor: not-allowed;
 
 }
+
+/* ==========================================
+   MINI MODAL POPUP - PORTADA DEL SORTEO
+========================================== */
+
+.portada-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99999 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 100vw !important;
+  height: 100dvh !important;
+
+  padding: 16px;
+  box-sizing: border-box;
+
+  background: rgba(15, 23, 42, 0.65) !important;
+  backdrop-filter: blur(3px);
+}
+
+.portada-modal {
+  position: relative !important;
+  z-index: 100000 !important;
+
+  width: 100% !important;
+  max-width: 390px !important;
+  max-height: calc(100dvh - 32px);
+
+  overflow-y: auto;
+  box-sizing: border-box;
+
+  background: #ffffff !important;
+  border-radius: 14px !important;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+
+  color: #172033;
+}
+
+/* CABECERA */
+
+.portada-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 18px 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.portada-modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.portada-modal-header p {
+  margin: 6px 0 0;
+  color: #667085;
+  font-size: 12px;
+}
+
+.portada-modal-cerrar {
+  border: none;
+  background: transparent;
+  color: #667085;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* CONTENIDO */
+
+.portada-modal-body {
+  padding: 20px;
+  text-align: center;
+}
+
+.portada-preview {
+  width: 100%;
+  height: 190px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+  background: #f8fafc;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.portada-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.portada-preview-vacia {
+  color: #94a3b8;
+}
+
+.portada-preview-vacia span {
+  font-size: 36px;
+}
+
+.portada-preview-vacia p {
+  margin: 4px 0 0;
+  font-size: 13px;
+}
+
+/* SELECCIONAR IMAGEN */
+
+.portada-seleccionar {
+  display: inline-block;
+  padding: 10px 18px;
+
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  background: #f2f4f7;
+
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.portada-seleccionar:hover {
+  background: #e5e7eb;
+}
+
+#archivo-portada {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.portada-ayuda {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: #667085;
+}
+
+.portada-nombre-archivo {
+  margin: 8px 0 0;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.portada-error {
+  margin-top: 12px;
+  padding: 10px;
+  color: #b42318;
+  background: #fff1f2;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+/* BOTONES */
+
+.portada-modal-footer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 16px 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.portada-btn-cancelar,
+.portada-btn-guardar {
+  flex: 1;
+  padding: 11px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.portada-btn-cancelar {
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  color: #344054;
+}
+
+.portada-btn-guardar {
+  background: #d91c32;
+  border: 1px solid #d91c32;
+  color: #ffffff;
+}
+
+.portada-btn-guardar:hover:not(:disabled) {
+  background: #b91429;
+}
+
+.portada-btn-cancelar:disabled,
+.portada-btn-guardar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -1,19 +1,19 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Charatec.Sorteo.Common.Interfaces;
+﻿using Charatec.Sorteo.Common.Interfaces;
 
 public sealed class LocalImagenStorageService : IImagenStorageService
 {
     private readonly string _directorioPortadas;
-
-    public LocalImagenStorageService(
-        IWebHostEnvironment environment)
+    public LocalImagenStorageService(string directorioPortadas)
     {
-        _directorioPortadas = Path.Combine(
-            environment.ContentRootPath,
-            "wwwroot",
-            "uploads",
-            "sorteos"
-        );
+        if (string.IsNullOrWhiteSpace(directorioPortadas))
+        {
+            throw new ArgumentException(
+                "El directorio de portadas no está configurado.",
+                nameof(directorioPortadas)
+            );
+        }
+
+        _directorioPortadas = Path.GetFullPath(directorioPortadas);
     }
 
     public async Task<string> GuardarPortadaAsync(

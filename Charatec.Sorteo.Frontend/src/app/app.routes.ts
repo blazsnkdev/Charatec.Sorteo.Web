@@ -37,25 +37,25 @@ export const routes: Routes = [
     canActivate: [clienteGuard]
   },
 
-{
-  path: 'publicaciones/:sorteoId/ruleta',
-  loadComponent: () =>
-    import(
-      './features/publicaciones/pages/ruleta/ruleta'
-    ).then(m => m.Ruleta),
-  canActivate: [adminGuard]
-},
+  {
+    path: 'publicaciones/:sorteoId/ruleta',
+    loadComponent: () =>
+      import(
+        './features/publicaciones/pages/ruleta/ruleta'
+      ).then(m => m.Ruleta),
+    canActivate: [adminGuard]
+  },
 
 
 
-{
-  path: 'publicaciones/:sorteoId/aportes',
-  loadComponent: () =>
-    import(
-      './features/publicaciones/pages/aportes-publicacion/aportes-publicacion'
-    ).then(m => m.AportesPublicacion),
-  canActivate: [adminGuard]
-},
+  {
+    path: 'publicaciones/:sorteoId/aportes',
+    loadComponent: () =>
+      import(
+        './features/publicaciones/pages/aportes-publicacion/aportes-publicacion'
+      ).then(m => m.AportesPublicacion),
+    canActivate: [adminGuard]
+  },
 
   {
     path: 'sorteos',
