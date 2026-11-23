@@ -1,4 +1,4 @@
-﻿namespace Charatec.Sorteo.Business.Interfaces
+﻿namespace Charatec.Sorteo.Common.Interfaces
 {
     public interface IImagenStorageService
     {

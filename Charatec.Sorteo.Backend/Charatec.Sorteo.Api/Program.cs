@@ -92,6 +92,10 @@ builder.Services.AddScoped<ISorteoService, SorteoService>();
 builder.Services.AddScoped<IParticipacionService, ParticipacionService>();
 builder.Services.AddScoped<IAporteService, AporteService>();
 
+builder.Services.AddScoped<
+    IImagenStorageService,
+    LocalImagenStorageService>();
+
 
 builder.Services
     .AddIdentityCore<ApplicationUser>(options =>

@@ -1,20 +1,11 @@
-
-
 import {
-
-  Component,
-
-  OnInit,
-
-  OnDestroy,
-
-  HostListener,
-
-  computed,
-
-  inject,
-
-  signal
+Component,
+OnInit,
+OnDestroy,
+HostListener,
+computed,
+inject,
+signal
 
 } from '@angular/core';
 
@@ -52,7 +43,7 @@ import { ResultadoPaginado } from '../../../core/models/resultado-paginado.model
 
 export class Publicaciones implements OnInit, OnDestroy {
 
-  private readonly publicacionesService = inject(PublicacionesService);
+  readonly publicacionesService = inject(PublicacionesService);
 
   private peticion?: Subscription;
 
@@ -132,11 +123,6 @@ export class Publicaciones implements OnInit, OnDestroy {
 
   });
 
-  //* ==========================================*
-
-  //* 2. MODAL DETALLE / EDITAR / PUBLICAR*
-
-  //* ==========================================*
 
   readonly modalAbierto = signal(false);
 
@@ -177,7 +163,137 @@ export class Publicaciones implements OnInit, OnDestroy {
     };
 
   }
+abrirModalPortada(sorteo: SorteoListado): void {
+    this.limpiarVistaPreviaPortada();
 
+    this.sorteoPortada.set(sorteo);
+    this.archivoPortada.set(null);
+    this.errorPortada.set(null);
+    this.modalPortadaAbierto.set(true);
+  }
+
+  seleccionarImagenPortada(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const archivo = input.files?.[0] ?? null;
+
+    this.limpiarVistaPreviaPortada();
+    this.archivoPortada.set(null);
+    this.errorPortada.set(null);
+
+    if (!archivo) return;
+
+    const tiposPermitidos = [
+      'image/jpeg',
+      'image/png',
+      'image/webp'
+    ];
+
+    if (!tiposPermitidos.includes(archivo.type)) {
+      this.errorPortada.set(
+        'Solo se permiten imágenes JPG, PNG o WEBP.'
+      );
+      input.value = '';
+      return;
+    }
+
+    if (archivo.size === 0 ||
+        archivo.size > 2 * 1024 * 1024) {
+      this.errorPortada.set(
+        'La imagen debe pesar como máximo 2 MB.'
+      );
+      input.value = '';
+      return;
+    }
+
+    this.archivoPortada.set(archivo);
+    this.vistaPreviaPortada.set(
+      URL.createObjectURL(archivo)
+    );
+  }
+
+  guardarImagenPortada(): void {
+    const sorteo = this.sorteoPortada();
+    const archivo = this.archivoPortada();
+
+    if (!sorteo || !archivo || this.guardandoPortada()) {
+      return;
+    }
+
+    this.guardandoPortada.set(true);
+    this.errorPortada.set(null);
+
+    this.peticionPortada = this.publicacionesService
+      .actualizarPortada(sorteo.id, archivo)
+      .subscribe({
+        next: (respuesta) => {
+          if (!respuesta.success || !respuesta.data) {
+            this.errorPortada.set(
+              respuesta.message ||
+              'No se pudo guardar la imagen.'
+            );
+            this.guardandoPortada.set(false);
+            return;
+          }
+
+          const nuevaRuta =
+            respuesta.data.imagenPortadaUrl;
+
+          // Actualizar la tabla sin volver a consultarla.
+          this.resultado.update(actual => {
+            if (!actual) return actual;
+
+            return {
+              ...actual,
+              registros: actual.registros.map(item =>
+                item.id === sorteo.id
+                  ? { ...item, imagenPortadaUrl: nuevaRuta }
+                  : item
+              )
+            };
+          });
+
+          // Actualizar detalle si estaba consultado.
+          this.detalleSorteo.update(actual =>
+            actual?.id === sorteo.id
+              ? { ...actual, imagenPortadaUrl: nuevaRuta }
+              : actual
+          );
+
+          this.guardandoPortada.set(false);
+          this.cerrarModalPortada();
+        },
+        error: (error: unknown) => {
+          this.errorPortada.set(
+            this.obtenerMensajeError(
+              error,
+              'Ocurrió un error al subir la imagen.'
+            )
+          );
+
+          this.guardandoPortada.set(false);
+        }
+      });
+  }
+
+  cerrarModalPortada(): void {
+    if (this.guardandoPortada()) return;
+
+    this.limpiarVistaPreviaPortada();
+    this.modalPortadaAbierto.set(false);
+    this.sorteoPortada.set(null);
+    this.archivoPortada.set(null);
+    this.errorPortada.set(null);
+  }
+
+  private limpiarVistaPreviaPortada(): void {
+    const url = this.vistaPreviaPortada();
+
+    if (url) {
+      URL.revokeObjectURL(url);
+    }
+
+    this.vistaPreviaPortada.set(null);
+  }
   get detalleModificado(): boolean {
 
     return JSON.stringify(this.formularioDetalle) !==
@@ -205,7 +321,14 @@ export class Publicaciones implements OnInit, OnDestroy {
   readonly errorCrear = signal<string | null>(null);
 
   readonly mensajeCrear = signal<string | null>(null);
+readonly modalPortadaAbierto = signal(false);
+  readonly sorteoPortada = signal<SorteoListado | null>(null);
+  readonly archivoPortada = signal<File | null>(null);
+  readonly vistaPreviaPortada = signal<string | null>(null);
+  readonly guardandoPortada = signal(false);
+  readonly errorPortada = signal<string | null>(null);
 
+  private peticionPortada?: Subscription;
   formularioCrear = this.formularioInicial();
 
   private formularioInicial() {
@@ -245,10 +368,10 @@ export class Publicaciones implements OnInit, OnDestroy {
   ngOnDestroy(): void {
 
     this.peticion?.unsubscribe();
-
     this.peticionDetalle?.unsubscribe();
-
     this.peticionCrear?.unsubscribe();
+    this.peticionPortada?.unsubscribe();
+  this.limpiarVistaPreviaPortada();
 
   }
 
@@ -1663,7 +1786,10 @@ export class Publicaciones implements OnInit, OnDestroy {
   @HostListener('document:keydown.escape')
 
   cerrarConEscape(): void {
-
+if (this.modalPortadaAbierto()) {
+  this.cerrarModalPortada();
+  return;
+}
     if (this.modalCrearAbierto()) {
 
       this.cerrarCrear();

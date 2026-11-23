@@ -144,23 +144,22 @@
 
           <!--* IMAGEN *-->
 
+
           <td>
-
-            @if (sorteo.imagenPortadaUrl) {
-
-            <img class="portada" [src]="sorteo.imagenPortadaUrl" [alt]="sorteo.titulo" loading="lazy" />
-
-            } @else {
-
-            <div class="sin-imagen">
-
-              Sin imagen
-
-            </div>
-
-            }
-
+            <button type="button" class="btn-portada-clic" [title]="'Cambiar portada de ' + sorteo.titulo"
+              [attr.aria-label]="'Cambiar portada de ' + sorteo.titulo" (click)="abrirModalPortada(sorteo)">
+              @if (sorteo.imagenPortadaUrl) {
+              <img class="portada" [src]="publicacionesService.obtenerUrlImagen(sorteo.imagenPortadaUrl)"
+                [alt]="sorteo.titulo" loading="lazy" />
+              } @else {
+              <div class="sin-imagen">
+                <span class="icono-agregar-portada">＋</span>
+                Sin imagen
+              </div>
+              }
+            </button>
           </td>
+
 
           <!--* TITULO *-->
 
@@ -261,13 +260,10 @@
           <td class="columna-acciones">
 
             <button type="button" class="btn-ver-detalle" [attr.aria-label]="'Administrar ' + sorteo.titulo"
-
               [title]="'Ver y administrar ' + sorteo.titulo" (click)="abrirDetalle(sorteo.id)">
 
               <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none"
-
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-
                 aria-hidden="true">
 
                 <path d="M2.062 12.348a1 1 0 0 1 0-.696
@@ -331,7 +327,6 @@
       @for (numero of paginasVisibles(); track numero) {
 
       <button type="button" [class.activa]="numero === pagina()" [disabled]="cargando()"
-
         [attr.aria-current]="numero === pagina() ? 'page' : null" (click)="irPagina(numero)">
 
         {{ numero }}
@@ -363,7 +358,6 @@
 <div class="modal-overlay" (click)="cerrarDetalle()">
 
   <div class="modal-contenido modal-editar" role="dialog" aria-modal="true" aria-labelledby="modal-titulo"
-
     (click)="$event.stopPropagation()">
 
     <!--* CABECERA *-->
@@ -381,7 +375,6 @@
       </div>
 
       <button type="button" class="modal-cerrar" aria-label="Cerrar modal" [disabled]="procesandoDetalle()"
-
         (click)="cerrarDetalle()">
 
         ×
@@ -491,7 +484,6 @@
           </label>
 
           <textarea id="editar-descripcion" rows="4" minlength="10" maxlength="3000"
-
             [(ngModel)]="formularioDetalle.descripcion"></textarea>
 
         </div>
@@ -507,7 +499,6 @@
             </label>
 
             <input id="editar-aporte" type="number" min="0.01" step="0.01"
-
               [(ngModel)]="formularioDetalle.aporteMinimo" />
 
           </div>
@@ -521,7 +512,6 @@
             </label>
 
             <input id="editar-meta" type="number" min="0.01" step="0.01"
-
               [(ngModel)]="formularioDetalle.metaRecaudacion" />
 
           </div>
@@ -601,7 +591,6 @@
       @if (sorteo.estado === 'Publicado') {
 
       <button type="button" class="btn-ver-aportes" [disabled]="procesandoDetalle() || cargandoDetalle()"
-
         (click)="verAportes(sorteo.id)">
 
         Ver aportes
@@ -617,7 +606,6 @@
       @if (detalleSorteo() && detalleEditable) {
 
       <button type="button" class="btn-guardar-cambios" [disabled]="procesandoDetalle() || cargandoDetalle()"
-
         (click)="guardarCambiosDetalle()">
 
         @if (procesandoDetalle()) {
@@ -633,7 +621,6 @@
       </button>
 
       <button type="button" class="btn-publicar-sorteo" [disabled]="procesandoDetalle() || cargandoDetalle()"
-
         (click)="publicarSorteoDetalle()">
 
         Publicar
@@ -661,7 +648,6 @@
 <div class="modal-overlay" (click)="cerrarCrear()">
 
   <div class="modal-contenido modal-crear" role="dialog" aria-modal="true" aria-labelledby="crear-titulo"
-
     (click)="$event.stopPropagation()">
 
     <header class="modal-header">
@@ -683,7 +669,6 @@
       </div>
 
       <button type="button" class="modal-cerrar" aria-label="Cerrar formulario" [disabled]="guardandoSorteo()"
-
         (click)="cerrarCrear()">
 
         ×
@@ -719,7 +704,6 @@
           </label>
 
           <input id="crear-titulo-input" name="titulo" type="text" minlength="5" maxlength="180" required
-
             [(ngModel)]="formularioCrear.titulo" placeholder="PROMOCIÓN LAPTOPS LENOVO SLIM 3" />
 
         </div>
@@ -735,7 +719,6 @@
           </label>
 
           <textarea id="crear-descripcion" name="descripcion" rows="3" minlength="10" maxlength="3000" required
-
             [(ngModel)]="formularioCrear.descripcion" placeholder="Participa por una laptop para oficina"></textarea>
 
         </div>
@@ -753,7 +736,6 @@
             </label>
 
             <input id="crear-aporte" name="aporteMinimo" type="number" min="0.01" step="0.01" required
-
               [(ngModel)]="formularioCrear.aporteMinimo" />
 
           </div>
@@ -767,7 +749,6 @@
             </label>
 
             <input id="crear-meta" name="metaRecaudacion" type="number" min="0.01" step="0.01"
-
               [(ngModel)]="formularioCrear.metaRecaudacion" placeholder="2500.00" />
 
           </div>
@@ -787,7 +768,6 @@
             </label>
 
             <input id="crear-inicio" name="fechaInicio" type="datetime-local" required
-
               [(ngModel)]="formularioCrear.fechaInicio" />
 
           </div>
@@ -801,7 +781,6 @@
             </label>
 
             <input id="crear-cierre" name="fechaCierre" type="datetime-local" required
-
               [(ngModel)]="formularioCrear.fechaCierre" />
 
           </div>
@@ -817,7 +796,6 @@
           </label>
 
           <input id="crear-fecha-sorteo" name="fechaSorteo" type="datetime-local"
-
             [(ngModel)]="formularioCrear.fechaSorteo" />
 
         </div>
@@ -864,4 +842,84 @@
 
 </div>
 
+}
+
+
+<!-- ===================================== -->
+<!-- MINI MODAL: IMAGEN DE PORTADA          -->
+<!-- ===================================== -->
+
+@if (modalPortadaAbierto()) {
+<div class="portada-overlay" (click)="cerrarModalPortada()">
+  <section class="portada-modal" role="dialog" aria-modal="true" aria-labelledby="portada-modal-titulo"
+    (click)="$event.stopPropagation()">
+    <header class="portada-modal-header">
+      <div>
+        <h2 id="portada-modal-titulo">
+          Imagen del sorteo
+        </h2>
+
+        <p>{{ sorteoPortada()?.titulo }}</p>
+      </div>
+
+      <button type="button" class="portada-modal-cerrar" aria-label="Cerrar" [disabled]="guardandoPortada()"
+        (click)="cerrarModalPortada()">
+        ×
+      </button>
+    </header>
+
+    <div class="portada-modal-body">
+      <div class="portada-preview">
+        @if (vistaPreviaPortada(); as previa) {
+        <img [src]="previa" alt="Vista previa de la nueva portada" />
+        } @else if (sorteoPortada()?.imagenPortadaUrl; as actual) {
+        <img [src]="publicacionesService.obtenerUrlImagen(actual)" alt="Portada actual" />
+        } @else {
+        <div class="portada-preview-vacia">
+          <span>＋</span>
+          <p>Sin imagen</p>
+        </div>
+        }
+      </div>
+
+      <label class="portada-seleccionar" for="archivo-portada">
+        Seleccionar imagen
+      </label>
+
+      <input id="archivo-portada" type="file" accept="image/jpeg,image/png,image/webp" [disabled]="guardandoPortada()"
+        (change)="seleccionarImagenPortada($event)" />
+
+      <p class="portada-ayuda">
+        JPG, PNG o WEBP · Máximo 2 MB
+      </p>
+
+      @if (archivoPortada(); as archivo) {
+      <p class="portada-nombre-archivo">
+        {{ archivo.name }}
+      </p>
+      }
+
+      @if (errorPortada()) {
+      <div class="portada-error">
+        {{ errorPortada() }}
+      </div>
+      }
+    </div>
+
+    <footer class="portada-modal-footer">
+      <button type="button" class="portada-btn-cancelar" [disabled]="guardandoPortada()" (click)="cerrarModalPortada()">
+        Cancelar
+      </button>
+
+      <button type="button" class="portada-btn-guardar" [disabled]="!archivoPortada() || guardandoPortada()"
+        (click)="guardarImagenPortada()">
+        @if (guardandoPortada()) {
+        Guardando...
+        } @else {
+        Guardar imagen
+        }
+      </button>
+    </footer>
+  </section>
+</div>
 }

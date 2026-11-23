@@ -83,6 +83,21 @@ export class PublicacionesService {
   }
 
 
+actualizarPortada(sorteoId: string, archivo: File) {
+  const formData = new FormData();
+  formData.append('archivo', archivo);
+
+  return this.http.patch<
+    ApiResponse<{
+      sorteoId: string;
+      imagenPortadaUrl: string;
+    }>
+  >(
+    `${this.apiUrl}/${sorteoId}/portada`,
+    formData
+  );
+}
+
   crear(
     request: CrearSorteoRequest
   ): Observable<ApiResponse<SorteoCreadoResponse>> {
@@ -99,6 +114,20 @@ export class PublicacionesService {
       { headers }
     );
   }
+
+obtenerUrlImagen(ruta: string | null | undefined): string {
+  if (!ruta) return '';
+
+  if (/^https?:\/\//i.test(ruta)) {
+    return ruta;
+  }
+
+  // La URL base de tu API debe ser absoluta,
+  // por ejemplo http://localhost:5000/api/v1/sorteo
+  const origenApi = new URL(this.apiUrl).origin;
+
+  return new URL(ruta, origenApi).href;
+}
 
   subirPortada(
     sorteoId: string,
