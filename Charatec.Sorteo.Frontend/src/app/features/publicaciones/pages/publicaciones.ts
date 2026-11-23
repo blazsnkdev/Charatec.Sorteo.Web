@@ -1133,51 +1133,38 @@ readonly modalPortadaAbierto = signal(false);
 
   }
 
-  async guardarCambiosDetalle(): Promise<void> {
 
-    if (
-      
-      this.procesandoDetalle() ||
+async guardarCambiosDetalle(): Promise<void> {
 
-      !this.detalleEditable ||
-
-      this.cargandoDetalle()
-
-    ) {
-
-      return;
-
-    }
-
-    this.procesandoDetalle.set(true);
-
-    this.errorDetalle.set(null);
-
-    this.mensajeDetalle.set(null);
-
-    try {
-
-      const guardado =
-
-        await this.guardarDetalleInterno();
-
-      if (guardado) {
-
-        this.mensajeDetalle.set(
-
-          'Cambios guardados correctamente.'
-
-        );
-
-      }
-
-    } finally {
-
-      this.procesandoDetalle.set(false);
-
-    }
-
+  if (
+    this.procesandoDetalle() ||
+    !this.detalleEditable ||
+    this.cargandoDetalle()
+  ) {
+    return;
   }
+
+  // Cerrar confirmación pendiente.
+  this.confirmarPublicacion.set(false);
+
+  this.procesandoDetalle.set(true);
+  this.errorDetalle.set(null);
+  this.mensajeDetalle.set(null);
+
+  try {
+    const guardado = await this.guardarDetalleInterno();
+
+    if (guardado) {
+      this.mensajeDetalle.set(
+        'Cambios guardados correctamente.'
+      );
+    }
+
+  } finally {
+    this.procesandoDetalle.set(false);
+  }
+}
+
 
   //* ==========================================*
 
