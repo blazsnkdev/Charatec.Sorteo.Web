@@ -574,6 +574,7 @@
 
     <!--* ====================================== *-->
 
+
 <!-- CONFIRMACIÓN PARA PUBLICAR -->
 @if (confirmarPublicacion() && detalleEditable) {
   <div class="confirmacion-publicar">
@@ -615,6 +616,44 @@
   </div>
 }
 
+
+@if (confirmarCancelacion()) {
+  <div class="confirmacion-publicar">
+
+    <div class="confirmacion-publicar-contenido">
+      <strong>¿Cancelar este sorteo?</strong>
+
+      <p>
+        El sorteo pasará a estado Cancelado.
+        Esta acción podría impedir que se
+        reciban nuevos aportes.
+      </p>
+    </div>
+
+    <div class="confirmacion-publicar-botones">
+
+      <button
+        type="button"
+        class="btn-confirmacion-cancelar"
+        [disabled]="procesandoDetalle()"
+        (click)="cancelarConfirmacionSorteo()"
+      >
+        Volver
+      </button>
+
+      <button
+        type="button"
+        class="btn-confirmacion-aceptar"
+        [disabled]="procesandoDetalle()"
+        (click)="confirmarCancelarSorteo()"
+      >
+        Confirmar cancelación
+      </button>
+
+    </div>
+  </div>
+}
+
     <footer class="modal-footer modal-footer-editar">
 
       <!--* CERRAR MODAL *-->
@@ -625,22 +664,23 @@
 
       </button>
 
-      <!--* VER APORTES: SOLO PUBLICADOS *-->
 
-      @if (detalleSorteo(); as sorteo) {
-
-      @if (sorteo.estado === 'Publicado') {
-
-      <button type="button" class="btn-ver-aportes" [disabled]="procesandoDetalle() || cargandoDetalle()"
-        (click)="verAportes(sorteo.id)">
-
-        Ver aportes
-
-      </button>
-
-      }
-
-      }
+<!-- CANCELAR SORTEO -->
+@if (detalleSorteo(); as sorteo) {
+  @if (
+    sorteo.estado === 'Borrador' ||
+    sorteo.estado === 'Publicado'
+  ) {
+    <button
+      type="button"
+      class="btn-eliminar-sorteo"
+      [disabled]="procesandoDetalle() || cargandoDetalle()"
+      (click)="solicitarCancelarSorteo()"
+    >
+      Cancelar sorteo
+    </button>
+  }
+}
 
       <!--* BOTONES EXISTENTES PARA BORRADOR *-->
 

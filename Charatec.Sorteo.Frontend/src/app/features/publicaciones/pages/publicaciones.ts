@@ -1,11 +1,11 @@
 import {
-Component,
-OnInit,
-OnDestroy,
-HostListener,
-computed,
-inject,
-signal
+  Component,
+  OnInit,
+  OnDestroy,
+  HostListener,
+  computed,
+  inject,
+  signal
 
 } from '@angular/core';
 
@@ -26,6 +26,7 @@ import { CrearSorteoRequest } from '../models/crear-sorteo-request.model';
 import { ActualizarSorteoRequest } from '../models/actualizar-sorteo-request.model';
 
 import { ResultadoPaginado } from '../../../core/models/resultado-paginado.model';
+import { CancelarSorteoRequest } from '../models/cancelar-sorte-request.model';
 
 @Component({
 
@@ -55,7 +56,7 @@ export class Publicaciones implements OnInit, OnDestroy {
   //* ==========================================*
 
   readonly cargando = signal(false);
-readonly confirmarPublicacion = signal(false);
+  readonly confirmarPublicacion = signal(false);
   readonly error = signal<string | null>(null);
 
   private readonly router = inject(Router);
@@ -65,7 +66,7 @@ readonly confirmarPublicacion = signal(false);
   readonly pagina = signal(1);
 
   readonly tamanoPagina = signal(10);
-
+  readonly confirmarCancelacion = signal(false);
   readonly resultado =
 
     signal<ResultadoPaginado<SorteoListado> | null>(null);
@@ -160,8 +161,8 @@ readonly confirmarPublicacion = signal(false);
     };
 
   }
-  
-abrirModalPortada(sorteo: SorteoListado): void {
+
+  abrirModalPortada(sorteo: SorteoListado): void {
     this.limpiarVistaPreviaPortada();
 
     this.sorteoPortada.set(sorteo);
@@ -169,6 +170,84 @@ abrirModalPortada(sorteo: SorteoListado): void {
     this.errorPortada.set(null);
     this.modalPortadaAbierto.set(true);
   }
+
+
+solicitarCancelarSorteo(): void {
+  const sorteo = this.detalleSorteo();
+
+  if (
+    !sorteo ||
+    !['Borrador', 'Publicado'].includes(sorteo.estado) ||
+    this.procesandoDetalle() ||
+    this.cargandoDetalle()
+  ) {
+    return;
+  }
+
+  // Cerrar confirmación de publicación.
+  this.confirmarPublicacion.set(false);
+
+  // Abrir confirmación de cancelación.
+  this.confirmarCancelacion.set(true);
+}
+
+
+cancelarConfirmacionSorteo(): void {
+  this.confirmarCancelacion.set(false);
+}
+
+async confirmarCancelarSorteo(): Promise<void> {
+  const sorteo = this.detalleSorteo();
+
+  if (
+    !sorteo ||
+    this.procesandoDetalle() ||
+    this.cargandoDetalle()
+  ) {
+    return;
+  }
+
+  this.confirmarCancelacion.set(false);
+  this.procesandoDetalle.set(true);
+  this.errorDetalle.set(null);
+  this.mensajeDetalle.set(null);
+
+  try {
+    const respuesta = await firstValueFrom(
+      this.publicacionesService.cancelar(sorteo.id)
+    );
+
+    if (!respuesta.success) {
+      this.errorDetalle.set(
+        respuesta.message ||
+        'No se pudo cancelar el sorteo.'
+      );
+      return;
+    }
+
+    this.detalleSorteo.update(actual =>
+      actual
+        ? { ...actual, estado: 'Cancelado' }
+        : actual
+    );
+
+    this.mensajeDetalle.set(
+      'Sorteo cancelado correctamente.'
+    );
+
+    this.cargarSorteos();
+
+  } catch (error: unknown) {
+    this.errorDetalle.set(
+      this.obtenerMensajeError(
+        error,
+        'No se pudo cancelar el sorteo.'
+      )
+    );
+  } finally {
+    this.procesandoDetalle.set(false);
+  }
+}
 
   seleccionarImagenPortada(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -195,7 +274,7 @@ abrirModalPortada(sorteo: SorteoListado): void {
     }
 
     if (archivo.size === 0 ||
-        archivo.size > 2 * 1024 * 1024) {
+      archivo.size > 2 * 1024 * 1024) {
       this.errorPortada.set(
         'La imagen debe pesar como máximo 2 MB.'
       );
@@ -319,7 +398,7 @@ abrirModalPortada(sorteo: SorteoListado): void {
   readonly errorCrear = signal<string | null>(null);
 
   readonly mensajeCrear = signal<string | null>(null);
-readonly modalPortadaAbierto = signal(false);
+  readonly modalPortadaAbierto = signal(false);
   readonly sorteoPortada = signal<SorteoListado | null>(null);
   readonly archivoPortada = signal<File | null>(null);
   readonly vistaPreviaPortada = signal<string | null>(null);
@@ -369,7 +448,7 @@ readonly modalPortadaAbierto = signal(false);
     this.peticionDetalle?.unsubscribe();
     this.peticionCrear?.unsubscribe();
     this.peticionPortada?.unsubscribe();
-  this.limpiarVistaPreviaPortada();
+    this.limpiarVistaPreviaPortada();
 
   }
 
@@ -718,7 +797,7 @@ readonly modalPortadaAbierto = signal(false);
   abrirDetalle(id: string): void {
     this.confirmarPublicacion.set(false);
     this.peticionDetalle?.unsubscribe();
-
+this.confirmarCancelacion.set(false);
     this.modalAbierto.set(true);
 
     this.detalleSorteo.set(null);
@@ -1134,36 +1213,36 @@ readonly modalPortadaAbierto = signal(false);
   }
 
 
-async guardarCambiosDetalle(): Promise<void> {
+  async guardarCambiosDetalle(): Promise<void> {
 
-  if (
-    this.procesandoDetalle() ||
-    !this.detalleEditable ||
-    this.cargandoDetalle()
-  ) {
-    return;
-  }
-
-  // Cerrar confirmación pendiente.
-  this.confirmarPublicacion.set(false);
-
-  this.procesandoDetalle.set(true);
-  this.errorDetalle.set(null);
-  this.mensajeDetalle.set(null);
-
-  try {
-    const guardado = await this.guardarDetalleInterno();
-
-    if (guardado) {
-      this.mensajeDetalle.set(
-        'Cambios guardados correctamente.'
-      );
+    if (
+      this.procesandoDetalle() ||
+      !this.detalleEditable ||
+      this.cargandoDetalle()
+    ) {
+      return;
     }
 
-  } finally {
-    this.procesandoDetalle.set(false);
+    // Cerrar confirmación pendiente.
+    this.confirmarPublicacion.set(false);
+
+    this.procesandoDetalle.set(true);
+    this.errorDetalle.set(null);
+    this.mensajeDetalle.set(null);
+
+    try {
+      const guardado = await this.guardarDetalleInterno();
+
+      if (guardado) {
+        this.mensajeDetalle.set(
+          'Cambios guardados correctamente.'
+        );
+      }
+
+    } finally {
+      this.procesandoDetalle.set(false);
+    }
   }
-}
 
 
   //* ==========================================*
@@ -1194,7 +1273,7 @@ async guardarCambiosDetalle(): Promise<void> {
 
     }
 
-this.confirmarPublicacion.set(false);
+    this.confirmarPublicacion.set(false);
 
     this.procesandoDetalle.set(true);
 
@@ -1312,6 +1391,7 @@ this.confirmarPublicacion.set(false);
 
   //* ==========================================*
 
+
 solicitarPublicacion(): void {
   if (
     !this.detalleSorteo() ||
@@ -1324,12 +1404,18 @@ solicitarPublicacion(): void {
 
   this.errorDetalle.set(null);
   this.mensajeDetalle.set(null);
+
+  // Cerrar confirmación de cancelación.
+  this.confirmarCancelacion.set(false);
+
+  // Abrir confirmación de publicación.
   this.confirmarPublicacion.set(true);
 }
 
-cancelarPublicacion(): void {
-  this.confirmarPublicacion.set(false);
-}
+
+  cancelarPublicacion(): void {
+    this.confirmarPublicacion.set(false);
+  }
 
   cerrarDetalle(): void {
 
@@ -1366,7 +1452,8 @@ cancelarPublicacion(): void {
     }
 
     this.peticionDetalle?.unsubscribe();
-this.confirmarPublicacion.set(false);
+    this.confirmarCancelacion.set(false);
+    this.confirmarPublicacion.set(false);
     this.modalAbierto.set(false);
 
     this.detalleSorteo.set(null);
@@ -1778,10 +1865,10 @@ this.confirmarPublicacion.set(false);
   @HostListener('document:keydown.escape')
 
   cerrarConEscape(): void {
-if (this.modalPortadaAbierto()) {
-  this.cerrarModalPortada();
-  return;
-}
+    if (this.modalPortadaAbierto()) {
+      this.cerrarModalPortada();
+      return;
+    }
     if (this.modalCrearAbierto()) {
 
       this.cerrarCrear();

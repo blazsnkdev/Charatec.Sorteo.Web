@@ -1566,17 +1566,41 @@
 }
 
 .btn-confirmacion-aceptar {
-  background: #d50000;
+  background: #003bff;
   color: #fff;
-  border: 1px solid #d50000;
+  border: 1px solid #003bff;
 }
 
 .btn-confirmacion-aceptar:hover:not(:disabled) {
-  background: #ae0000;
+  background: #002dcc;
 }
 
 .btn-confirmacion-cancelar:disabled,
 .btn-confirmacion-aceptar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+.btn-eliminar-sorteo {
+  width: auto;
+  padding: 10px 16px;
+  border: 1px solid #003bff;
+  border-radius: 8px;
+  background: #003bff;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-eliminar-sorteo:hover:not(:disabled) {
+  background: #002dcc;
+  color: #ffffff;
+}
+
+.btn-eliminar-sorteo:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }

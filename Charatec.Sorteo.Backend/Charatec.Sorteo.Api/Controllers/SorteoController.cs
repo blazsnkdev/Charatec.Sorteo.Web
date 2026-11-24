@@ -163,15 +163,34 @@ namespace Charatec.Sorteo.Api.Controllers
             );
         }
 
+
         [HttpPost("{id:guid}/cancelar")]
-        public async Task<IActionResult> Cancelar([FromBody] CancelarSorteoRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Cancelar(
+            Guid id,
+            CancellationToken cancellationToken)
         {
             if (!User.TryObtenerUsuarioId(out var administradorId))
             {
-                return ApiResults.Unauthorized("No se pudo identificar al administrador.");
+                return ApiResults.Unauthorized(
+                    "No se pudo identificar al administrador."
+                );
             }
-            var result = await sorteoService.CancelarSorteoAsync(request,cancellationToken);
-            return ApiResults.FromResult(result, "Estado modificado");
+
+            var request = new CancelarSorteoRequest(
+                id,
+                administradorId
+            );
+
+            var result = await sorteoService.CancelarSorteoAsync(
+                request,
+                cancellationToken
+            );
+
+            return ApiResults.FromResult(
+                result,
+                "Estado modificado"
+            );
         }
+
     }
 }

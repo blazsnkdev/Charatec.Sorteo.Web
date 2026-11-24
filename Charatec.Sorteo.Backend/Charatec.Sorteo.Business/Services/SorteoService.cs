@@ -648,7 +648,7 @@ namespace Charatec.Sorteo.Business.Services
             }
             if(sorteo.Estado == EstadoSorteo.Cancelado)//TODO: si el estado del sorteo ya esta cancelado no se puede modificar su estado
             {
-                Result<EstadoSorteoCanceladoResponse>.Failure(Error.Conflict("El sorteo ya está cancelado"));
+                return Result<EstadoSorteoCanceladoResponse>.Failure(Error.Conflict("El sorteo ya está cancelado"));
             }
             _uow._sorteoRepository.CancelarEstadoSorteo(sorteo);
             await _uow.SaveChangesAsync(cancellationToken);

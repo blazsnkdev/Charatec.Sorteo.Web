@@ -1,4 +1,3 @@
-
 import { inject, Injectable } from '@angular/core';
 import {
   HttpClient,
@@ -135,17 +134,17 @@ export class PublicacionesService {
   }
 
 
-obtenerUrlImagen(ruta: string | null | undefined): string {
-  if (!ruta) return '';
+  obtenerUrlImagen(ruta: string | null | undefined): string {
+    if (!ruta) return '';
 
-  // Si ya es una URL absoluta, devolverla.
-  if (/^https?:\/\//i.test(ruta)) {
-    return ruta;
+    // Si ya es una URL absoluta, devolverla.
+    if (/^https?:\/\//i.test(ruta)) {
+      return ruta;
+    }
+
+    // Utilizar el origen actual de Angular.
+    return new URL(ruta, window.location.origin).href;
   }
-
-  // Utilizar el origen actual de Angular.
-  return new URL(ruta, window.location.origin).href;
-}
 
 
   subirPortada(
@@ -218,9 +217,21 @@ obtenerUrlImagen(ruta: string | null | undefined): string {
       { headers }
     );
   }
-  cancelarSorteo(request: CancelarSorteoRequest): Observable<string>{
-    return this.http.post<string>()
+
+  cancelar(sorteoId: string): Observable<ApiResponse<unknown>> {
+    const token = this.sesionService.obtenerToken();
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token ?? ''}`
+    });
+
+    return this.http.post<ApiResponse<unknown>>(
+      `${this.apiUrl}/${sorteoId}/cancelar`,
+      {},
+      { headers }
+    );
   }
+
 
 
 
