@@ -17,10 +17,10 @@ namespace Charatec.Sorteo.Api.Controllers
         public async Task<IActionResult> Registrar(
             [FromBody] CrearSorteoBorradorRequest request,
             CancellationToken cancellationToken)
-            {
-                var administradorId = Guid.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)!
-            );
+        {
+            var administradorId = Guid.Parse(
+            User.FindFirstValue(ClaimTypes.NameIdentifier)!
+        );
 
             var result = await sorteoService.RegistrarSorteoAsync(
                 request,
@@ -161,6 +161,17 @@ namespace Charatec.Sorteo.Api.Controllers
                 result,
                 "Imagen de portada actualizada correctamente."
             );
+        }
+
+        [HttpPost("{id:guid}/cancelar")]
+        public async Task<IActionResult> Cancelar([FromBody] CancelarSorteoRequest request, CancellationToken cancellationToken)
+        {
+            if (!User.TryObtenerUsuarioId(out var administradorId))
+            {
+                return ApiResults.Unauthorized("No se pudo identificar al administrador.");
+            }
+            var result = await sorteoService.CancelarSorteoAsync(request,cancellationToken);
+            return ApiResults.FromResult(result, "Estado modificado");
         }
     }
 }

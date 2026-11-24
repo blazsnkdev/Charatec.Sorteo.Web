@@ -62,6 +62,9 @@ namespace Charatec.Sorteo.Data.Repositories
                     cancellationToken
                 );
         }
-
+        public void CancelarEstadoSorteo(TblSorteo model)
+        {
+            model.Estado = EstadoSorteo.Cancelado;
+        }
     }
 }

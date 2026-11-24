@@ -41,5 +41,9 @@ namespace Charatec.Sorteo.Business.Interfaces
             Stream imagen,
             long tamanoBytes,
             CancellationToken cancellationToken = default);
+
+        Task<Result<EstadoSorteoCanceladoResponse>> CancelarSorteoAsync(
+            CancelarSorteoRequest request,
+            CancellationToken cancellationToken = default);
     }
 }

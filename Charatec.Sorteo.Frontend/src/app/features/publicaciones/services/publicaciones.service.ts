@@ -23,6 +23,7 @@ import {
   ActualizarSorteoRequest,
   SorteoPublicadoResponse
 } from '../models/actualizar-sorteo-request.model';
+import { CancelarSorteoRequest } from '../models/cancelar-sorte-request.model';
 
 
 @Injectable({
@@ -216,6 +217,9 @@ obtenerUrlImagen(ruta: string | null | undefined): string {
       null,
       { headers }
     );
+  }
+  cancelarSorteo(request: CancelarSorteoRequest): Observable<string>{
+    return this.http.post<string>()
   }
 
 

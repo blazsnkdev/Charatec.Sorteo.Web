@@ -1,5 +1,4 @@
 ﻿using Charatec.Sorteo.Entities.Models;
-
 namespace Charatec.Sorteo.Data.Interfaces
 {
     public interface ISorteoRepository : IRepository<TblSorteo>
@@ -23,7 +22,7 @@ namespace Charatec.Sorteo.Data.Interfaces
         Task<TblSorteo?> ObtenerPorIdParaActualizarAsync(
             Guid id,
             CancellationToken cancellationToken = default);
-
+        void CancelarEstadoSorteo(TblSorteo model);
 
     }
 }

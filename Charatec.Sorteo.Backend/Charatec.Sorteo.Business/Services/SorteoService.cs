@@ -630,5 +630,29 @@ namespace Charatec.Sorteo.Business.Services
 
             return null;
         }
+
+        public async Task<Result<EstadoSorteoCanceladoResponse>> CancelarSorteoAsync(CancelarSorteoRequest request, CancellationToken cancellationToken = default)
+        {
+            if (request.AdministradorId == Guid.Empty)
+            {
+                return Result<EstadoSorteoCanceladoResponse>.Failure(Error.Validation(""));
+            }
+            if(request.SorteoId == Guid.Empty)
+            {
+                return Result<EstadoSorteoCanceladoResponse>.Failure(Error.Validation(""));
+            }
+            var sorteo = await _uow._sorteoRepository.ObtenerPorIdAsync(request.SorteoId);
+            if(sorteo is null)
+            {
+                return Result<EstadoSorteoCanceladoResponse>.Failure(Error.Validation(""));
+            }
+            if(sorteo.Estado == EstadoSorteo.Cancelado)//TODO: si el estado del sorteo ya esta cancelado no se puede modificar su estado
+            {
+                Result<EstadoSorteoCanceladoResponse>.Failure(Error.Conflict("El sorteo ya está cancelado"));
+            }
+            _uow._sorteoRepository.CancelarEstadoSorteo(sorteo);
+            await _uow.SaveChangesAsync(cancellationToken);
+            return Result<EstadoSorteoCanceladoResponse>.Success(new EstadoSorteoCanceladoResponse(sorteo.Id));//TODO: retornarmos el id del sorte modificado su estado
+        }
     }
 }
